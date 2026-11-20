@@ -1,0 +1,30 @@
+{
+ "onnx_sha256": "1d3b42a93c87037799cddc0d3801387c2f3c7ff453d15976b962c83b5f5be455",
+ "parts": [
+  "background",
+  "windshield",
+  "back-windshield",
+  "front-window",
+  "back-window",
+  "front-door",
+  "back-door",
+  "front-wheel",
+  "back-wheel",
+  "front-bumper",
+  "back-bumper",
+  "headlight",
+  "tail-light",
+  "hood",
+  "trunk",
+  "license-plate",
+  "mirror",
+  "roof",
+  "grille",
+  "rocker-panel",
+  "quarter-panel",
+  "fender"
+ ],
+ "side": 644,
+ "backbone_checkpoint_sha256": "f830d168bdda7a77f7caed552426dc2680321b7fe1cecce18d982e7c79806244",
+ "train_val_miou": 0.6537122130393982
+}
