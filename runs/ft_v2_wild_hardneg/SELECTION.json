@@ -1,0 +1,43 @@
+{
+  "status": "development_only_not_production_approved",
+  "production_approved": false,
+  "selected_on": "expanded_coco_clean_and_user_asserted_part_hard_negative_candidate",
+  "architecture": "DINOv2 ViT-S/14 shared-backbone dense segmentation",
+  "selection": "CANDIDATE ft_v2: last-3-blocks fine-tune with Wikimedia wild clean hard negatives; threshold from proxy calibration, NOT yet validated in the tiled pipeline",
+  "artifacts": {
+    "checkpoint": {
+      "path": "runs/candidates/ft_v2/best.pt",
+      "sha256": "2bc19f27e2c15f737ef559b0e921028b71f8fa8a26898c34ddcb2f04c196f6d9",
+      "bytes": 98931668
+    },
+    "development_profile": {
+      "path": "runs/candidates/ft_v2/profile.json",
+      "sha256": "2ed18f0966da39925f1e7109a740f74358b527cd72201d5cee559ae03ca671cb",
+      "bytes": 844
+    },
+    "parts_model": {
+      "path": "runs/pilot_cc0_dinov2_parts_hardneg_long/parts/parts-v1.onnx",
+      "sha256": "1d3b42a93c87037799cddc0d3801387c2f3c7ff453d15976b962c83b5f5be455",
+      "bytes": 93044890,
+      "note": "optional; frozen damage backbone + part head; held-out mIoU 0.62"
+    }
+  },
+  "current_candidate_metrics": {
+    "damage_cases": 98,
+    "detected_cases": 91,
+    "case_recall": 0.9285714285714286,
+    "clean_images": 100,
+    "clean_alerts": 1,
+    "clean_false_alert_rate": 0.01,
+    "supplied_clean_regression_damage_pixels": 0,
+    "component_guard_pixels": 1200,
+    "production_approved": false
+  },
+  "warnings": [
+    "Thresholds, component filter, and checkpoint selection consumed development data.",
+    "The public validation split contains no independently reviewed clean groups.",
+    "Synthetic stress results are diagnostics, not real nuisance-slice evidence.",
+    "Severe low resolution adds 10 false regions relative to the previous selected model.",
+    "Fresh first-party calibration and an untouched clean-inclusive test are required."
+  ]
+}
