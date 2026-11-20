@@ -1,0 +1,5 @@
+{
+  "source_onnx_sha256": "70657510d108afeae398d13a85b8524eedb85108f507da61e852eb653916c600",
+  "context_sha256": "93379fa9665bb7a57858a984d00e5ada7913360c7de0e1091cc03bd3f8e45e02",
+  "precision": "fp16"
+}
