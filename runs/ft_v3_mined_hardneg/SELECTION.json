@@ -1,0 +1,39 @@
+{
+  "status": "development_only_not_production_approved",
+  "production_approved": false,
+  "selected_on": "expanded_coco_clean_and_user_asserted_part_hard_negative_candidate",
+  "architecture": "DINOv2 ViT-S/14 shared-backbone dense segmentation",
+  "selection": "CANDIDATE ft_v3: v2 + 537 mined hard negatives (Indian-market models, reflective colours, parked scenes)",
+  "artifacts": {
+    "checkpoint": {
+      "path": "runs/ft_v3_mined_hardneg/best.pt",
+      "sha256": "d674f468b28726977d31d73f2259300d03fda279d4d6b74219acbb258bbd772f",
+      "bytes": 98931668
+    },
+    "development_profile": {
+      "path": "runs/ft_v3_mined_hardneg/profile.json",
+      "sha256": "ee52faff155a3eb2fd3155fbada6f66f75523f53b8b6c0d0b3d379402fdf94b6",
+      "bytes": 835
+    },
+    "parts_model": {
+      "path": "runs/pilot_cc0_dinov2_parts_hardneg_long/parts/parts-v1.onnx",
+      "sha256": "1d3b42a93c87037799cddc0d3801387c2f3c7ff453d15976b962c83b5f5be455",
+      "bytes": 93044890,
+      "note": "optional; frozen damage backbone + part head; held-out mIoU 0.62"
+    }
+  },
+  "current_candidate_metrics": {
+    "protocol": "single-scale 784px proxy; held-out Wikimedia clean photos (test split 72, validation 71)",
+    "wild_clean_false_alert_test_shipped_prev": 0.542,
+    "wild_clean_false_alert_test_v2": 0.0,
+    "test_recall_at_1pct_clean_false_alert_prev": 0.457,
+    "test_recall_at_1pct_clean_false_alert_v2": 0.963,
+    "tiled_pipeline_check": "10 held-out clean photos: previous model flagged 8, v2 flagged 0; damaged samples 5/5 detected",
+    "production_approved": false
+  },
+  "warnings": [
+    "Thresholds were chosen on a proxy protocol and a small real-pipeline check; fresh first-party calibration is required.",
+    "Validation selected the checkpoint; the clean wild set is Wikimedia curated photos, not customer photos.",
+    "NPU context graph is not regenerated for this checkpoint."
+  ]
+}
