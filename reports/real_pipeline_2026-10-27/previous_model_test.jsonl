@@ -1,0 +1,203 @@
+{"id": "hitl_00733", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.91, "max_score": 0.9559540748596191, "quality": ["low_resolution"], "size": [574, 430]}
+{"id": "hitl_00734", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.69, "max_score": 0.850715696811676, "quality": ["low_resolution", "possible_specular_glare"], "size": [570, 380]}
+{"id": "hitl_00735", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.95, "max_score": 0.9930753707885742, "quality": ["low_resolution", "possible_specular_glare"], "size": [571, 428]}
+{"id": "hitl_00736", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.89, "max_score": 0.9373184442520142, "quality": ["possible_specular_glare"], "size": [906, 511]}
+{"id": "hitl_00737", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.97, "max_score": 0.9910609126091003, "quality": ["low_resolution", "possible_specular_glare"], "size": [677, 477]}
+{"id": "hitl_00738", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.91, "max_score": 0.9732258915901184, "quality": ["low_resolution", "possible_specular_glare"], "size": [734, 436]}
+{"id": "hitl_00739", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.99, "max_score": 0.9987238645553589, "quality": ["low_resolution"], "size": [670, 448]}
+{"id": "hitl_00740", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.97, "max_score": 0.9905160665512085, "quality": ["possible_specular_glare"], "size": [732, 554]}
+{"id": "hitl_00741", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.91, "max_score": 0.9695887565612793, "quality": ["possible_specular_glare"], "size": [886, 589]}
+{"id": "hitl_00742", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.95, "max_score": 0.9797611236572266, "quality": ["possible_specular_glare"], "size": [791, 598]}
+{"id": "hitl_00743", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.89, "max_score": 0.9409476518630981, "quality": ["low_resolution"], "size": [575, 430]}
+{"id": "hitl_00744", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.93, "max_score": 0.9717933535575867, "quality": ["low_resolution", "possible_specular_glare"], "size": [635, 476]}
+{"id": "hitl_00745", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.95, "max_score": 0.9757415056228638, "quality": ["low_resolution", "possible_specular_glare"], "size": [633, 476]}
+{"id": "hitl_00746", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.89, "max_score": 0.9526129961013794, "quality": ["low_resolution", "possible_specular_glare"], "size": [641, 397]}
+{"id": "hitl_00747", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.97, "max_score": 0.9959656000137329, "quality": ["possible_specular_glare"], "size": [798, 600]}
+{"id": "hitl_00748", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.87, "max_score": 0.9009697437286377, "quality": ["possible_specular_glare"], "size": [797, 601]}
+{"id": "hitl_00749", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.87, "max_score": 0.9541833400726318, "quality": ["low_resolution", "possible_specular_glare"], "size": [638, 360]}
+{"id": "hitl_00750", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.95, "max_score": 0.9885958433151245, "quality": ["low_resolution", "possible_specular_glare"], "size": [570, 428]}
+{"id": "hitl_00751", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.69, "max_score": 0.9181684851646423, "quality": [], "size": [797, 600]}
+{"id": "hitl_00752", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.95, "max_score": 0.9810072183609009, "quality": ["possible_specular_glare"], "size": [796, 599]}
+{"id": "hitl_00753", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.95, "max_score": 0.9885352253913879, "quality": ["low_resolution", "possible_specular_glare"], "size": [727, 478]}
+{"id": "hitl_00754", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.99, "max_score": 0.9992803335189819, "quality": ["possible_specular_glare"], "size": [886, 530]}
+{"id": "hitl_00755", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.91, "max_score": 0.9474281668663025, "quality": ["possible_specular_glare"], "size": [727, 526]}
+{"id": "hitl_00756", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.89, "max_score": 0.9725121855735779, "quality": ["low_resolution"], "size": [570, 426]}
+{"id": "hitl_00757", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.97, "max_score": 0.9946478605270386, "quality": ["possible_specular_glare"], "size": [797, 600]}
+{"id": "hitl_00758", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.89, "max_score": 0.9395384788513184, "quality": ["possible_specular_glare"], "size": [798, 597]}
+{"id": "hitl_00759", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.95, "max_score": 0.9904680848121643, "quality": ["low_resolution"], "size": [710, 347]}
+{"id": "hitl_00760", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.97, "max_score": 0.982422947883606, "quality": ["possible_specular_glare"], "size": [797, 599]}
+{"id": "hitl_00761", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.95, "max_score": 0.9739885330200195, "quality": ["low_resolution", "possible_specular_glare"], "size": [506, 382]}
+{"id": "hitl_00762", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.97, "max_score": 0.9846864938735962, "quality": ["low_resolution", "possible_specular_glare"], "size": [632, 473]}
+{"id": "hitl_00763", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.97, "max_score": 0.9878504276275635, "quality": ["low_resolution", "possible_specular_glare"], "size": [573, 429]}
+{"id": "hitl_00764", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.91, "max_score": 0.959473729133606, "quality": [], "size": [766, 608]}
+{"id": "hitl_00765", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.91, "max_score": 0.9790577292442322, "quality": ["low_resolution", "possible_specular_glare"], "size": [633, 479]}
+{"id": "hitl_00766", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.97, "max_score": 0.9954673051834106, "quality": ["low_resolution", "possible_specular_glare"], "size": [575, 429]}
+{"id": "hitl_00767", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.97, "max_score": 0.9924255013465881, "quality": ["possible_specular_glare"], "size": [796, 599]}
+{"id": "hitl_00768", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.87, "max_score": 0.9291855692863464, "quality": ["low_resolution", "possible_specular_glare"], "size": [506, 397]}
+{"id": "hitl_00769", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.99, "max_score": 0.994890034198761, "quality": ["possible_specular_glare"], "size": [739, 506]}
+{"id": "hitl_00770", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.95, "max_score": 0.9909886121749878, "quality": ["possible_specular_glare"], "size": [889, 511]}
+{"id": "hitl_00771", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.95, "max_score": 0.9777687788009644, "quality": ["possible_specular_glare"], "size": [795, 598]}
+{"id": "hitl_00772", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.89, "max_score": 0.953370988368988, "quality": [], "size": [735, 547]}
+{"id": "hitl_00773", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.97, "max_score": 0.9981609582901001, "quality": ["low_resolution", "possible_specular_glare"], "size": [572, 428]}
+{"id": "hitl_00774", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.89, "max_score": 0.9491559267044067, "quality": ["low_resolution", "possible_specular_glare"], "size": [574, 427]}
+{"id": "hitl_00775", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.97, "max_score": 0.9920947551727295, "quality": [], "size": [754, 597]}
+{"id": "hitl_00776", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.95, "max_score": 0.9822273850440979, "quality": ["low_resolution", "possible_specular_glare"], "size": [569, 425]}
+{"id": "hitl_00777", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.85, "max_score": 0.924049973487854, "quality": ["possible_specular_glare"], "size": [885, 625]}
+{"id": "hitl_00778", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.97, "max_score": 0.9894382953643799, "quality": ["possible_specular_glare"], "size": [798, 599]}
+{"id": "hitl_00779", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.95, "max_score": 0.9838116765022278, "quality": ["low_resolution", "possible_specular_glare"], "size": [634, 475]}
+{"id": "hitl_00780", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.97, "max_score": 0.9952149987220764, "quality": ["low_resolution"], "size": [570, 394]}
+{"id": "hitl_00781", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.99, "max_score": 0.9977914094924927, "quality": ["low_resolution", "possible_specular_glare"], "size": [569, 424]}
+{"id": "hitl_00782", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.97, "max_score": 0.9916285872459412, "quality": ["low_resolution", "possible_specular_glare"], "size": [634, 478]}
+{"id": "hitl_00783", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.97, "max_score": 0.9905557632446289, "quality": ["low_resolution", "possible_specular_glare"], "size": [635, 475]}
+{"id": "hitl_00784", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.97, "max_score": 0.9816241264343262, "quality": ["possible_specular_glare"], "size": [783, 504]}
+{"id": "hitl_00785", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.97, "max_score": 0.9938210844993591, "quality": ["possible_specular_glare"], "size": [765, 624]}
+{"id": "hitl_00786", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.81, "max_score": 0.9183444976806641, "quality": ["possible_specular_glare"], "size": [733, 511]}
+{"id": "hitl_00787", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.91, "max_score": 0.9821965098381042, "quality": ["low_resolution", "possible_specular_glare"], "size": [569, 429]}
+{"id": "hitl_00788", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.61, "max_score": 0.7375960350036621, "quality": ["low_resolution", "possible_specular_glare"], "size": [635, 475]}
+{"id": "hitl_00789", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.99, "max_score": 0.9983121752738953, "quality": [], "size": [797, 600]}
+{"id": "hitl_00790", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.97, "max_score": 0.9921811819076538, "quality": ["possible_specular_glare"], "size": [900, 501]}
+{"id": "hitl_00791", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.93, "max_score": 0.9658413529396057, "quality": ["low_resolution"], "size": [573, 429]}
+{"id": "hitl_00792", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.89, "max_score": 0.9881063103675842, "quality": ["low_resolution"], "size": [572, 428]}
+{"id": "hitl_00793", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.99, "max_score": 0.9966703653335571, "quality": [], "size": [797, 599]}
+{"id": "hitl_00794", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.91, "max_score": 0.9663492441177368, "quality": ["low_resolution", "possible_specular_glare"], "size": [505, 371]}
+{"id": "hitl_00795", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.97, "max_score": 0.9970413446426392, "quality": ["low_resolution", "possible_specular_glare"], "size": [649, 446]}
+{"id": "hitl_00796", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.89, "max_score": 0.9548532962799072, "quality": ["possible_specular_glare"], "size": [798, 597]}
+{"id": "hitl_00797", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.89, "max_score": 0.9367594718933105, "quality": ["low_resolution", "possible_specular_glare"], "size": [634, 477]}
+{"id": "hitl_00798", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.97, "max_score": 0.9912446141242981, "quality": ["low_resolution", "possible_specular_glare"], "size": [632, 472]}
+{"id": "hitl_00799", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.99, "max_score": 0.9969753623008728, "quality": ["possible_specular_glare"], "size": [797, 597]}
+{"id": "hitl_00800", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.97, "max_score": 0.9900698065757751, "quality": ["low_resolution", "possible_specular_glare"], "size": [694, 469]}
+{"id": "hitl_00801", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.93, "max_score": 0.9701862335205078, "quality": ["possible_specular_glare"], "size": [748, 512]}
+{"id": "hitl_00802", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.99, "max_score": 0.9957079887390137, "quality": ["low_resolution", "possible_specular_glare"], "size": [682, 436]}
+{"id": "hitl_00803", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.97, "max_score": 0.9925512075424194, "quality": ["low_resolution"], "size": [572, 431]}
+{"id": "hitl_00804", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.91, "max_score": 0.960677981376648, "quality": ["low_resolution", "possible_specular_glare"], "size": [569, 426]}
+{"id": "hitl_00805", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.81, "max_score": 0.9283615350723267, "quality": ["low_resolution", "possible_specular_glare"], "size": [573, 431]}
+{"id": "hitl_00806", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.93, "max_score": 0.968540608882904, "quality": ["low_resolution"], "size": [573, 431]}
+{"id": "hitl_00807", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.91, "max_score": 0.9930717349052429, "quality": ["low_resolution", "possible_specular_glare"], "size": [575, 428]}
+{"id": "hitl_00808", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.97, "max_score": 0.9954013824462891, "quality": ["low_resolution"], "size": [779, 403]}
+{"id": "hitl_00809", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.93, "max_score": 0.9712613821029663, "quality": ["possible_specular_glare"], "size": [687, 528]}
+{"id": "hitl_00810", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.99, "max_score": 0.9962225556373596, "quality": [], "size": [795, 600]}
+{"id": "hitl_00811", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.97, "max_score": 0.9882045388221741, "quality": ["possible_specular_glare"], "size": [797, 599]}
+{"id": "hitl_00812", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.99, "max_score": 0.9934433102607727, "quality": ["possible_specular_glare"], "size": [894, 658]}
+{"id": "hitl_00813", "label": "damage", "set": "test", "source": "hitl", "case_score": 0.85, "max_score": 0.9540892839431763, "quality": ["possible_specular_glare"], "size": [514, 519]}
+{"id": "coco_val_000000470924", "label": "clean", "set": "test", "source": "coco", "case_score": 0.09, "max_score": 0.13956061005592346, "quality": ["possible_specular_glare"], "size": [640, 480]}
+{"id": "coco_val_000000474164", "label": "clean", "set": "test", "source": "coco", "case_score": 0.47, "max_score": 0.6414251923561096, "quality": [], "size": [633, 640]}
+{"id": "coco_val_000000474452", "label": "clean", "set": "test", "source": "coco", "case_score": 0.0, "max_score": 0.05380496755242348, "quality": ["low_resolution"], "size": [500, 375]}
+{"id": "coco_val_000000475484", "label": "clean", "set": "test", "source": "coco", "case_score": 0.07, "max_score": 0.17752955853939056, "quality": ["low_resolution"], "size": [426, 640]}
+{"id": "coco_val_000000476119", "label": "clean", "set": "test", "source": "coco", "case_score": 0.07, "max_score": 0.09824523329734802, "quality": ["low_resolution", "possible_specular_glare"], "size": [640, 427]}
+{"id": "coco_val_000000476704", "label": "clean", "set": "test", "source": "coco", "case_score": 0.39, "max_score": 0.6069185137748718, "quality": ["low_resolution", "possible_specular_glare"], "size": [640, 428]}
+{"id": "coco_val_000000477227", "label": "clean", "set": "test", "source": "coco", "case_score": 0.0, "max_score": 0.07202627509832382, "quality": ["low_resolution"], "size": [640, 427]}
+{"id": "coco_val_000000478474", "label": "clean", "set": "test", "source": "coco", "case_score": 0.13, "max_score": 0.5086429119110107, "quality": ["possible_specular_glare"], "size": [480, 640]}
+{"id": "coco_val_000000478721", "label": "clean", "set": "test", "source": "coco", "case_score": 0.05, "max_score": 0.11220449209213257, "quality": [], "size": [640, 480]}
+{"id": "coco_val_000000479030", "label": "clean", "set": "test", "source": "coco", "case_score": 0.0, "max_score": 0.057593781501054764, "quality": ["low_resolution"], "size": [640, 424]}
+{"id": "coco_val_000000480021", "label": "clean", "set": "test", "source": "coco", "case_score": 0.41, "max_score": 0.5183753967285156, "quality": ["low_resolution"], "size": [640, 471]}
+{"id": "coco_val_000000480944", "label": "clean", "set": "test", "source": "coco", "case_score": 0.09, "max_score": 0.21379505097866058, "quality": [], "size": [480, 640]}
+{"id": "coco_val_000000484029", "label": "clean", "set": "test", "source": "coco", "case_score": 0.05, "max_score": 0.14626355469226837, "quality": [], "size": [480, 640]}
+{"id": "coco_val_000000485237", "label": "clean", "set": "test", "source": "coco", "case_score": 0.17, "max_score": 0.30741167068481445, "quality": ["low_resolution"], "size": [640, 174]}
+{"id": "coco_val_000000488251", "label": "clean", "set": "test", "source": "coco", "case_score": 0.51, "max_score": 0.7887191772460938, "quality": ["low_resolution", "possible_specular_glare"], "size": [640, 360]}
+{"id": "coco_val_000000488664", "label": "clean", "set": "test", "source": "coco", "case_score": 0.0, "max_score": 0.04684716835618019, "quality": ["possible_specular_glare"], "size": [629, 489]}
+{"id": "coco_val_000000490936", "label": "clean", "set": "test", "source": "coco", "case_score": 0.51, "max_score": 0.6358075141906738, "quality": ["possible_specular_glare"], "size": [480, 640]}
+{"id": "coco_val_000000491213", "label": "clean", "set": "test", "source": "coco", "case_score": 0.65, "max_score": 0.7225358486175537, "quality": ["possible_specular_glare"], "size": [640, 480]}
+{"id": "coco_val_000000491464", "label": "clean", "set": "test", "source": "coco", "case_score": 0.11, "max_score": 0.3784540891647339, "quality": ["low_resolution"], "size": [640, 428]}
+{"id": "coco_val_000000492077", "label": "clean", "set": "test", "source": "coco", "case_score": 0.0, "max_score": 0.06968726217746735, "quality": ["possible_specular_glare"], "size": [640, 480]}
+{"id": "coco_val_000000493286", "label": "clean", "set": "test", "source": "coco", "case_score": 0.35, "max_score": 0.6116936206817627, "quality": ["low_resolution", "possible_specular_glare"], "size": [640, 359]}
+{"id": "coco_val_000000495146", "label": "clean", "set": "test", "source": "coco", "case_score": 0.0, "max_score": 0.13702623546123505, "quality": ["possible_specular_glare"], "size": [640, 480]}
+{"id": "coco_val_000000496722", "label": "clean", "set": "test", "source": "coco", "case_score": 0.13, "max_score": 0.29336538910865784, "quality": ["low_resolution", "possible_specular_glare"], "size": [640, 360]}
+{"id": "coco_val_000000498286", "label": "clean", "set": "test", "source": "coco", "case_score": 0.93, "max_score": 0.9582567811012268, "quality": ["possible_specular_glare"], "size": [640, 480]}
+{"id": "coco_val_000000498709", "label": "clean", "set": "test", "source": "coco", "case_score": 0.65, "max_score": 0.7498105764389038, "quality": ["low_resolution"], "size": [640, 425]}
+{"id": "coco_val_000000499181", "label": "clean", "set": "test", "source": "coco", "case_score": 0.17, "max_score": 0.24771323800086975, "quality": ["possible_specular_glare"], "size": [640, 480]}
+{"id": "coco_val_000000499768", "label": "clean", "set": "test", "source": "coco", "case_score": 0.21, "max_score": 0.38926175236701965, "quality": ["low_resolution", "possible_specular_glare"], "size": [640, 428]}
+{"id": "coco_val_000000499775", "label": "clean", "set": "test", "source": "coco", "case_score": 0.0, "max_score": 0.09192002564668655, "quality": ["excessive_glare_or_overexposure", "possible_specular_glare"], "size": [640, 480]}
+{"id": "coco_val_000000500613", "label": "clean", "set": "test", "source": "coco", "case_score": 0.21, "max_score": 0.703492283821106, "quality": ["low_resolution", "possible_specular_glare"], "size": [640, 425]}
+{"id": "coco_val_000000504415", "label": "clean", "set": "test", "source": "coco", "case_score": 0.0, "max_score": 0.007278377190232277, "quality": ["low_resolution", "possible_specular_glare"], "size": [640, 427]}
+{"id": "coco_val_000000505942", "label": "clean", "set": "test", "source": "coco", "case_score": 0.23, "max_score": 0.4463959336280823, "quality": ["low_resolution", "possible_specular_glare"], "size": [500, 375]}
+{"id": "coco_val_000000506656", "label": "clean", "set": "test", "source": "coco", "case_score": 0.41, "max_score": 0.6208875775337219, "quality": ["possible_specular_glare"], "size": [640, 480]}
+{"id": "coco_val_000000506707", "label": "clean", "set": "test", "source": "coco", "case_score": 0.0, "max_score": 0.07391220331192017, "quality": ["low_resolution"], "size": [640, 427]}
+{"id": "coco_val_000000507667", "label": "clean", "set": "test", "source": "coco", "case_score": 0.45, "max_score": 0.6834405064582825, "quality": ["low_resolution", "possible_specular_glare"], "size": [500, 386]}
+{"id": "coco_val_000000507797", "label": "clean", "set": "test", "source": "coco", "case_score": 0.0, "max_score": 0.11242534965276718, "quality": ["low_resolution", "possible_specular_glare"], "size": [640, 425]}
+{"id": "coco_val_000000507975", "label": "clean", "set": "test", "source": "coco", "case_score": 0.17, "max_score": 0.2228313386440277, "quality": ["possible_specular_glare"], "size": [640, 480]}
+{"id": "coco_val_000000508602", "label": "clean", "set": "test", "source": "coco", "case_score": 0.13, "max_score": 0.2217557579278946, "quality": ["low_resolution", "possible_specular_glare"], "size": [500, 429]}
+{"id": "coco_val_000000511076", "label": "clean", "set": "test", "source": "coco", "case_score": 0.23, "max_score": 0.3591470718383789, "quality": ["low_resolution", "possible_specular_glare"], "size": [640, 427]}
+{"id": "coco_val_000000511760", "label": "clean", "set": "test", "source": "coco", "case_score": 0.09, "max_score": 0.17684994637966156, "quality": ["low_resolution", "possible_specular_glare"], "size": [296, 640]}
+{"id": "coco_val_000000511999", "label": "clean", "set": "test", "source": "coco", "case_score": 0.33, "max_score": 0.4318911135196686, "quality": ["low_resolution", "possible_specular_glare"], "size": [640, 446]}
+{"id": "coco_val_000000512564", "label": "clean", "set": "test", "source": "coco", "case_score": 0.0, "max_score": 0.050288125872612, "quality": ["low_resolution", "possible_specular_glare"], "size": [640, 424]}
+{"id": "coco_val_000000513181", "label": "clean", "set": "test", "source": "coco", "case_score": 0.0, "max_score": 0.021363722160458565, "quality": ["low_resolution"], "size": [640, 423]}
+{"id": "coco_val_000000513567", "label": "clean", "set": "test", "source": "coco", "case_score": 0.09, "max_score": 0.27361345291137695, "quality": ["possible_specular_glare"], "size": [640, 480]}
+{"id": "coco_val_000000514376", "label": "clean", "set": "test", "source": "coco", "case_score": 0.0, "max_score": 0.04369395226240158, "quality": ["possible_specular_glare"], "size": [640, 480]}
+{"id": "coco_val_000000514586", "label": "clean", "set": "test", "source": "coco", "case_score": 0.05, "max_score": 0.07632982730865479, "quality": ["low_resolution"], "size": [354, 500]}
+{"id": "coco_val_000000515025", "label": "clean", "set": "test", "source": "coco", "case_score": 0.09, "max_score": 0.1683076173067093, "quality": ["low_resolution", "possible_specular_glare"], "size": [640, 427]}
+{"id": "coco_val_000000515266", "label": "clean", "set": "test", "source": "coco", "case_score": 0.89, "max_score": 0.921745240688324, "quality": ["low_resolution"], "size": [640, 427]}
+{"id": "coco_val_000000517069", "label": "clean", "set": "test", "source": "coco", "case_score": 0.17, "max_score": 0.2656967341899872, "quality": [], "size": [640, 480]}
+{"id": "coco_val_000000520009", "label": "clean", "set": "test", "source": "coco", "case_score": 0.13, "max_score": 0.26516371965408325, "quality": ["low_resolution", "possible_specular_glare"], "size": [500, 412]}
+{"id": "coco_val_000000521052", "label": "clean", "set": "test", "source": "coco", "case_score": 0.53, "max_score": 0.6043007969856262, "quality": ["possible_specular_glare"], "size": [640, 480]}
+{"id": "wild_0008", "label": "clean", "set": "test", "source": "wild", "case_score": 0.39, "max_score": 0.5109214186668396, "quality": [], "size": [1280, 1348]}
+{"id": "wild_0020", "label": "clean", "set": "test", "source": "wild", "case_score": 0.67, "max_score": 0.8125447034835815, "quality": ["possible_specular_glare"], "size": [1280, 853]}
+{"id": "wild_0025", "label": "clean", "set": "test", "source": "wild", "case_score": 0.93, "max_score": 0.9443047642707825, "quality": [], "size": [1280, 1098]}
+{"id": "wild_0027", "label": "clean", "set": "test", "source": "wild", "case_score": 0.67, "max_score": 0.842119038105011, "quality": ["possible_specular_glare"], "size": [1280, 638]}
+{"id": "wild_0034", "label": "clean", "set": "test", "source": "wild", "case_score": 0.67, "max_score": 0.8785496354103088, "quality": ["possible_specular_glare"], "size": [1280, 749]}
+{"id": "wild_0041", "label": "clean", "set": "test", "source": "wild", "case_score": 0.49, "max_score": 0.7377262711524963, "quality": [], "size": [1280, 853]}
+{"id": "wild_0046", "label": "clean", "set": "test", "source": "wild", "case_score": 0.71, "max_score": 0.8985714316368103, "quality": ["possible_specular_glare"], "size": [1280, 960]}
+{"id": "wild_0048", "label": "clean", "set": "test", "source": "wild", "case_score": 0.71, "max_score": 0.8416601419448853, "quality": ["possible_specular_glare"], "size": [1280, 853]}
+{"id": "wild_0060", "label": "clean", "set": "test", "source": "wild", "case_score": 0.87, "max_score": 0.9536124467849731, "quality": [], "size": [1280, 948]}
+{"id": "wild_0061", "label": "clean", "set": "test", "source": "wild", "case_score": 0.95, "max_score": 0.9924460649490356, "quality": ["possible_specular_glare"], "size": [1280, 887]}
+{"id": "wild_0068", "label": "clean", "set": "test", "source": "wild", "case_score": 0.79, "max_score": 0.9120718240737915, "quality": ["possible_specular_glare"], "size": [1280, 720]}
+{"id": "wild_0070", "label": "clean", "set": "test", "source": "wild", "case_score": 0.05, "max_score": 0.13184981048107147, "quality": ["possible_specular_glare"], "size": [1280, 853]}
+{"id": "wild_0072", "label": "clean", "set": "test", "source": "wild", "case_score": 0.85, "max_score": 0.9065170288085938, "quality": [], "size": [1280, 959]}
+{"id": "wild_0074", "label": "clean", "set": "test", "source": "wild", "case_score": 0.63, "max_score": 0.7094815969467163, "quality": ["possible_specular_glare"], "size": [1280, 853]}
+{"id": "wild_0077", "label": "clean", "set": "test", "source": "wild", "case_score": 0.69, "max_score": 0.8143401741981506, "quality": [], "size": [1280, 942]}
+{"id": "wild_0082", "label": "clean", "set": "test", "source": "wild", "case_score": 0.69, "max_score": 0.7649520635604858, "quality": [], "size": [1280, 727]}
+{"id": "wild_0084", "label": "clean", "set": "test", "source": "wild", "case_score": 0.71, "max_score": 0.7997650504112244, "quality": [], "size": [1280, 887]}
+{"id": "wild_0087", "label": "clean", "set": "test", "source": "wild", "case_score": 0.91, "max_score": 0.929155707359314, "quality": ["possible_specular_glare"], "size": [1280, 853]}
+{"id": "wild_0096", "label": "clean", "set": "test", "source": "wild", "case_score": 0.95, "max_score": 0.9782730937004089, "quality": [], "size": [1280, 1279]}
+{"id": "wild_0098", "label": "clean", "set": "test", "source": "wild", "case_score": 0.93, "max_score": 0.9479705095291138, "quality": ["possible_specular_glare"], "size": [1280, 1016]}
+{"id": "wild_0111", "label": "clean", "set": "test", "source": "wild", "case_score": 0.91, "max_score": 0.9551008343696594, "quality": ["possible_specular_glare"], "size": [1280, 671]}
+{"id": "wild_0117", "label": "clean", "set": "test", "source": "wild", "case_score": 0.89, "max_score": 0.9730546474456787, "quality": ["possible_specular_glare"], "size": [1280, 853]}
+{"id": "wild_0120", "label": "clean", "set": "test", "source": "wild", "case_score": 0.93, "max_score": 0.9821287393569946, "quality": ["possible_specular_glare"], "size": [1280, 868]}
+{"id": "wild_0134", "label": "clean", "set": "test", "source": "wild", "case_score": 0.77, "max_score": 0.8439550399780273, "quality": [], "size": [1280, 853]}
+{"id": "wild_0136", "label": "clean", "set": "test", "source": "wild", "case_score": 0.91, "max_score": 0.9349594116210938, "quality": [], "size": [1280, 720]}
+{"id": "wild_0145", "label": "clean", "set": "test", "source": "wild", "case_score": 0.47, "max_score": 0.7131775617599487, "quality": ["possible_specular_glare"], "size": [1280, 854]}
+{"id": "wild_0151", "label": "clean", "set": "test", "source": "wild", "case_score": 0.19, "max_score": 0.3613768517971039, "quality": ["possible_specular_glare"], "size": [1280, 720]}
+{"id": "wild_0152", "label": "clean", "set": "test", "source": "wild", "case_score": 0.73, "max_score": 0.8344117403030396, "quality": ["possible_specular_glare"], "size": [1280, 853]}
+{"id": "wild_0159", "label": "clean", "set": "test", "source": "wild", "case_score": 0.73, "max_score": 0.8386184573173523, "quality": ["possible_specular_glare"], "size": [1280, 679]}
+{"id": "wild_0169", "label": "clean", "set": "test", "source": "wild", "case_score": 0.49, "max_score": 0.6550450921058655, "quality": [], "size": [1280, 765]}
+{"id": "wild_0180", "label": "clean", "set": "test", "source": "wild", "case_score": 0.93, "max_score": 0.9650656580924988, "quality": [], "size": [1280, 1920]}
+{"id": "wild_0188", "label": "clean", "set": "test", "source": "wild", "case_score": 0.81, "max_score": 0.860863447189331, "quality": ["possible_specular_glare"], "size": [1280, 928]}
+{"id": "wild_0191", "label": "clean", "set": "test", "source": "wild", "case_score": 0.67, "max_score": 0.8540216088294983, "quality": ["possible_specular_glare"], "size": [1280, 960]}
+{"id": "wild_0192", "label": "clean", "set": "test", "source": "wild", "case_score": 0.81, "max_score": 0.9502111077308655, "quality": ["possible_specular_glare"], "size": [1280, 1398]}
+{"id": "wild_0198", "label": "clean", "set": "test", "source": "wild", "case_score": 0.81, "max_score": 0.876660168170929, "quality": [], "size": [1280, 853]}
+{"id": "wild_0209", "label": "clean", "set": "test", "source": "wild", "case_score": 0.65, "max_score": 0.7353188991546631, "quality": ["possible_specular_glare"], "size": [1280, 856]}
+{"id": "wild_0221", "label": "clean", "set": "test", "source": "wild", "case_score": 0.41, "max_score": 0.5294029116630554, "quality": ["possible_specular_glare"], "size": [1280, 1281]}
+{"id": "wild_0229", "label": "clean", "set": "test", "source": "wild", "case_score": 0.77, "max_score": 0.8647470474243164, "quality": ["possible_specular_glare"], "size": [1280, 853]}
+{"id": "wild_0236", "label": "clean", "set": "test", "source": "wild", "case_score": 0.07, "max_score": 0.24125155806541443, "quality": [], "size": [1280, 853]}
+{"id": "wild_0237", "label": "clean", "set": "test", "source": "wild", "case_score": 0.87, "max_score": 0.9510678052902222, "quality": [], "size": [1280, 853]}
+{"id": "wild_0243", "label": "clean", "set": "test", "source": "wild", "case_score": 0.91, "max_score": 0.9546880125999451, "quality": ["possible_specular_glare"], "size": [1280, 960]}
+{"id": "wild_0247", "label": "clean", "set": "test", "source": "wild", "case_score": 0.45, "max_score": 0.5207533240318298, "quality": [], "size": [1280, 853]}
+{"id": "wild_0249", "label": "clean", "set": "test", "source": "wild", "case_score": 0.89, "max_score": 0.9777176380157471, "quality": [], "size": [1280, 853]}
+{"id": "wild_0250", "label": "clean", "set": "test", "source": "wild", "case_score": 0.79, "max_score": 0.9012334942817688, "quality": [], "size": [1280, 853]}
+{"id": "wild_0255", "label": "clean", "set": "test", "source": "wild", "case_score": 0.73, "max_score": 0.7929137945175171, "quality": ["possible_specular_glare"], "size": [1280, 869]}
+{"id": "wild_0259", "label": "clean", "set": "test", "source": "wild", "case_score": 0.91, "max_score": 0.9469189047813416, "quality": ["possible_specular_glare"], "size": [1280, 960]}
+{"id": "wild_0270", "label": "clean", "set": "test", "source": "wild", "case_score": 0.83, "max_score": 0.9760643243789673, "quality": ["possible_specular_glare"], "size": [1280, 853]}
+{"id": "wild_0273", "label": "clean", "set": "test", "source": "wild", "case_score": 0.87, "max_score": 0.9139772653579712, "quality": ["possible_specular_glare"], "size": [1280, 711]}
+{"id": "wild_0274", "label": "clean", "set": "test", "source": "wild", "case_score": 0.93, "max_score": 0.9549423456192017, "quality": ["possible_specular_glare"], "size": [1280, 853]}
+{"id": "wild_0275", "label": "clean", "set": "test", "source": "wild", "case_score": 0.05, "max_score": 0.165535569190979, "quality": ["possible_specular_glare"], "size": [1280, 853]}
+{"id": "wild_0287", "label": "clean", "set": "test", "source": "wild", "case_score": 0.79, "max_score": 0.8513576984405518, "quality": [], "size": [1280, 853]}
+{"id": "wild_0307", "label": "clean", "set": "test", "source": "wild", "case_score": 0.67, "max_score": 0.8631995916366577, "quality": [], "size": [1280, 818]}
+{"id": "wild_0310", "label": "clean", "set": "test", "source": "wild", "case_score": 0.73, "max_score": 0.8610720634460449, "quality": ["possible_specular_glare"], "size": [1280, 854]}
+{"id": "wild_0311", "label": "clean", "set": "test", "source": "wild", "case_score": 0.25, "max_score": 0.4263446629047394, "quality": [], "size": [1280, 851]}
+{"id": "wild_0314", "label": "clean", "set": "test", "source": "wild", "case_score": 0.71, "max_score": 0.7964731454849243, "quality": ["possible_specular_glare"], "size": [1280, 853]}
+{"id": "wild_0320", "label": "clean", "set": "test", "source": "wild", "case_score": 0.05, "max_score": 0.2804534435272217, "quality": ["possible_specular_glare"], "size": [1280, 786]}
+{"id": "wild_0335", "label": "clean", "set": "test", "source": "wild", "case_score": 0.79, "max_score": 0.938204288482666, "quality": [], "size": [1280, 747]}
+{"id": "wild_0342", "label": "clean", "set": "test", "source": "wild", "case_score": 0.91, "max_score": 0.93348628282547, "quality": [], "size": [1280, 1173]}
+{"id": "wild_0344", "label": "clean", "set": "test", "source": "wild", "case_score": 0.95, "max_score": 0.9829186797142029, "quality": ["possible_specular_glare"], "size": [1280, 962]}
+{"id": "wild_0348", "label": "clean", "set": "test", "source": "wild", "case_score": 0.33, "max_score": 0.5171093344688416, "quality": [], "size": [1280, 758]}
+{"id": "wild_0355", "label": "clean", "set": "test", "source": "wild", "case_score": 0.09, "max_score": 0.31161734461784363, "quality": [], "size": [1280, 1707]}
+{"id": "wild_0362", "label": "clean", "set": "test", "source": "wild", "case_score": 0.87, "max_score": 0.9243931770324707, "quality": ["possible_specular_glare"], "size": [1280, 720]}
+{"id": "wild_0363", "label": "clean", "set": "test", "source": "wild", "case_score": 0.51, "max_score": 0.6878088116645813, "quality": [], "size": [1280, 853]}
+{"id": "wild_0366", "label": "clean", "set": "test", "source": "wild", "case_score": 0.93, "max_score": 0.9566508531570435, "quality": [], "size": [1280, 960]}
+{"id": "wild_0371", "label": "clean", "set": "test", "source": "wild", "case_score": 0.67, "max_score": 0.8196592330932617, "quality": [], "size": [1280, 960]}
+{"id": "wild_0388", "label": "clean", "set": "test", "source": "wild", "case_score": 0.67, "max_score": 0.771849513053894, "quality": ["possible_specular_glare"], "size": [1280, 1246]}
+{"id": "wild_0391", "label": "clean", "set": "test", "source": "wild", "case_score": 0.61, "max_score": 0.7786857485771179, "quality": ["possible_specular_glare"], "size": [1280, 854]}
+{"id": "wild_0394", "label": "clean", "set": "test", "source": "wild", "case_score": 0.15, "max_score": 0.3507329821586609, "quality": ["possible_specular_glare"], "size": [1280, 853]}
+{"id": "wild_0421", "label": "clean", "set": "test", "source": "wild", "case_score": 0.39, "max_score": 0.6480458974838257, "quality": ["possible_specular_glare"], "size": [1280, 1707]}
+{"id": "wild_0424", "label": "clean", "set": "test", "source": "wild", "case_score": 0.81, "max_score": 0.938719630241394, "quality": [], "size": [1280, 824]}
+{"id": "wild_0426", "label": "clean", "set": "test", "source": "wild", "case_score": 0.91, "max_score": 0.9546554684638977, "quality": ["possible_specular_glare"], "size": [1280, 930]}
+{"id": "wild_0433", "label": "clean", "set": "test", "source": "wild", "case_score": 0.67, "max_score": 0.8354051113128662, "quality": [], "size": [1280, 688]}

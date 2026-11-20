@@ -1,0 +1,46 @@
+{
+  "status": "development_only_not_production_approved",
+  "production_approved": false,
+  "selected_on": "expanded_coco_clean_and_user_asserted_part_hard_negative_candidate",
+  "architecture": "DINOv2 ViT-S/14 shared-backbone dense segmentation",
+  "selection": "ft_v3: v2 + 537 hard negatives mined from 1,674 clean Wikimedia photos (Indian-market models, reflective colours, parked and showroom scenes); threshold 0.381; development only, not production approved",
+  "artifacts": {
+    "checkpoint": {
+      "path": "runs/ft_v3_mined_hardneg/best.pt",
+      "sha256": "d674f468b28726977d31d73f2259300d03fda279d4d6b74219acbb258bbd772f",
+      "bytes": 98931668
+    },
+    "development_profile": {
+      "path": "runs/ft_v3_mined_hardneg/profile.json",
+      "sha256": "c97bf18aed9c9b88db40332c5dafab4eac0ff353e474abfda0c3714e039f4f1d",
+      "bytes": 866
+    },
+    "parts_model": {
+      "path": "runs/pilot_cc0_dinov2_parts_hardneg_long/parts/parts-v1.onnx",
+      "sha256": "1d3b42a93c87037799cddc0d3801387c2f3c7ff453d15976b962c83b5f5be455",
+      "bytes": 93044890,
+      "note": "optional; frozen damage backbone + part head; held-out mIoU 0.62"
+    }
+  },
+  "current_candidate_metrics": {
+    "protocol": "real tiled pipeline on the Adreno GPU",
+    "fresh_clean_photos_flagged": {
+      "previous_v2": "64/456 (14.0%)",
+      "v3": "15/456 (3.3%)"
+    },
+    "heldout_test_damage_caught": {
+      "previous_v2": "72/81 (88.9%)",
+      "v3": "71/81 (87.7%)"
+    },
+    "heldout_test_clean_flagged": {
+      "previous_v2": "3/122 (2.5%)",
+      "v3": "0/122 (0.0%)"
+    },
+    "production_approved": false
+  },
+  "warnings": [
+    "Threshold kept from v2; the old calibration split lacks the hard clean domain, so it could not set it reliably.",
+    "Clean photos are curated Wikimedia images, not customer phone photos; some may contain real wear.",
+    "NPU context graph is not rebuilt for this checkpoint."
+  ]
+}

@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vehicle Damage Scan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #2ab6b6; --teal-dark: #1f9a9a; --teal-pale: #c9f5ec;
+    --ink: #222b45; --text: #333; --muted: #8f9bb3; --line: #edf1f7; --line2: #e3e7ee; --page: #edf1f7;
+    --banner-bg: #fffbdd; --banner-ink: #e0a800;
+    --h1: #ffceba; --h2: #ffb598; --h3: #ffa986; --h4: #d17566; --h5: #b31900;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--text); font: 14px/1.5 "Exo 2", system-ui, -apple-system, "Segoe UI", sans-serif; }
+  button { font: inherit; cursor: pointer; }
+  .topbar { background: #fff; border-top: 2px solid var(--teal); height: 58px; display: flex; align-items: center; padding: 0 22px; gap: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+  .brand { display: flex; align-items: center; gap: 10px; color: #1c3f94; font-weight: 600; font-size: 22px; letter-spacing: .02em; }
+  .brand small { font-weight: 400; color: #1c3f94; font-size: 18px; letter-spacing: .04em; }
+  .page { max-width: 1320px; margin: 0 auto; padding: 0 0 24px; }
+  .banner { margin: 10px 8px 12px; padding: 8px 12px; background: var(--banner-bg); color: var(--banner-ink); font-size: 17px; display: flex; align-items: center; gap: 8px; }
+  .banner.ok { background: #e6f8ef; color: #1b9a5b; } .banner.info { background: #e8f1ff; color: #3366cc; } .banner.warn { background: #fff0e4; color: #d9640a; }
+  .banner svg { width: 20px; height: 20px; fill: currentColor; flex: none; }
+
+  .card { background: #fff; border: 1px solid var(--line); margin-bottom: 14px; }
+  .card > header { padding: 14px 19px; font-weight: 500; color: var(--ink); font-size: 14.5px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line2); }
+  .card > header.teal { border-bottom: 1px solid var(--teal); }
+  .card .body { padding: 16px 19px; }
+  .chev { background: none; border: 0; color: var(--teal); padding: 2px 6px; font-size: 18px; line-height: 1; transition: transform .15s; }
+  .collapsed .chev { transform: rotate(180deg); } .collapsed .body { display: none; }
+
+  .intake { display: grid; grid-template-columns: 340px 1fr; gap: 22px; }
+  @media (max-width: 860px) { .intake { grid-template-columns: 1fr; } }
+  #drop { border: 2px dashed var(--line2); padding: 22px 12px; text-align: center; cursor: pointer; color: var(--muted); transition: border-color .15s, background .15s; }
+  #drop:hover, #drop.over, #drop:focus-visible { border-color: var(--teal); background: #f4fcfc; outline: none; }
+  #drop strong { color: var(--ink); display: block; font-weight: 500; font-size: 15px; }
+  #picked { margin-top: 8px; color: var(--muted); font-size: 13px; }
+  .btn { border: 1px solid var(--teal); background: var(--teal); color: #fff; padding: 8px 18px; border-radius: 3px; font-size: 14px; }
+  .btn:hover:not(:disabled) { background: var(--teal-dark); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn.outline { background: #fff; color: var(--teal); }
+  .btn.outline:hover { background: #f0fbfb; }
+  .btn.block { width: 100%; margin-top: 10px; }
+  .link { background: none; border: 0; color: var(--teal); padding: 0; font-size: 13px; }
+  .samples { display: grid; grid-template-columns: repeat(auto-fill, minmax(116px, 1fr)); gap: 8px; }
+  .sample { border: 1px solid var(--line2); background: #fff; color: var(--text); padding: 0; text-align: left; overflow: hidden; }
+  .sample:hover { border-color: var(--teal); }
+  .sample img { width: 100%; height: 58px; object-fit: cover; display: block; }
+  .sample span { display: block; padding: 3px 6px; font-size: 11.5px; color: var(--muted); line-height: 1.25; }
+  .err { color: #d6453d; font-size: 13px; margin-top: 8px; min-height: 1em; }
+
+  .kv { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px 40px; font-size: 13.5px; color: var(--ink); }
+  .kv div span { color: var(--muted); }
+  .kv b { font-weight: 500; }
+
+  .tabs { display: flex; align-items: center; gap: 0; border-bottom: 1px solid var(--teal); padding: 0 19px; }
+  .tab { background: none; border: 0; color: var(--muted); padding: 14px 12px 12px; font-size: 14.5px; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tab.on { color: var(--teal); border-bottom-color: var(--teal); }
+  .tabs .sp { margin-left: auto; display: flex; }
+  .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; padding: 16px 19px 18px; }
+  .tile { position: relative; background: var(--line2); border: 2px solid transparent; padding: 0; aspect-ratio: 5 / 3.3; overflow: hidden; line-height: 0; text-align: left; }
+  .tile:hover, .tile.sel { border-color: var(--teal); }
+  .tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+  .tile .mk { position: absolute; transform: translate(0, -100%); max-width: 62%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; line-height: 1.25; padding: 0 4px; border-radius: 2px; background: #16a3ad; color: #fff; pointer-events: none; }
+  .tile .no { position: absolute; left: 5px; top: 4px; line-height: 1.2; font-size: 11px; color: #fff; background: rgba(0,0,0,.55); padding: 0 5px; border-radius: 2px; }
+  .tile .st { position: absolute; left: 0; right: 0; bottom: 0; line-height: 1.3; font-size: 11px; color: #fff; background: rgba(34,43,69,.72); padding: 2px 6px; }
+  .tile .wait { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 13px; line-height: 1.3; text-align: center; padding: 8px; }
+  .spin { width: 18px; height: 18px; border: 3px solid var(--line2); border-top-color: var(--teal); border-radius: 50%; animation: r .9s linear infinite; display: inline-block; vertical-align: -4px; margin-right: 8px; }
+  @keyframes r { to { transform: rotate(360deg); } }
+  .bar { height: 4px; background: var(--line2); } .bar i { display: block; height: 100%; background: var(--teal); width: 0; transition: width .3s; }
+
+  .carwrap { display: flex; justify-content: center; padding: 8px 0; }
+  svg.car { width: 100%; max-width: 900px; height: auto; }
+  .zone { fill: none; stroke: #a8a8a8; stroke-width: 1.3; }
+  .bodyline { fill: none; stroke: #a8a8a8; stroke-width: 2; }
+  .foot { text-align: center; border-top: 1px solid var(--line); padding: 14px 10px 16px; color: var(--ink); }
+  .legend { display: flex; gap: 22px; justify-content: center; align-items: center; margin-top: 8px; color: var(--muted); font-size: 13px; }
+  .legend .d { display: inline-block; width: 18px; height: 18px; border-radius: 50%; vertical-align: -4px; margin-right: 6px; }
+  .note { color: var(--muted); font-size: 12.5px; margin-top: 8px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th { text-align: left; color: var(--muted); font-weight: 400; padding: 12px 10px; font-size: 14px; }
+  td { padding: 11px 10px; border-top: 1px solid var(--line); color: var(--muted); vertical-align: middle; }
+  td.panel { text-transform: capitalize; }
+  tr.row { cursor: pointer; } tr.row:hover td { background: #f6fbfb; }
+  .thumb { position: relative; width: 44px; height: 32px; background: #333; overflow: hidden; display: block; }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; opacity: .75; }
+  .thumb b { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; font-weight: 500; text-shadow: 0 1px 2px #000; }
+  .dots { display: inline-flex; gap: 5px; vertical-align: middle; }
+  .dots i { width: 10px; height: 10px; border-radius: 50%; background: #e9edf3; }
+  .flag { color: #c58a00; font-size: 12px; }
+  .dline { display: flex; align-items: center; gap: 8px; margin: 2px 0; }
+  .matrix td, .matrix th { text-align: center; } .matrix td:first-child, .matrix th:first-child { text-align: left; }
+  .sev { display: inline-flex; align-items: center; justify-content: center; min-width: 26px; height: 26px; border-radius: 6px; color: #4a1d0e; font-weight: 600; }
+  .sev-1 { background: var(--h1); } .sev-2 { background: var(--h2); } .sev-3 { background: var(--h3); } .sev-4 { background: var(--h4); color: #fff; } .sev-5 { background: var(--h5); color: #fff; }
+  .sub { display: block; font-size: 11px; color: var(--muted); }
+  .dash { color: var(--line2); }
+  .pills { display: flex; gap: 8px; padding: 12px 19px; align-items: center; border-bottom: 1px solid var(--teal); }
+  .pill { border: 1px solid var(--teal); background: #fff; color: var(--teal); border-radius: 999px; padding: 2px 14px; font-size: 12.5px; }
+  .pill.on { background: var(--teal); color: #fff; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 16px 19px; }
+  .chip { border: 1px solid var(--line2); border-radius: 999px; padding: 2px 12px; color: var(--muted); text-transform: capitalize; font-size: 13px; }
+  .chip.bad { border-color: #f0a9a0; color: #c0392b; }
+  .more { padding: 10px 19px 14px; border-top: 1px solid var(--line); }
+
+  .detail { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 20px; }
+  @media (max-width: 960px) { .detail { grid-template-columns: 1fr; } }
+  .toolbar { display: flex; gap: 6px; margin-bottom: 8px; }
+  .toggle { border: 1px solid var(--teal); background: #fff; color: var(--teal); border-radius: 999px; padding: 2px 12px; font-size: 13px; }
+  .toggle[aria-pressed="true"] { background: var(--teal); color: #fff; }
+  .stage { position: relative; background: #000; line-height: 0; }
+  .stage img.b { width: 100%; height: auto; display: block; }
+  .stage img.layer { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .stage svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .stage rect { fill: none; stroke: #ffe14a; stroke-width: 3; vector-effect: non-scaling-stroke; stroke-dasharray: 8 5; opacity: 0; } .stage rect.on { opacity: 1; }
+  .why { color: var(--muted); font-size: 13px; margin: 4px 0; }
+  details { margin-top: 12px; color: var(--muted); font-size: 13px; } details summary { cursor: pointer; color: var(--ink); }
+  .rub { width: auto; margin: 8px 0; } .rub td, .rub th { border: 1px solid var(--line2); padding: 3px 9px; text-align: center; font-size: 12.5px; color: var(--text); }
+  textarea { width: 100%; min-height: 66px; border: 1px solid var(--line2); padding: 10px; font: inherit; resize: vertical; }
+  .right { text-align: right; margin-top: 8px; }
+  footer { padding: 14px 22px; color: var(--muted); background: #fff; border-top: 1px solid var(--line2); font-size: 13px; margin-top: 8px; }
+  .empty { color: var(--muted); text-align: center; padding: 26px 10px; }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="brand">
+    <svg width="34" height="22" viewBox="0 0 34 22" fill="none" stroke="#1c3f94" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M2 15 L5 8 Q6 6 9 6 H21 Q24 6 26 9 L30 12 Q32 13 32 15 V17 H2 Z"/><circle cx="9" cy="17.5" r="2.6" fill="#fff"/><circle cx="25" cy="17.5" r="2.6" fill="#fff"/></svg>
+    VEHICLE DAMAGE <small>SCAN</small>
+  </div>
+</div>
+
+<div class="page">
+  <div id="banner" class="banner info"></div>
+
+  <section class="card" id="uploadCard">
+    <header class="teal"><span>Upload photos</span><button class="chev" id="upToggle" aria-label="Collapse">&#8963;</button></header>
+    <div class="body">
+      <div class="intake">
+        <div>
+          <div id="drop" tabindex="0" role="button" aria-label="Choose or drop car photos"><strong>Drop photos or click to choose</strong>Several angles work best. JPEG, PNG or WebP</div>
+          <input id="file" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden>
+          <div id="picked"></div>
+          <button id="go" class="btn block" disabled>Scan photos</button>
+          <div id="err" class="err" role="alert"></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;color:var(--muted);margin-bottom:8px"><span>Or try a sample</span><button class="link" id="clear" type="button">Clear results</button></div>
+          <div id="samples" class="samples"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="results" style="display:none">
+    <section class="card" id="detailsCard">
+      <header class="teal"><span>Scan details</span><button class="chev" id="detToggle" aria-label="Collapse">&#8963;</button></header>
+      <div class="body"><div class="kv" id="kv"></div></div>
+    </section>
+
+    <section class="card">
+      <div class="tabs"><button class="tab on" id="tabA">Analysed (0)</button><div class="sp"><button class="tab" id="tabU">Uploads</button></div></div>
+      <div class="bar" id="barWrap" style="display:none"><i id="progBar"></i></div>
+      <div id="gallery" class="gallery"></div>
+    </section>
+
+    <section class="card">
+      <header>Damage Heatmap</header>
+      <div class="body" style="padding:6px 19px"><div class="carwrap" id="carHost"></div></div>
+      <div class="foot">Damage intensity<div class="legend" id="legend"></div>
+        <div class="note">Highest intensity seen in any photo. The side (left/right, as seen from the driver's seat) comes from the photo angle; when the angle does not tell, a side panel lights up on both sides.</div></div>
+    </section>
+
+    <section class="card">
+      <header class="teal">Damage matrix</header>
+      <div class="body" id="matrix"></div>
+    </section>
+
+    <section class="card">
+      <header class="teal">Damage summary</header>
+      <div id="summary"></div>
+    </section>
+
+    <section class="card">
+      <div class="pills"><span style="color:var(--ink);margin-right:6px">Coverage</span>
+        <button class="pill on" id="pDet">Detected panels</button><button class="pill" id="pMiss">Not detected / missing panels</button></div>
+      <div id="coverage"></div>
+    </section>
+
+    <section class="card" id="detailCard" style="display:none">
+      <header class="teal"><span id="detailTitle">Photo detail</span></header>
+      <div class="body">
+        <div class="detail">
+          <div><div class="toolbar" id="toolbar"></div>
+            <div class="stage"><img id="base" class="b" alt="Vehicle photo"><img id="lPanels" class="layer" alt=""><img id="lDamage" class="layer" alt=""><svg id="boxes" preserveAspectRatio="none"></svg></div></div>
+          <div><div id="detailInfo"></div><div id="panelsBox"></div>
+            <details><summary>How the intensity is rated</summary>
+              <p>Each damage is rated 1 (lowest) to 5 (highest) from its type and how much of its panel it covers.</p>
+              <table class="rub"><tr><th>Dent depth</th><th>0–20%</th><th>20–40%</th><th>40–60%</th><th>60–80%</th><th>80–100%</th></tr>
+                <tr><td>d1</td><td>1</td><td>2</td><td>3</td><td>4</td><td>4</td></tr><tr><td>d2</td><td>2</td><td>3</td><td>4</td><td>5</td><td>5</td></tr><tr><td>d3</td><td>3</td><td>4</td><td>5</td><td>5</td><td>5</td></tr></table>
+              <p>Scratches: under 20% of the panel = 1, otherwise 3. Each damage type on a panel is rated on its own total area, and the panel shows its worst rating. Not in the supplied rubric: paint damage is rated like a scratch, and cracks, breakage and deformation are rated on the d3 row by panel area. Dent depth is not measured yet, so dents are assumed d2 and marked "assumed". The model often confuses scratches, paint damage and cracks, so check the type before trusting a high rating.</p></details></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <header class="teal">Remarks</header>
+      <div class="body"><textarea id="remarks" placeholder="Remarks"></textarea><div class="right"><span id="saved" class="why"></span> <button class="btn" id="save">Save</button></div></div>
+    </section>
+  </div>
+</div>
+<footer>Development model, not production approved. Results are a triage aid, not a repair quote. Each photo takes a few seconds on the GPU and about a minute on CPU.</footer>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; };
+const NS = "http://www.w3.org/2000/svg";
+const svgEl = (tag, attrs) => { const e = document.createElementNS(NS, tag); Object.entries(attrs || {}).forEach(([k, v]) => e.setAttribute(k, v)); return e; };
+const pretty = (s) => (s || "").replace(/_/g, " ");
+const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+// panels are keyed "part|side"; side is "left", "right" or "" when the photo angle does not tell
+const zkey = (p) => `${p.part}|${p.side || ""}`;
+const zpart = (key) => key.split("|")[0];
+const zside = (key) => key.split("|")[1] || "";
+const zname = (key) => (zside(key) ? cap(zside(key)) + " " : "") + pretty(zpart(key));
+const LABEL = {1: "Trivial", 2: "Minor", 3: "Moderate", 4: "Major", 5: "Replace"};
+const HEAT = {1: "#ffceba", 2: "#ffb598", 3: "#ffa986", 4: "#d17566", 5: "#b31900"};
+const TYPES = ["dent", "scratch", "crack_or_breakage", "paint_damage", "deformation_or_detachment"];
+const TYPE_SHORT = {dent: "Dent", scratch: "Scratch", crack_or_breakage: "Crack / break", paint_damage: "Paint", deformation_or_detachment: "Deformed"};
+const DECISION = {damage_detected: "Damage detected", no_damage_detected: "No damage found", manual_review_required: "Needs a human look", recapture_required: "Retake the photo"};
+const ALERT = '<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><circle cx="12" cy="16" r="1"/><path d="M12 7a1 1 0 0 0-1 1v5a1 1 0 0 0 2 0V8a1 1 0 0 0-1-1z"/></svg>';
+
+let queue = [], scans = [], selected = -1, running = false, view = "analysed", coverTab = "det", showClean = false;
+let batchDone = 0, batchTotal = 0;
+const scanId = "S-" + Date.now().toString(36).toUpperCase().slice(-6);
+const started = new Date();
+
+function showError(msg) { $("err").textContent = msg || ""; }
+function addFiles(files) {
+  const ok = [...files].filter((f) => /^image\/(jpeg|png|webp)$/.test(f.type));
+  if (files.length && !ok.length) { showError("Upload JPEG, PNG or WebP images."); return; }
+  showError("");
+  queue.push(...ok.map((f) => ({ name: f.name, file: f })));
+  $("picked").textContent = queue.length ? `${queue.length} photo(s) ready` : "";
+  $("go").disabled = !queue.length || running;
+}
+$("drop").onclick = () => $("file").click();
+$("drop").onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); $("file").click(); } };
+$("file").onchange = (e) => { addFiles(e.target.files); e.target.value = ""; };
+["dragover", "dragenter"].forEach((t) => $("drop").addEventListener(t, (e) => { e.preventDefault(); $("drop").classList.add("over"); }));
+["dragleave", "drop"].forEach((t) => $("drop").addEventListener(t, (e) => { e.preventDefault(); $("drop").classList.remove("over"); }));
+$("drop").addEventListener("drop", (e) => addFiles(e.dataTransfer.files));
+$("clear").onclick = () => { if (running) return; scans = []; selected = -1; queue = []; $("picked").textContent = ""; $("go").disabled = true; renderAll(); };
+$("go").onclick = () => startQueue();
+$("upToggle").onclick = () => $("uploadCard").classList.toggle("collapsed");
+$("detToggle").onclick = () => $("detailsCard").classList.toggle("collapsed");
+$("tabA").onclick = () => { view = "analysed"; renderGallery(); };
+$("tabU").onclick = () => { view = "uploads"; renderGallery(); };
+$("pDet").onclick = () => { coverTab = "det"; renderCoverage(); };
+$("pMiss").onclick = () => { coverTab = "miss"; renderCoverage(); };
+$("remarks").value = localStorage.getItem("scan-remarks") || "";
+$("save").onclick = () => { localStorage.setItem("scan-remarks", $("remarks").value); $("saved").textContent = "Saved on this device"; };
+
+async function startQueue() {
+  if (running || !queue.length) return;
+  running = true; $("go").disabled = true;
+  const batch = queue.splice(0); $("picked").textContent = "";
+  const first = scans.length;
+  batch.forEach((b) => scans.push({ name: b.name, status: "waiting", src: b.file ? URL.createObjectURL(b.file) : b.url, job: b }));
+  batchTotal = batch.length; batchDone = 0; $("barWrap").style.display = "block"; renderAll();
+  for (let i = 0; i < batch.length; i++) {
+    const s = scans[first + i]; s.status = "scanning"; renderGallery(); renderBanner();
+    try {
+      let res;
+      if (s.job.file) { const body = new FormData(); body.append("file", s.job.file); res = await fetch("/api/damage/predict", { method: "POST", body }); }
+      else res = await fetch(`/api/damage/predict/sample/${s.job.sample}`);
+      if (!res.ok) throw new Error((await res.json().catch(() => ({}))).detail || `Server error ${res.status}`);
+      s.result = await res.json(); s.status = "done";
+    } catch (err) { s.status = "error"; s.error = err.message; }
+    batchDone = i + 1; $("progBar").style.width = `${(batchDone / batchTotal) * 100}%`;
+    if (selected < 0 && s.status === "done") selected = first + i;
+    renderAll();
+  }
+  running = false; $("barWrap").style.display = "none"; $("go").disabled = !queue.length; renderBanner();
+  if (queue.length) startQueue();
+}
+
+const typeLines = (p) => { const box = el("div"); (p.damage || []).forEach((d) => { const line = el("div", "dline"); line.append(sev(d.severity.score), el("span", null, `${cap(pretty(d.class_name))} · ${d.area_pct_of_panel.toFixed(0)}% of panel`)); line.title = d.severity.reason; box.append(line); }); return box; };
+const dots = (n) => { const d = el("span", "dots"); for (let i = 1; i <= 5; i++) { const x = el("i"); if (i <= n) x.style.background = HEAT[n]; d.append(x); } d.title = `Intensity ${n} of 5 (${LABEL[n]})`; return d; };
+const sev = (n) => { const s = el("span", `sev sev-${n}`, String(n)); s.title = `${LABEL[n]} (${n} of 5)`; return s; };
+
+/* ---------- banner + details ---------- */
+function renderBanner() {
+  const b = $("banner"); const done = scans.filter((s) => s.result);
+  let cls = "info", text = "Upload photos of the car to begin";
+  if (running) { cls = "info"; text = `Analysing photo ${Math.min(batchDone + 1, batchTotal)} of ${batchTotal}…`; }
+  else if (done.length) {
+    const agg = aggregate(); const n = Object.keys(agg.zones).length; const top = Math.max(0, ...Object.values(agg.zones).map((z) => z.rating));
+    if (n) { cls = ""; text = `Waiting for your review: ${n} damaged panel${n > 1 ? "s" : ""}, highest intensity ${top} of 5`; }
+    else if (done.every((s) => s.result.decision === "no_damage_detected")) { cls = "ok"; text = `No damage found in ${done.length} photo${done.length > 1 ? "s" : ""}`; }
+    else { cls = "warn"; text = "No damaged panel identified, but some photos need a human look or a retake"; }
+  }
+  b.className = "banner " + cls; b.innerHTML = ALERT; b.append(document.createTextNode(" " + text));
+}
+function renderDetails() {
+  const kv = $("kv"); kv.replaceChildren();
+  const done = scans.filter((s) => s.result); const agg = aggregate();
+  const dev = done.length ? done[0].result.runtime.device : "—";
+  const ms = done.reduce((a, s) => a + s.result.runtime.elapsed_ms, 0);
+  const add = (lines) => { const d = el("div"); lines.forEach(([k, v]) => { const r = el("div"); if (k) r.append(el("span", null, k + " : ")); r.append(el("b", null, v)); d.append(r); }); kv.append(d); };
+  add([["Scan ID", scanId], ["Started", started.toLocaleString()], ["Photos", `${scans.length} (${done.length} analysed)`]]);
+  add([["Damaged panels", String(Object.keys(agg.zones).length)], ["Highest intensity", String(Math.max(0, ...Object.values(agg.zones).map((z) => z.rating)) || "none")], ["Photos needing review", String(done.filter((s) => s.result.manual_review).length)]]);
+  add([["Engine", dev], ["Part model", done.length ? done[0].result.part_model : "—"], ["Compute time", `${(ms / 1000).toFixed(1)} s`]]);
+}
+
+/* ---------- gallery ---------- */
+function renderGallery() {
+  const g = $("gallery"); g.replaceChildren();
+  const done = scans.filter((s) => s.status === "done").length;
+  $("tabA").textContent = `Analysed (${done}${done !== scans.length ? " of " + scans.length : ""})`;
+  $("tabA").className = "tab" + (view === "analysed" ? " on" : ""); $("tabU").className = "tab" + (view === "uploads" ? " on" : "");
+  scans.forEach((s, i) => {
+    const t = el("button", "tile" + (i === selected ? " sel" : "")); t.type = "button";
+    const raw = el("img"); raw.alt = s.name; raw.src = view === "uploads" || !s.result ? s.src : "data:image/jpeg;base64," + s.result.layers.image_jpeg_b64; t.append(raw);
+    t.append(el("span", "no", String(i + 1)));
+    if (view === "analysed" && s.result) {
+      const ov = el("img"); ov.alt = ""; ov.src = "data:image/png;base64," + s.result.layers.panel_overlay_png_b64; t.append(ov);
+      const W = s.result.image.width, H = s.result.image.height;
+      (s.result.detections || []).forEach((d) => {
+        const m = el("span", "mk", TYPE_SHORT[d.class_name] || pretty(d.class_name));
+        m.title = `${pretty(d.class_name)}${d.part ? " on " + (d.side ? d.side + " " : "") + pretty(d.part) : ""}, intensity ${d.severity.score}`;
+        m.style.left = `min(${(d.bbox[0] / W) * 100}%, 62%)`; m.style.top = `${Math.max(14, (d.bbox[1] / H) * 100)}%`; t.append(m);
+      });
+      t.append(el("span", "st", `${DECISION[s.result.decision] || s.result.decision}${s.result.overall_severity ? " · " + s.result.overall_severity + "/5" : ""}`));
+    } else if (!s.result) {
+      const w = el("span", "wait"); if (s.status === "scanning") w.append(el("span", "spin")); w.append(document.createTextNode(s.status === "error" ? "Failed: " + s.error : s.status === "scanning" ? "Scanning…" : "Waiting…")); t.append(w);
+    }
+    t.onclick = () => { if (s.result) { selected = i; renderGallery(); renderDetail(); $("detailCard").scrollIntoView({ behavior: "smooth", block: "nearest" }); } };
+    g.append(t);
+  });
+}
+
+/* ---------- aggregate ---------- */
+function aggregate() {
+  const zones = {}, matrix = {}, seen = {}, best = {};
+  scans.forEach((s, idx) => {
+    if (!s.result) return;
+    (s.result.parts_visible || []).forEach((p) => { seen[p.part] = (seen[p.part] || 0) + 1; });
+    (s.result.panels || []).forEach((p) => {
+      const k = zkey(p);
+      const z = zones[k] || (zones[k] = { rating: 0, photos: 0 }); z.rating = Math.max(z.rating, p.rating); z.photos += 1;
+      if (!best[k] || p.rating > best[k].rating) best[k] = { ...p, photo: idx };
+      (p.damage || []).forEach((d) => { const row = matrix[k] || (matrix[k] = {}); const c = row[d.class_name] || (row[d.class_name] = { rating: 0, photos: 0 }); c.rating = Math.max(c.rating, d.severity.score); c.photos += 1; });
+    });
+  });
+  const catalogue = (scans.find((s) => s.result) || { result: { part_catalogue: [] } }).result.part_catalogue || [];
+  return { zones, matrix, seen, best, catalogue };
+}
+
+/* ---------- top-down heatmap on the supplied line art (front is at the right) ---------- */
+const CAR_IMG = window.CAR_IMG || "/static/car_topdown.png";
+const OY = 280; // the PNG was cropped from y=280 of the 1000x1000 original
+// part -> blobs [cx, cy, rx, ry] in original-image coordinates; two entries = left and right side of the car
+const ZONES = {
+  front_bumper: [[962, 500, 34, 100]], grille: [[968, 500, 22, 50]],
+  headlight: [[958, 436, 22, 22], [958, 566, 22, 22]],
+  bonnet: [[820, 500, 115, 140]], windshield: [[662, 500, 70, 145]],
+  roof: [[420, 500, 155, 125]], rear_windshield: [[150, 500, 95, 125]],
+  boot: [[32, 500, 28, 150]], rear_bumper: [[14, 500, 18, 150]],
+  tail_light: [[40, 372, 25, 30], [40, 628, 25, 30]],
+  front_window: [[525, 358, 85, 22], [525, 642, 85, 22]], rear_window: [[325, 358, 115, 22], [325, 642, 115, 22]],
+  front_door: [[540, 330, 90, 24], [540, 670, 90, 24]], rear_door: [[330, 328, 100, 24], [330, 672, 100, 24]],
+  fender: [[800, 330, 100, 24], [800, 670, 100, 24]],
+  front_wheel: [[830, 310, 40, 18], [830, 690, 40, 18]], rear_wheel: [[170, 312, 40, 18], [170, 688, 40, 18]],
+  side_mirror: [[612, 318, 22, 34], [612, 682, 22, 34]], side_skirt: [[560, 322, 120, 12], [560, 678, 120, 12]],
+  quarter_panel: [[110, 338, 70, 26], [110, 662, 70, 26]],
+};
+function renderCar(zones) {
+  const host = $("carHost"); host.replaceChildren();
+  const svg = svgEl("svg", { viewBox: "-30 -45 1060 530", class: "car", role: "img", "aria-label": "Top-down car with damaged panels highlighted" });
+  const defs = svgEl("defs"); const f = svgEl("filter", { id: "soft", x: "-60%", y: "-60%", width: "220%", height: "220%" }); f.append(svgEl("feGaussianBlur", { stdDeviation: "7" })); defs.append(f); svg.append(defs);
+  const blobs = svgEl("g"); svg.append(blobs);
+  svg.append(svgEl("image", { href: CAR_IMG, x: 0, y: 0, width: 1000, height: 440 }));
+  Object.entries(zones).sort((a, b) => a[1].rating - b[1].rating).forEach(([key, z]) => {
+    const list = ZONES[zpart(key)] || [];
+    // two blobs = [car's left (top of the drawing), car's right (bottom)]; draw one when the side is known
+    const chosen = list.length === 2 && zside(key) ? [list[zside(key) === "left" ? 0 : 1]] : list;
+    const part = zname(key) + (list.length === 2 && !zside(key) ? " (side unknown)" : "");
+    chosen.forEach(([cx, cy, rx, ry]) => {
+      const e = svgEl("ellipse", { cx, cy: cy - OY, rx: rx * 0.85 + 6, ry: ry * 0.85 + 6, fill: HEAT[z.rating], opacity: ".88", filter: "url(#soft)" });
+      const t = svgEl("title"); t.textContent = `${pretty(part)}: intensity ${z.rating} (${LABEL[z.rating]}), seen in ${z.photos} photo(s)`; e.append(t); blobs.append(e);
+    });
+  });
+  host.append(svg);
+  const lg = $("legend"); lg.replaceChildren();
+  [1, 2, 3, 4, 5].forEach((n) => { const w = el("span"); const d = el("span", "d"); d.style.background = HEAT[n]; w.append(d, document.createTextNode(String(n))); lg.append(w); });
+}
+
+/* ---------- matrix ---------- */
+function renderMatrix(matrix) {
+  const box = $("matrix"); box.replaceChildren();
+  const parts = Object.keys(matrix).sort((a, b) => Math.max(...Object.values(matrix[b]).map((c) => c.rating)) - Math.max(...Object.values(matrix[a]).map((c) => c.rating)));
+  if (!parts.length) { box.append(el("div", "empty", scans.some((s) => s.result) ? "No damaged panel identified in these photos." : "Scan photos to fill the matrix.")); return; }
+  const t = el("table"); t.className = "matrix"; const head = el("tr"); head.append(el("th", null, "Panel")); TYPES.forEach((ty) => head.append(el("th", null, TYPE_SHORT[ty]))); head.append(el("th", null, "Max")); t.append(head);
+  parts.forEach((p) => {
+    const tr = el("tr"); tr.append(el("td", "panel", zname(p))); let max = 0;
+    TYPES.forEach((ty) => { const td = el("td"); const c = matrix[p][ty];
+      if (c) { max = Math.max(max, c.rating); td.append(sev(c.rating), el("span", "sub", `${c.photos} photo${c.photos > 1 ? "s" : ""}`)); } else td.append(el("span", "dash", "–")); tr.append(td); });
+    const tm = el("td"); tm.append(sev(max)); tr.append(tm); t.append(tr);
+  });
+  box.append(t);
+  box.append(el("div", "note", "Each cell shows the highest intensity (1–5) and how many photos show that damage. The same damage seen from two angles is not counted as separate damage."));
+}
+
+/* ---------- summary (like an estimate table, without prices) ---------- */
+function thumbFor(idx) { const s = scans[idx]; const d = el("span", "thumb"); const im = el("img"); im.alt = ""; im.src = s.src; d.append(im, el("b", null, String(idx + 1))); return d; }
+function renderSummary(agg) {
+  const box = $("summary"); box.replaceChildren();
+  const rows = Object.entries(agg.best).sort((a, b) => b[1].rating - a[1].rating);
+  if (!rows.length) { box.append(el("div", "empty", scans.some((s) => s.result) ? "No damaged panel identified." : "Nothing to show yet.")); return; }
+  const t = el("table"); const h = el("tr"); ["", "Panel", "Damage description", "Damage intensity", "Photos"].forEach((x) => h.append(el("th", null, x))); t.append(h);
+  rows.forEach(([part, b]) => {
+    const tr = el("tr", "row"); const c0 = el("td"); c0.append(thumbFor(b.photo));
+    const desc = el("td", "desc"); desc.append(typeLines(b));
+    if (b.depth_assumed) desc.append(el("div", "flag", "dent depth assumed"));
+    const di = el("td"); di.append(dots(b.rating));
+    tr.append(c0, el("td", "panel", zname(part)), desc, di, el("td", null, String(agg.zones[part].photos)));
+    tr.onclick = () => { selected = b.photo; renderGallery(); renderDetail(); $("detailCard").scrollIntoView({ behavior: "smooth", block: "nearest" }); };
+    t.append(tr);
+  });
+  const damagedParts = new Set(Object.keys(agg.zones).map(zpart));
+  const clean = Object.keys(agg.seen).filter((p) => !damagedParts.has(p));
+  if (showClean) clean.forEach((p) => { const tr = el("tr"); tr.append(el("td"), el("td", "panel", pretty(p)), el("td", null, "No damage found"), el("td"), el("td", null, String(agg.seen[p]))); t.append(tr); });
+  box.append(t);
+  if (clean.length) { const m = el("div", "more"); const b = el("button", "btn outline", (showClean ? "Hide" : "Show") + " clean panels"); b.onclick = () => { showClean = !showClean; renderSummary(agg); }; m.append(b); box.append(m); }
+}
+
+/* ---------- coverage ---------- */
+function renderCoverage() {
+  $("pDet").className = "pill" + (coverTab === "det" ? " on" : ""); $("pMiss").className = "pill" + (coverTab === "miss" ? " on" : "");
+  const agg = aggregate(); const box = $("coverage"); box.replaceChildren();
+  if (!scans.some((s) => s.result)) { box.append(el("div", "empty", "Scan photos to see which panels were covered.")); return; }
+  if (!agg.catalogue.length) { box.append(el("div", "empty", "The part model is not loaded, so panel coverage is unknown.")); return; }
+  const wrap = el("div", "chips");
+  const partMax = {}; Object.entries(agg.zones).forEach(([k, z]) => { partMax[zpart(k)] = Math.max(partMax[zpart(k)] || 0, z.rating); });
+  if (coverTab === "det") Object.keys(agg.seen).sort().forEach((p) => wrap.append(el("span", "chip" + (partMax[p] ? " bad" : ""), pretty(p) + (partMax[p] ? ` · ${partMax[p]}` : ""))));
+  else { const missing = agg.catalogue.filter((p) => !agg.seen[p] && p !== "license_plate"); if (!missing.length) wrap.append(el("span", "why", "Every panel was visible in at least one photo.")); missing.forEach((p) => wrap.append(el("span", "chip", pretty(p)))); }
+  box.append(wrap);
+  box.append(el("div", "more why", coverTab === "det" ? "Panels seen in at least one photo. Red outline means damage was found." : "Panels not seen in any photo. Add photos from other angles to check them."));
+}
+
+/* ---------- single-photo detail ---------- */
+function renderDetail() {
+  const s = scans[selected]; const card = $("detailCard");
+  if (!s || !s.result) { card.style.display = "none"; return; }
+  card.style.display = "block";
+  const r = s.result, L = r.layers, W = r.image.width, H = r.image.height;
+  $("detailTitle").textContent = `Photo ${selected + 1}: ${s.name}`;
+  $("base").src = "data:image/jpeg;base64," + L.image_jpeg_b64; $("lPanels").src = "data:image/png;base64," + L.panel_overlay_png_b64; $("lDamage").src = "data:image/png;base64," + L.damage_overlay_png_b64;
+  const svg = $("boxes"); svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.replaceChildren();
+  const tb = $("toolbar"); tb.replaceChildren();
+  [["Damaged panels", "lPanels"], ["Damage mask", "lDamage"]].forEach(([name, id]) => {
+    const b = el("button", "toggle", name); b.type = "button"; b.setAttribute("aria-pressed", "true"); $(id).style.display = "block";
+    b.onclick = () => { const now = b.getAttribute("aria-pressed") !== "true"; b.setAttribute("aria-pressed", String(now)); $(id).style.display = now ? "block" : "none"; }; tb.append(b);
+  });
+  const info = $("detailInfo"); info.replaceChildren();
+  const head = el("div", null, `${DECISION[r.decision] || r.decision}${r.overall_severity ? " · highest intensity " + r.overall_severity + " (" + LABEL[r.overall_severity] + ")" : ""}`); head.style.fontWeight = "500"; info.append(head, el("p", "why", r.reason));
+  const V = { left: "car's left side", right: "car's right side", front: "front of the car", rear: "rear of the car", unknown: "unclear (side panels shown on both sides)" };
+  if (r.view) info.append(el("p", "why", `Photo angle: ${V[r.view.view] || r.view.view}`));
+  if (r.decision_reasons && r.decision_reasons.length) info.append(el("p", "why", "Review reasons: " + r.decision_reasons.map((x) => pretty(x.replace("quality:", ""))).join(", ")));
+  const box = (bb) => { const rc = svgEl("rect", { x: bb[0], y: bb[1], width: bb[2] - bb[0], height: bb[3] - bb[1] }); svg.append(rc); return rc; };
+  const pb = $("panelsBox"); pb.replaceChildren(); const panels = r.panels || [];
+  if (panels.length) {
+    const t = el("table"); const h = el("tr"); ["Panel", "Damage (type · rating)", "Total of panel", "Panel intensity"].forEach((x) => h.append(el("th", null, x))); t.append(h);
+    panels.forEach((p) => {
+      const rc = box(p.bbox); const tr = el("tr", "row"); tr.tabIndex = 0;
+      const c4 = el("td"); c4.append(dots(p.rating)); if (p.depth_assumed) c4.append(el("div", "flag", "dent depth assumed"));
+      tr.append(el("td", "panel", zname(zkey(p))), (() => { const c = el("td", "desc"); c.append(typeLines(p)); return c; })(), el("td", null, `${p.damage_area_pct_of_panel.toFixed(1)}%`), c4);
+      const on = () => rc.classList.add("on"), off = () => rc.classList.remove("on"); tr.onmouseenter = on; tr.onmouseleave = off; tr.onfocus = on; tr.onblur = off; t.append(tr);
+    });
+    pb.append(t);
+  } else pb.append(el("p", "why", r.part_model === "unavailable" ? "The part model is not loaded, so damage cannot be assigned to panels." : "No damaged panel was identified in this photo."));
+  [...(r.detections || []), ...(r.review_candidates || [])].filter((d) => !d.part).forEach((d) => { box(d.bbox); pb.append(el("p", "why", `${pretty(d.class_name)} on an unidentified panel · intensity ${d.severity.score} · confidence ${(d.score * 100).toFixed(0)}%`)); });
+}
+
+function renderAll() {
+  $("results").style.display = scans.length ? "block" : "none";
+  renderBanner(); renderDetails(); renderGallery();
+  const agg = aggregate(); renderCar(agg.zones); renderMatrix(agg.matrix); renderSummary(agg); renderCoverage(); renderDetail();
+}
+
+(async () => {
+  try {
+    const list = await (await fetch("/api/damage/samples")).json();
+    list.forEach((s) => {
+      const b = el("button", "sample"); b.type = "button"; const img = el("img"); img.src = s.url; img.alt = s.label; img.loading = "lazy";
+      b.append(img, el("span", null, s.label)); b.onclick = () => { queue.push({ name: s.file, sample: s.id, url: s.url }); startQueue(); }; $("samples").append(b);
+    });
+  } catch { $("samples").textContent = "Samples unavailable."; }
+  renderAll();
+})();
+</script>
+</body>
+</html>

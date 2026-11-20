@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="509.982031pt" height="173.170832pt" viewBox="0 0 509.982031 173.170832" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-11-04T14:38:49.239348</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 173.170832 
+L 509.982031 173.170832 
+L 509.982031 0 
+L 0 0 
+L 0 173.170832 
+z
+" style="fill: none"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 112.182031 142.200969 
+L 502.782031 142.200969 
+L 502.782031 20.232969 
+L 112.182031 20.232969 
+L 112.182031 142.200969 
+z
+" style="fill: none"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <path d="M 127.205108 142.200969 
+L 127.205108 20.232969 
+" clip-path="url(#p830c573e43)" style="fill: none; stroke: #e6e9ef; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_2"/>
+     <g id="text_1">
+      <text style="font-size: 8.5px; font-family: 'Segoe UI', 'Arial'; text-anchor: middle; fill: #52514e" x="127.205108" y="151.889201" transform="rotate(-0 127.205108 151.889201)">400</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_3">
+      <path d="M 187.297416 142.200969 
+L 187.297416 20.232969 
+" clip-path="url(#p830c573e43)" style="fill: none; stroke: #e6e9ef; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_4"/>
+     <g id="text_2">
+      <text style="font-size: 8.5px; font-family: 'Segoe UI', 'Arial'; text-anchor: middle; fill: #52514e" x="187.297416" y="151.889201" transform="rotate(-0 187.297416 151.889201)">800</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_5">
+      <path d="M 247.389724 142.200969 
+L 247.389724 20.232969 
+" clip-path="url(#p830c573e43)" style="fill: none; stroke: #e6e9ef; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_6"/>
+     <g id="text_3">
+      <text style="font-size: 8.5px; font-family: 'Segoe UI', 'Arial'; text-anchor: middle; fill: #52514e" x="247.389724" y="151.889201" transform="rotate(-0 247.389724 151.889201)">1200</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_7">
+      <path d="M 307.482031 142.200969 
+L 307.482031 20.232969 
+" clip-path="url(#p830c573e43)" style="fill: none; stroke: #e6e9ef; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_8"/>
+     <g id="text_4">
+      <text style="font-size: 8.5px; font-family: 'Segoe UI', 'Arial'; text-anchor: middle; fill: #52514e" x="307.482031" y="151.889201" transform="rotate(-0 307.482031 151.889201)">1600</text>
+     </g>
+    </g>
+    <g id="text_5">
+     <text style="font-size: 8.5px; font-family: 'Segoe UI', 'Arial'; text-anchor: middle; fill: #52514e" x="307.482031" y="163.970676" transform="rotate(-0 307.482031 163.970676)">Photo long side (px): dot = median, bar = 10th–90th percentile</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_9"/>
+     <g id="text_6">
+      <text style="font-size: 8.5px; font-family: 'Segoe UI', 'Arial'; text-anchor: end; fill: #52514e" x="108.682031" y="128.760453" transform="rotate(-0 108.682031 128.760453)">Wikimedia fresh clean pool</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_10"/>
+     <g id="text_7">
+      <text style="font-size: 8.5px; font-family: 'Segoe UI', 'Arial'; text-anchor: end; fill: #52514e" x="108.682031" y="100.995297" transform="rotate(-0 108.682031 100.995297)">Wikimedia wild clean</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_11"/>
+     <g id="text_8">
+      <text style="font-size: 8.5px; font-family: 'Segoe UI', 'Arial'; text-anchor: end; fill: #52514e" x="108.682031" y="73.275297" transform="rotate(-0 108.682031 73.275297)">COCO clean</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_12"/>
+     <g id="text_9">
+      <text style="font-size: 8.5px; font-family: 'Segoe UI', 'Arial'; text-anchor: end; fill: #52514e" x="108.682031" y="45.555297" transform="rotate(-0 108.682031 45.555297)">HITL damage (all splits)</text>
+     </g>
+    </g>
+   </g>
+   <g id="patch_3">
+    <path d="M 220.949108 142.200969 
+L 307.482031 142.200969 
+L 307.482031 20.232969 
+L 220.949108 20.232969 
+z
+" clip-path="url(#p830c573e43)" style="fill: #00a6b2; opacity: 0.08; stroke: #00a6b2; stroke-linejoin: miter"/>
+   </g>
+   <g id="line2d_13">
+    <path d="M 152.744339 42.408969 
+L 186.921839 42.408969 
+" clip-path="url(#p830c573e43)" style="fill: none; stroke: #eb6834; stroke-opacity: 0.35; stroke-width: 6; stroke-linecap: round"/>
+   </g>
+   <g id="line2d_14">
+    <defs>
+     <path id="mbf409ec25f" d="M 0 4 
+C 1.060812 4 2.078319 3.578535 2.828427 2.828427 
+C 3.578535 2.078319 4 1.060812 4 0 
+C 4 -1.060812 3.578535 -2.078319 2.828427 -2.828427 
+C 2.078319 -3.578535 1.060812 -4 0 -4 
+C -1.060812 -4 -2.078319 -3.578535 -2.828427 -2.828427 
+C -3.578535 -2.078319 -4 -1.060812 -4 0 
+C -4 1.060812 -3.578535 2.078319 -2.828427 2.828427 
+C -2.078319 3.578535 -1.060812 4 0 4 
+z
+" style="stroke: #ffffff; stroke-width: 1.6"/>
+    </defs>
+    <g clip-path="url(#p830c573e43)">
+     <use xlink:href="#mbf409ec25f" x="170.772031" y="42.408969" style="fill: #eb6834; stroke: #ffffff; stroke-width: 1.6"/>
+    </g>
+   </g>
+   <g id="line2d_15">
+    <path d="M 142.228185 70.128969 
+L 163.260493 70.128969 
+" clip-path="url(#p830c573e43)" style="fill: none; stroke: #2a78d6; stroke-opacity: 0.35; stroke-width: 6; stroke-linecap: round"/>
+   </g>
+   <g id="line2d_16">
+    <defs>
+     <path id="macd929d3c1" d="M 0 4 
+C 1.060812 4 2.078319 3.578535 2.828427 2.828427 
+C 3.578535 2.078319 4 1.060812 4 0 
+C 4 -1.060812 3.578535 -2.078319 2.828427 -2.828427 
+C 2.078319 -3.578535 1.060812 -4 0 -4 
+C -1.060812 -4 -2.078319 -3.578535 -2.828427 -2.828427 
+C -3.578535 -2.078319 -4 -1.060812 -4 0 
+C -4 1.060812 -3.578535 2.078319 -2.828427 2.828427 
+C -2.078319 3.578535 -1.060812 4 0 4 
+z
+" style="stroke: #ffffff; stroke-width: 1.6"/>
+    </defs>
+    <g clip-path="url(#p830c573e43)">
+     <use xlink:href="#macd929d3c1" x="163.260493" y="70.128969" style="fill: #2a78d6; stroke: #ffffff; stroke-width: 1.6"/>
+    </g>
+   </g>
+   <g id="line2d_17">
+    <path d="M 259.408185 97.848969 
+L 259.408185 97.848969 
+" clip-path="url(#p830c573e43)" style="fill: none; stroke: #2a78d6; stroke-opacity: 0.35; stroke-width: 6; stroke-linecap: round"/>
+   </g>
+   <g id="line2d_18">
+    <g clip-path="url(#p830c573e43)">
+     <use xlink:href="#macd929d3c1" x="259.408185" y="97.848969" style="fill: #2a78d6; stroke: #ffffff; stroke-width: 1.6"/>
+    </g>
+   </g>
+   <g id="line2d_19">
+    <path d="M 259.408185 125.568969 
+L 259.408185 125.568969 
+" clip-path="url(#p830c573e43)" style="fill: none; stroke: #2a78d6; stroke-opacity: 0.35; stroke-width: 6; stroke-linecap: round"/>
+   </g>
+   <g id="line2d_20">
+    <g clip-path="url(#p830c573e43)">
+     <use xlink:href="#macd929d3c1" x="259.408185" y="125.568969" style="fill: #2a78d6; stroke: #ffffff; stroke-width: 1.6"/>
+    </g>
+   </g>
+   <g id="patch_4">
+    <path d="M 112.182031 142.200969 
+L 112.182031 20.232969 
+" style="fill: none; stroke: #e6e9ef; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 112.182031 142.200969 
+L 502.782031 142.200969 
+" style="fill: none; stroke: #e6e9ef; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 8px; font-family: 'Segoe UI', 'Arial'; text-anchor: start; fill: #17213b" x="322.505108" y="44.450219" transform="rotate(-0 322.505108 44.450219)">median 690 px · short side &lt; 480 px: 55%</text>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 8px; font-family: 'Segoe UI', 'Arial'; text-anchor: start; fill: #17213b" x="322.505108" y="72.170219" transform="rotate(-0 322.505108 72.170219)">median 640 px · short side &lt; 480 px: 65%</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 8px; font-family: 'Segoe UI', 'Arial'; text-anchor: start; fill: #17213b" x="322.505108" y="99.890219" transform="rotate(-0 322.505108 99.890219)">median 1280 px · short side &lt; 480 px: 0%</text>
+   </g>
+   <g id="text_13">
+    <text style="font-size: 8px; font-family: 'Segoe UI', 'Arial'; text-anchor: start; fill: #17213b" x="322.505108" y="127.610219" transform="rotate(-0 322.505108 127.610219)">median 1280 px · short side &lt; 480 px: 2%</text>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 7.5px; font-family: 'Segoe UI', 'Arial'; text-anchor: start; fill: #00727a" x="221.850493" y="28.548969" transform="rotate(-0 221.850493 28.548969)">model working range 1,024–1,600 px</text>
+   </g>
+   <g id="text_15">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Segoe UI', 'Arial'; text-anchor: start; fill: #17213b" x="112.182031" y="14.232969" transform="rotate(-0 112.182031 14.232969)">Damaged photos are systematically smaller than clean photos</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p830c573e43">
+   <rect x="112.182031" y="20.232969" width="390.6" height="121.968"/>
+  </clipPath>
+ </defs>
+</svg>

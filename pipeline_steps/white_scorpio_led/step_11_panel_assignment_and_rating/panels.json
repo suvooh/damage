@@ -1,0 +1,52 @@
+[
+ {
+  "part": "front_bumper",
+  "part_id": 9,
+  "damage": [
+   {
+    "class_name": "crack_or_breakage",
+    "area_pct_of_panel": 2.4446464515291213,
+    "severity": {
+     "score": 3,
+     "label": "moderate",
+     "reason": "crack or breakage, 2% of panel (not in the rubric; rated on the d3 row)",
+     "basis": "extension:rated_on_d3_row",
+     "depth_class": null,
+     "depth_assumed": false,
+     "area_basis": "panel",
+     "area_fraction": 0.024446464515291214
+    }
+   },
+   {
+    "class_name": "deformation_or_detachment",
+    "area_pct_of_panel": 0.9447438478020909,
+    "severity": {
+     "score": 3,
+     "label": "moderate",
+     "reason": "deformation or detachment, 1% of panel (not in the rubric; rated on the d3 row)",
+     "basis": "extension:rated_on_d3_row",
+     "depth_class": null,
+     "depth_assumed": false,
+     "area_basis": "panel",
+     "area_fraction": 0.009447438478020908
+    }
+   }
+  ],
+  "damage_types": [
+   "crack_or_breakage",
+   "deformation_or_detachment"
+  ],
+  "damage_count": 1,
+  "damage_area_pct_of_panel": 3.3893902993312124,
+  "rating": 3,
+  "rating_label": "moderate",
+  "rating_reason": "crack or breakage, 2% of panel (not in the rubric; rated on the d3 row)",
+  "depth_assumed": false,
+  "bbox": [
+   103,
+   229,
+   358,
+   430
+  ]
+ }
+]

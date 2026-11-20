@@ -1,0 +1,841 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Edge Damage Detection Plan</title>
+<style>
+  :root {
+    --navy: #24458e; --navy-dark: #123a78; --teal: #00a6b2; --teal-pale: #e7f7f8; --teal-ink: #00727a;
+    --ink: #17213b; --grey: #5b6577; --line: #d6dde8; --soft: #f4f6fa;
+    --amber: #b7791f; --amber-pale: #fff5e2; --green: #22965e; --green-pale: #e6f5ed;
+    --red: #c9302c; --red-pale: #fbeaea; --purple: #7054c8; --purple-pale: #f0ecfb;
+  }
+  @page {
+    size: A4; margin: 16mm 15mm 17mm 15mm;
+    @bottom-left { content: "Vehicle damage detection · Edge + server plan"; font: 7.5pt "Segoe UI", Arial, sans-serif; color: #5b6577; }
+    @bottom-right { content: counter(page) " / " counter(pages); font: 7.5pt "Segoe UI", Arial, sans-serif; color: #5b6577; }
+  }
+  @page :first { margin: 0; @bottom-left { content: none; } @bottom-right { content: none; } }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0; background: #fff; color: var(--ink); font: 9.8pt/1.5 "Segoe UI", "Aptos", Arial, sans-serif; }
+  h1, h2, h3, h4 { color: var(--navy-dark); line-height: 1.2; margin: 0; }
+  h2 { font-size: 17pt; margin: 0 0 3mm; padding-bottom: 2mm; border-bottom: 2px solid var(--teal); break-after: avoid; }
+  h2 .num { color: var(--teal); margin-right: 3mm; }
+  h3 { font-size: 11.5pt; margin: 5mm 0 2mm; break-after: avoid; }
+  h4 { font-size: 10pt; margin: 0 0 1.5mm; }
+  p { margin: 0 0 2.4mm; }
+  ul { margin: 0 0 2.4mm; padding-left: 5mm; } li { margin-bottom: 0.8mm; }
+  section { break-before: page; }
+  .lead { font-size: 10.5pt; color: var(--grey); margin-bottom: 4mm; break-after: avoid; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5mm 0 4mm; font-size: 8.8pt; }
+  thead { display: table-header-group; } tr { break-inside: avoid; }
+  th { background: var(--navy); color: #fff; text-align: left; font-weight: 600; padding: 1.6mm 2mm; }
+  td { padding: 1.5mm 2mm; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tbody tr:nth-child(even) td { background: var(--soft); }
+  td.c, th.c { text-align: center; }
+  figure { margin: 2mm 0 5mm; break-inside: avoid; }
+  figure svg { width: 100%; height: auto; display: block; }
+  figcaption { font-size: 8pt; color: var(--grey); margin-top: 1.5mm; }
+  figcaption b { color: var(--ink); }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4mm; margin: 2mm 0 4mm; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; margin: 2mm 0 4mm; }
+  .card { border: 1px solid var(--line); border-top: 3px solid var(--navy); border-radius: 1.5mm; padding: 3mm 3.5mm; break-inside: avoid; }
+  .card.teal { border-top-color: var(--teal); } .card.purple { border-top-color: var(--purple); } .card.amber { border-top-color: var(--amber); }
+  .card p, .card li { font-size: 8.9pt; }
+  .kpi { font-size: 19pt; font-weight: 700; color: var(--navy); line-height: 1.1; }
+  .kpi small { display: block; font-size: 8.2pt; font-weight: 400; color: var(--grey); margin-top: 1mm; }
+  .callout { border-left: 3.5px solid var(--teal); background: var(--teal-pale); padding: 3mm 4mm; margin: 3mm 0 4mm; break-inside: avoid; }
+  .callout.amber { border-color: var(--amber); background: var(--amber-pale); }
+  .tag { display: inline-block; font-size: 7.6pt; font-weight: 600; padding: 0.3mm 1.6mm; border-radius: 1mm; }
+  .t-ext { background: #e3eaf8; color: var(--navy-dark); } .t-int { background: var(--teal-pale); color: var(--teal-ink); } .t-und { background: var(--purple-pale); color: #5a3fb0; }
+
+  .cover { height: 297mm; width: 210mm; background: var(--navy-dark); color: #fff; position: relative; overflow: hidden; break-after: page; }
+  .cover .band { position: absolute; left: 0; right: 0; bottom: 0; height: 84mm; background: #fff; }
+  .cover .inner { position: absolute; left: 20mm; right: 20mm; top: 50mm; }
+  .cover .eyebrow { font-size: 9pt; letter-spacing: 0.22em; text-transform: uppercase; color: #7fd8e0; font-weight: 600; }
+  .cover h1 { color: #fff; font-size: 32pt; line-height: 1.12; margin: 6mm 0 5mm; }
+  .cover .sub { font-size: 12.5pt; color: #c9d6f2; max-width: 150mm; line-height: 1.45; }
+  .cover .rule { width: 30mm; height: 3px; background: var(--teal); margin: 9mm 0 7mm; }
+  .cover .meta { font-size: 9.5pt; color: #c9d6f2; line-height: 1.7; } .cover .meta b { color: #fff; }
+  .cover .foot { position: absolute; left: 20mm; right: 20mm; bottom: 18mm; }
+  .cover .foot .kpi { font-size: 16pt; }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5b6577"/></marker>
+    <marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#00a6b2"/></marker>
+    <marker id="ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7054c8"/></marker>
+    <symbol id="carside" viewBox="0 0 200 70">
+      <path d="M8 50V40Q10 31 30 29L62 26L82 10Q87 6 97 6H140Q150 6 158 14L172 27Q192 29 194 39V50Z" fill="#fff" stroke="#24458e" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M88 12H124V27H70ZM130 12H146Q152 12 156 17L164 27H130Z" fill="#eaf0fb" stroke="#24458e" stroke-width="1.4"/>
+      <circle cx="46" cy="52" r="12" fill="#17213b"/><circle cx="46" cy="52" r="5" fill="#d6dde8"/>
+      <circle cx="160" cy="52" r="12" fill="#17213b"/><circle cx="160" cy="52" r="5" fill="#d6dde8"/>
+    </symbol>
+    <symbol id="seat" viewBox="0 0 60 80">
+      <rect x="10" y="4" width="40" height="44" rx="10" fill="#fff" stroke="#00a6b2" stroke-width="3"/>
+      <rect x="6" y="46" width="48" height="26" rx="8" fill="#fff" stroke="#00a6b2" stroke-width="3"/>
+      <rect x="20" y="0" width="20" height="10" rx="4" fill="#fff" stroke="#00a6b2" stroke-width="2.5"/>
+    </symbol>
+    <symbol id="axle" viewBox="0 0 120 60">
+      <rect x="0" y="14" width="18" height="32" rx="5" fill="#17213b"/><rect x="102" y="14" width="18" height="32" rx="5" fill="#17213b"/>
+      <path d="M18 30H102" stroke="#7054c8" stroke-width="5"/>
+      <path d="M30 30L44 10M90 30L76 10" stroke="#7054c8" stroke-width="3.5"/>
+      <rect x="50" y="22" width="20" height="16" rx="3" fill="#fff" stroke="#7054c8" stroke-width="2.5"/>
+    </symbol>
+    <symbol id="phone" viewBox="0 0 40 70">
+      <rect x="1" y="1" width="38" height="68" rx="7" fill="#17213b"/><rect x="4" y="7" width="32" height="54" rx="3" fill="#fff"/>
+    </symbol>
+    <symbol id="server" viewBox="0 0 60 60">
+      <rect x="4" y="4" width="52" height="15" rx="3" fill="#00a6b2"/><rect x="4" y="22" width="52" height="15" rx="3" fill="#00a6b2"/><rect x="4" y="40" width="52" height="15" rx="3" fill="#00a6b2"/>
+      <g fill="#fff"><circle cx="12" cy="11.5" r="2.4"/><circle cx="12" cy="29.5" r="2.4"/><circle cx="12" cy="47.5" r="2.4"/></g>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============================ COVER ============================ -->
+<div class="cover">
+  <div class="band"></div>
+  <div class="inner">
+    <div class="eyebrow">Architecture &amp; plan</div>
+    <h1>Vehicle Damage Detection<br>on the Edge</h1>
+    <div class="sub">Three use cases: exterior, interior and undercarriage. Each has a small model that runs on the phone and a larger server model as fallback.</div>
+    <div class="rule"></div>
+    <div class="meta">
+      <b>App:</b> React Native, guided photo capture, works offline<br>
+      <b>Input:</b> ordinary 2D phone photos<br>
+      <b>Date:</b> 4 November 2026
+    </div>
+  </div>
+  <div class="foot">
+    <div class="grid3">
+      <div><div class="kpi">3 use cases<small>Exterior · interior · undercarriage</small></div></div>
+      <div><div class="kpi">6 models<small>One phone model + one server model per use case</small></div></div>
+      <div><div class="kpi">&lt; 2 s<small>Target analysis time per photo on the phone, offline</small></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================ 1. ARCHITECTURE ============================ -->
+<section style="break-before:auto">
+  <h2><span class="num">1</span>Architecture</h2>
+  <p class="lead">The phone does the work by default. The server checks only the cases where the phone is unsure, the photo is borderline, or the part is safety-critical.</p>
+
+  <figure>
+    <svg viewBox="0 0 1000 740" font-family="Segoe UI, Arial, sans-serif">
+      <!-- phone -->
+      <rect x="10" y="10" width="980" height="245" rx="12" fill="#eaf0fb" stroke="#24458e" stroke-width="1.5"/>
+      <use href="#phone" x="28" y="26" width="40" height="70"/>
+      <text x="80" y="50" font-size="18" font-weight="700" fill="#123a78">PHONE · React Native app</text>
+      <text x="80" y="74" font-size="13" fill="#5b6577">Guided photo capture · photo quality check · offline queue</text>
+      <g font-size="13.5" fill="#17213b">
+        <rect x="40" y="105" width="290" height="132" rx="10" fill="#fff" stroke="#24458e" stroke-width="2"/>
+        <use href="#carside" x="56" y="120" width="90" height="32"/>
+        <text x="160" y="136" font-weight="700" font-size="15">1 Exterior</text><text x="160" y="156" fill="#5b6577">edge model</text>
+        <text x="56" y="184">panels + damage</text><text x="56" y="204" fill="#5b6577">scratch · dent · crack · paint</text><text x="56" y="222" fill="#5b6577">· missing part</text>
+
+        <rect x="355" y="105" width="290" height="132" rx="10" fill="#fff" stroke="#00a6b2" stroke-width="2"/>
+        <use href="#seat" x="372" y="114" width="32" height="42"/>
+        <text x="420" y="136" font-weight="700" font-size="15">2 Interior</text><text x="420" y="156" fill="#5b6577">edge model</text>
+        <text x="372" y="184">components + damage</text><text x="372" y="204" fill="#5b6577">tear · stain · crack · scratch</text><text x="372" y="222" fill="#5b6577">· burn · broken part</text>
+
+        <rect x="670" y="105" width="300" height="132" rx="10" fill="#fff" stroke="#7054c8" stroke-width="2"/>
+        <use href="#axle" x="686" y="120" width="70" height="35"/>
+        <text x="770" y="136" font-weight="700" font-size="15">3 Undercarriage</text><text x="770" y="156" fill="#5b6577">edge model</text>
+        <text x="686" y="184">components + damage</text><text x="686" y="204" fill="#5b6577">leak · corrosion · torn boot</text><text x="686" y="222" fill="#5b6577">· bent · crack · impact</text>
+      </g>
+
+      <!-- decision -->
+      <path d="M500 255V283" stroke="#5b6577" stroke-width="2.5" marker-end="url(#a)"/>
+      <path d="M500 287L680 335L500 383L320 335Z" fill="#fff" stroke="#24458e" stroke-width="2"/>
+      <text x="500" y="330" font-size="13.5" font-weight="700" fill="#17213b" text-anchor="middle">Phone result confident, photo OK,</text>
+      <text x="500" y="349" font-size="13.5" font-weight="700" fill="#17213b" text-anchor="middle">no safety part?</text>
+
+      <!-- yes branch: left lane, outside the server panel -->
+      <path d="M320 335H112V413" stroke="#22965e" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+      <text x="290" y="325" font-size="13" font-weight="700" fill="#146b42">yes</text>
+      <rect x="20" y="417" width="185" height="118" rx="10" fill="#e6f5ed" stroke="#22965e" stroke-width="1.5"/>
+      <use href="#phone" x="34" y="430" width="22" height="38"/>
+      <text x="64" y="448" font-size="14" font-weight="700" fill="#146b42">Use phone</text>
+      <text x="64" y="466" font-size="14" font-weight="700" fill="#146b42">result</text>
+      <text x="34" y="494" font-size="12" fill="#17213b">shown instantly,</text>
+      <text x="34" y="512" font-size="12" fill="#17213b">works offline,</text>
+      <text x="34" y="528" font-size="12" fill="#5b6577">synced later</text>
+
+      <!-- no branch: into the server -->
+      <path d="M500 383V425" stroke="#b7791f" stroke-width="2.5" marker-end="url(#a)"/>
+      <text x="512" y="410" font-size="13" font-weight="700" fill="#8a5a10">no → send to server</text>
+      <rect x="712" y="290" width="278" height="90" rx="8" fill="#fff5e2" stroke="#b7791f"/>
+      <path d="M680 335H708" stroke="#b7791f" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text x="726" y="312" font-size="13" font-weight="700" fill="#8a5a10">Server is used when</text>
+      <text x="726" y="332" font-size="12" fill="#17213b">confidence is low · photo is borderline</text>
+      <text x="726" y="350" font-size="12" fill="#17213b">safety part · technician asks</text>
+      <text x="726" y="368" font-size="12" fill="#5b6577">offline → queued until online</text>
+
+      <!-- server -->
+      <rect x="230" y="429" width="760" height="180" rx="12" fill="#e7f7f8" stroke="#00a6b2" stroke-width="1.5"/>
+      <use href="#server" x="246" y="442" width="34" height="34"/>
+      <text x="292" y="465" font-size="17" font-weight="700" fill="#00727a">SERVER · bigger, more accurate models</text>
+      <g font-size="13" fill="#17213b">
+        <rect x="248" y="487" width="233" height="104" rx="10" fill="#fff" stroke="#24458e"/><text x="262" y="512" font-weight="700">Exterior server model</text><text x="262" y="534" fill="#5b6577">Mask2Former +</text><text x="262" y="552" fill="#5b6577">DINOv2 ViT-L</text><text x="262" y="576" fill="#00727a" font-size="12">also teaches phone model</text>
+        <rect x="493" y="487" width="233" height="104" rx="10" fill="#fff" stroke="#00a6b2"/><text x="507" y="512" font-weight="700">Interior server model</text><text x="507" y="534" fill="#5b6577">Mask2Former +</text><text x="507" y="552" fill="#5b6577">DINOv2 ViT-L</text><text x="507" y="576" fill="#00727a" font-size="12">also teaches phone model</text>
+        <rect x="738" y="487" width="233" height="104" rx="10" fill="#fff" stroke="#7054c8"/><text x="752" y="512" font-weight="700">Undercarriage server model</text><text x="752" y="534" fill="#5b6577">Mask2Former +</text><text x="752" y="552" fill="#5b6577">DINOv2 ViT-L</text><text x="752" y="576" fill="#00727a" font-size="12">also teaches phone model</text>
+      </g>
+
+      <!-- report -->
+      <path d="M610 609V651" stroke="#5b6577" stroke-width="2.5" marker-end="url(#a)"/>
+      <path d="M112 535V685H226" stroke="#22965e" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+      <rect x="230" y="655" width="760" height="62" rx="10" fill="#123a78"/>
+      <text x="610" y="681" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">Inspection report</text>
+      <text x="610" y="703" font-size="12.5" fill="#c9d6f2" text-anchor="middle">part · damage · size · severity · confidence · source (phone or server)</text>
+    </svg>
+    <figcaption><b>Figure 1.</b> System architecture. Only the phone model for the chosen use case is loaded. A confident phone result goes straight to the report (green path). Otherwise the photo goes to the matching server model (amber path).</figcaption>
+  </figure>
+
+  <div class="grid3">
+    <div class="card"><div class="kpi">10–25 MB<small>Size of each phone model</small></div></div>
+    <div class="card teal"><div class="kpi">Offline<small>Phone works without network; server checks queue and run later</small></div></div>
+    <div class="card purple"><div class="kpi">Per use case<small>Each pair of models is trained, tested and released on its own</small></div></div>
+  </div>
+</section>
+
+<!-- ============================ 2. MODELS ============================ -->
+<section>
+  <h2><span class="num">2</span>The six models</h2>
+  <p class="lead">Each use case has one model pair. The server model is trained first. The phone model is then trained to copy it (distillation), so it stays small but close to the server model's accuracy.</p>
+
+  <figure>
+    <svg viewBox="0 0 1000 400" font-family="Segoe UI, Arial, sans-serif">
+      <g font-family="Segoe UI, Arial, sans-serif">
+        <!-- column template x offsets 10, 345, 680 -->
+        <g>
+          <rect x="10" y="10" width="310" height="380" rx="12" fill="#fff" stroke="#24458e" stroke-width="2"/>
+          <rect x="10" y="10" width="310" height="56" rx="12" fill="#24458e"/><rect x="10" y="50" width="310" height="16" fill="#24458e"/>
+          <text x="30" y="46" font-size="18" font-weight="700" fill="#fff">1 · Exterior</text>
+          <use href="#carside" x="200" y="20" width="104" height="38"/>
+          <use href="#server" x="30" y="84" width="34" height="34"/>
+          <text x="74" y="98" font-size="13.5" font-weight="700" fill="#17213b">Server model</text>
+          <text x="74" y="116" font-size="12" fill="#5b6577">Mask2Former + DINOv2 ViT-L</text>
+          <path d="M165 132V172" stroke="#24458e" stroke-width="2.5" marker-end="url(#a)"/>
+          <text x="176" y="158" font-size="12" fill="#24458e" font-weight="600">distil</text>
+          <use href="#phone" x="34" y="182" width="24" height="42"/>
+          <text x="74" y="196" font-size="13.5" font-weight="700" fill="#17213b">Phone model</text>
+          <text x="74" y="214" font-size="12" fill="#5b6577">lightweight instance segmentation</text>
+          <rect x="28" y="238" width="274" height="138" rx="8" fill="#f4f6fa"/>
+          <text x="40" y="260" font-size="12.5" font-weight="700" fill="#17213b">Head A · panels</text>
+          <text x="40" y="278" font-size="11.5" fill="#5b6577">doors · bumpers · bonnet · fenders</text>
+          <text x="40" y="294" font-size="11.5" fill="#5b6577">quarters · boot · roof · lamps · glass</text>
+          <text x="40" y="320" font-size="12.5" font-weight="700" fill="#17213b">Head B · damage</text>
+          <text x="40" y="338" font-size="11.5" fill="#5b6577">scratch · dent · crack · paint damage</text>
+          <text x="40" y="354" font-size="11.5" fill="#5b6577">missing part</text>
+        </g>
+        <g>
+          <rect x="345" y="10" width="310" height="380" rx="12" fill="#fff" stroke="#00a6b2" stroke-width="2"/>
+          <rect x="345" y="10" width="310" height="56" rx="12" fill="#00a6b2"/><rect x="345" y="50" width="310" height="16" fill="#00a6b2"/>
+          <text x="365" y="46" font-size="18" font-weight="700" fill="#fff">2 · Interior</text>
+          <g transform="translate(590 16)"><rect x="2" y="2" width="22" height="18" rx="5" fill="#fff"/><rect x="0" y="20" width="26" height="14" rx="4" fill="#fff"/><rect x="34" y="2" width="22" height="18" rx="5" fill="#fff"/><rect x="32" y="20" width="26" height="14" rx="4" fill="#fff"/></g>
+          <use href="#server" x="365" y="84" width="34" height="34"/>
+          <text x="409" y="98" font-size="13.5" font-weight="700" fill="#17213b">Server model</text>
+          <text x="409" y="116" font-size="12" fill="#5b6577">Mask2Former + DINOv2 ViT-L</text>
+          <path d="M500 132V172" stroke="#00a6b2" stroke-width="2.5" marker-end="url(#at)"/>
+          <text x="511" y="158" font-size="12" fill="#00727a" font-weight="600">distil</text>
+          <use href="#phone" x="369" y="182" width="24" height="42"/>
+          <text x="409" y="196" font-size="13.5" font-weight="700" fill="#17213b">Phone model</text>
+          <text x="409" y="214" font-size="12" fill="#5b6577">lightweight instance segmentation</text>
+          <rect x="363" y="238" width="274" height="138" rx="8" fill="#f4f6fa"/>
+          <text x="375" y="260" font-size="12.5" font-weight="700" fill="#17213b">Head A · components</text>
+          <text x="375" y="278" font-size="11.5" fill="#5b6577">dashboard · cluster · seats · door trims</text>
+          <text x="375" y="294" font-size="11.5" fill="#5b6577">console · steering · headliner</text>
+          <text x="375" y="320" font-size="12.5" font-weight="700" fill="#17213b">Head B · damage</text>
+          <text x="375" y="338" font-size="11.5" fill="#5b6577">tear · stain · crack · scratch</text>
+          <text x="375" y="354" font-size="11.5" fill="#5b6577">burn · broken part</text>
+        </g>
+        <g>
+          <rect x="680" y="10" width="310" height="380" rx="12" fill="#fff" stroke="#7054c8" stroke-width="2"/>
+          <rect x="680" y="10" width="310" height="56" rx="12" fill="#7054c8"/><rect x="680" y="50" width="310" height="16" fill="#7054c8"/>
+          <text x="700" y="46" font-size="18" font-weight="700" fill="#fff">3 · Undercarriage</text>
+          <use href="#server" x="700" y="84" width="34" height="34"/>
+          <text x="744" y="98" font-size="13.5" font-weight="700" fill="#17213b">Server model</text>
+          <text x="744" y="116" font-size="12" fill="#5b6577">Mask2Former + DINOv2 ViT-L</text>
+          <path d="M835 132V172" stroke="#7054c8" stroke-width="2.5" marker-end="url(#ap)"/>
+          <text x="846" y="158" font-size="12" fill="#5a3fb0" font-weight="600">distil</text>
+          <use href="#phone" x="704" y="182" width="24" height="42"/>
+          <text x="744" y="196" font-size="13.5" font-weight="700" fill="#17213b">Phone model</text>
+          <text x="744" y="214" font-size="12" fill="#5b6577">lightweight instance segmentation</text>
+          <rect x="698" y="238" width="274" height="138" rx="8" fill="#f4f6fa"/>
+          <text x="710" y="260" font-size="12.5" font-weight="700" fill="#17213b">Head A · components</text>
+          <text x="710" y="278" font-size="11.5" fill="#5b6577">shocks · springs · arms · CV boots</text>
+          <text x="710" y="294" font-size="11.5" fill="#5b6577">exhaust · oil pan · brake / fuel lines</text>
+          <text x="710" y="320" font-size="12.5" font-weight="700" fill="#17213b">Head B · damage</text>
+          <text x="710" y="338" font-size="11.5" fill="#5b6577">leak · corrosion · torn boot</text>
+          <text x="710" y="354" font-size="11.5" fill="#5b6577">bent part · crack · impact mark</text>
+        </g>
+      </g>
+    </svg>
+    <figcaption><b>Figure 2.</b> One model pair per use case. Every phone model has two heads: one finds the part, the other finds the damage. Each damage is then matched to the part it sits on.</figcaption>
+  </figure>
+
+  <table>
+    <thead><tr><th style="width:17%">Use case</th><th style="width:27%">Phone model</th><th style="width:25%">Server model</th><th>Finds</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag t-ext">1 Exterior</span></td><td>Lightweight instance segmentation (RTMDet-Ins-S class, Apache 2.0); 10–25 MB; &lt; 2 s per photo</td><td>Mask2Former + DINOv2 ViT-L; GPU</td><td><b>Panels:</b> doors, bumpers, bonnet, fenders, quarters, boot, roof, lamps, glass. <b>Damage:</b> scratch, dent, crack, paint damage, missing part</td></tr>
+      <tr><td><span class="tag t-int">2 Interior</span></td><td>Same model type, own training</td><td>Mask2Former + DINOv2 ViT-L</td><td><b>Components:</b> dashboard, instrument cluster, seats, door trims, console, steering wheel, headliner. <b>Damage:</b> tear, stain, crack, scratch, burn, broken part</td></tr>
+      <tr><td><span class="tag t-und">3 Undercarriage</span></td><td>Same model type, own training</td><td>Mask2Former + DINOv2 ViT-L</td><td><b>Components:</b> shocks, springs, control arms, CV boots, exhaust, oil pan, brake and fuel lines. <b>Damage:</b> leak, corrosion, torn boot, bent part, crack, impact mark</td></tr>
+    </tbody>
+  </table>
+  <div class="callout amber"><strong>Undercarriage is always advisory.</strong> It reports visible damage only. Any finding on steering, brakes, suspension or structure is flagged for a technician, and the system never certifies that a car is mechanically sound.</div>
+</section>
+
+<!-- ============================ 3. DATA PIPELINE ============================ -->
+<section>
+  <h2><span class="num">3</span>Data processing pipeline</h2>
+  <p class="lead">How raw workshop photos become training data. It runs separately for each use case, and every stage writes a versioned output that the next stage reads.</p>
+
+  <figure>
+    <svg viewBox="0 0 1000 330" font-family="Segoe UI, Arial, sans-serif">
+      <g stroke-width="1.8">
+        <rect x="10" y="20" width="230" height="100" rx="10" fill="#e7f7f8" stroke="#00a6b2"/>
+        <rect x="260" y="20" width="230" height="100" rx="10" fill="#e7f7f8" stroke="#00a6b2"/>
+        <rect x="510" y="20" width="230" height="100" rx="10" fill="#e7f7f8" stroke="#00a6b2"/>
+        <rect x="760" y="20" width="230" height="100" rx="10" fill="#e7f7f8" stroke="#00a6b2"/>
+        <rect x="760" y="210" width="230" height="100" rx="10" fill="#eaf0fb" stroke="#24458e"/>
+        <rect x="510" y="210" width="230" height="100" rx="10" fill="#eaf0fb" stroke="#24458e"/>
+        <rect x="260" y="210" width="230" height="100" rx="10" fill="#eaf0fb" stroke="#24458e"/>
+        <rect x="10" y="210" width="230" height="100" rx="10" fill="#e6f5ed" stroke="#22965e"/>
+      </g>
+      <g font-size="14" font-weight="700" fill="#17213b">
+        <text x="26" y="48">D1 · Collect</text><text x="276" y="48">D2 · Clean</text><text x="526" y="48">D3 · Label</text><text x="776" y="48">D4 · Review</text>
+        <text x="776" y="238">D5 · Split + version</text><text x="526" y="238">D6 · Preprocess</text><text x="276" y="238">D7 · Augment</text><text x="26" y="238">D8 · To training</text>
+      </g>
+      <g font-size="12" fill="#5b6577">
+        <text x="26" y="72">photos from the capture app</text><text x="26" y="90">all 3 use cases</text><text x="26" y="108">consent recorded per photo</text>
+        <text x="276" y="72">drop duplicates + bad photos</text><text x="276" y="90">blur faces + number plates</text><text x="276" y="108">give each photo an ID</text>
+        <text x="526" y="72">outline parts + damage</text><text x="526" y="90">(polygons, per use case)</text><text x="526" y="108">model pre-labels save time</text>
+        <text x="776" y="72">second annotator checks</text><text x="776" y="90">assessor settles disputes</text><text x="776" y="108">quality score per label</text>
+        <text x="776" y="262">split by vehicle:</text><text x="776" y="280">70% train · 15% val · 15% test</text><text x="776" y="298">freeze dataset version</text>
+        <text x="526" y="262">resize to training size</text><text x="526" y="280">cut full-res photos into tiles</text><text x="526" y="298">so small damage stays visible</text>
+        <text x="276" y="262">light · colour · angle · mild blur</text><text x="276" y="280">left/right flip swaps</text><text x="276" y="298">"left door" ↔ "right door"</text>
+        <text x="26" y="262">batches to model training</text><text x="26" y="280">(Section 4)</text><text x="26" y="298">test set never trained on</text>
+      </g>
+      <g stroke="#5b6577" stroke-width="2.2" marker-end="url(#a)" fill="none">
+        <line x1="240" y1="70" x2="257" y2="70"/><line x1="490" y1="70" x2="507" y2="70"/><line x1="740" y1="70" x2="757" y2="70"/>
+        <path d="M875 120V207"/>
+        <line x1="760" y1="260" x2="743" y2="260"/><line x1="510" y1="260" x2="493" y2="260"/><line x1="260" y1="260" x2="243" y2="260"/>
+      </g>
+      <text x="500" y="164" font-size="12.5" fill="#00727a" font-weight="600" text-anchor="middle">Technician corrections from live inspections re-enter at D1 and follow the same path</text>
+    </svg>
+    <figcaption><b>Figure 3.</b> Data processing pipeline. Teal: collecting and labelling. Navy: building the dataset. Green: hand-off to training.</figcaption>
+  </figure>
+
+  <table>
+    <thead><tr><th style="width:15%">Stage</th><th style="width:18%">Input</th><th>What happens</th><th style="width:18%">Output</th><th style="width:16%">Tools</th></tr></thead>
+    <tbody>
+      <tr><td><b>D1</b> Collect</td><td>Guided photos from the app</td><td>Photos uploaded with slot name, device, time and consent</td><td>Raw photo store</td><td>App upload, object storage</td></tr>
+      <tr><td><b>D2</b> Clean</td><td>Raw photos</td><td>Remove exact and near duplicates and unusable photos (blur, dark); blur faces and plates in the training copy</td><td>Clean photo set</td><td>Python, hashing, blur detector</td></tr>
+      <tr><td><b>D3</b> Label</td><td>Clean photos</td><td>Draw polygons for every part and every damage using the use-case label list. The server model and SAM 2 propose outlines; annotators correct them</td><td>Draft labels</td><td>CVAT or Label Studio, SAM 2</td></tr>
+      <tr><td><b>D4</b> Review</td><td>Draft labels</td><td>Second annotator checks each photo; an assessor resolves disagreements and spot-checks 10%</td><td>Approved labels</td><td>Review queue in the labelling tool</td></tr>
+      <tr><td><b>D5</b> Split + version</td><td>Approved labels</td><td>Split by vehicle, so no car is in two sets. Balance paint colours, lighting, damage size and parts. Freeze a numbered version</td><td>Dataset v1, v2, …</td><td>DVC or lakeFS</td></tr>
+      <tr><td><b>D6</b> Preprocess</td><td>Dataset version</td><td>Resize to the model's input size; cut high-resolution photos into overlapping tiles; convert labels to masks</td><td>Training-ready tensors</td><td>PyTorch data loaders</td></tr>
+      <tr><td><b>D7</b> Augment</td><td>Training tensors</td><td>Random brightness, colour, perspective and mild blur, applied on the fly. Flips also swap left/right labels</td><td>Augmented batches</td><td>Albumentations</td></tr>
+      <tr><td><b>D8</b> To training</td><td>Augmented batches</td><td>Feeds server-model training and phone-model distillation. The test split is only used for final checks</td><td>Model inputs</td><td>Training jobs (Section 4)</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================ 4. TRAINING PIPELINE ============================ -->
+<section>
+  <h2><span class="num">4</span>Training pipeline: server models → phone models</h2>
+  <p class="lead">For each use case, the bigger server model is trained first. It then labels photos for the small phone model, which learns to copy it (distillation). Three use cases means this runs three times.</p>
+
+  <figure>
+    <svg viewBox="0 0 1000 410" font-family="Segoe UI, Arial, sans-serif">
+      <rect x="10" y="10" width="980" height="172" rx="12" fill="#e7f7f8" stroke="#00a6b2" stroke-width="1.5"/>
+      <use href="#server" x="24" y="20" width="26" height="26"/>
+      <text x="58" y="40" font-size="15" font-weight="700" fill="#00727a">Server model (bigger) · per use case</text>
+      <rect x="10" y="228" width="980" height="172" rx="12" fill="#eaf0fb" stroke="#24458e" stroke-width="1.5"/>
+      <use href="#phone" x="26" y="236" width="16" height="28"/>
+      <text x="58" y="258" font-size="15" font-weight="700" fill="#123a78">Phone model (small) · per use case</text>
+      <g fill="#fff" stroke-width="1.8">
+        <rect x="20" y="58" width="176" height="110" rx="9" stroke="#00a6b2"/><rect x="214" y="58" width="176" height="110" rx="9" stroke="#00a6b2"/><rect x="408" y="58" width="176" height="110" rx="9" stroke="#00a6b2"/><rect x="602" y="58" width="176" height="110" rx="9" stroke="#00a6b2"/><rect x="796" y="58" width="176" height="110" rx="9" stroke="#00a6b2"/>
+        <rect x="796" y="276" width="176" height="110" rx="9" stroke="#24458e"/><rect x="602" y="276" width="176" height="110" rx="9" stroke="#24458e"/><rect x="408" y="276" width="176" height="110" rx="9" stroke="#24458e"/><rect x="214" y="276" width="176" height="110" rx="9" stroke="#24458e"/><rect x="20" y="276" width="176" height="110" rx="9" stroke="#22965e"/>
+      </g>
+      <g font-size="13.5" font-weight="700" fill="#17213b">
+        <text x="32" y="82">A1 Start weights</text><text x="226" y="82">A2 Train decoder</text><text x="420" y="82">A3 Fine-tune all</text><text x="614" y="82">A4 Hard examples</text><text x="808" y="82">A5 Calibrate + test</text>
+        <text x="808" y="300">B1 Teacher labels</text><text x="614" y="300">B2 Distil</text><text x="420" y="300">B3 Quantise + export</text><text x="226" y="300">B4 Test on phones</text><text x="32" y="300">B5 Release</text>
+      </g>
+      <g font-size="11.8" fill="#5b6577">
+        <text x="32" y="104">pretrained DINOv2</text><text x="32" y="120">ViT-L (Apache 2.0)</text><text x="32" y="136">+ new Mask2Former</text><text x="32" y="152">decoder and heads</text>
+        <text x="226" y="104">backbone frozen</text><text x="226" y="120">only decoder learns</text><text x="226" y="136">fast and stable</text><text x="226" y="152">~20 epochs</text>
+        <text x="420" y="104">whole model learns</text><text x="420" y="120">small learning rate</text><text x="420" y="136">on the backbone</text><text x="420" y="152">~50 epochs</text>
+        <text x="614" y="104">find mistakes on new</text><text x="614" y="120">photos → label them</text><text x="614" y="136">→ retrain (repeat</text><text x="614" y="152">2–3 rounds)</text>
+        <text x="808" y="104">thresholds per</text><text x="808" y="120">damage type; check</text><text x="808" y="136">targets on test set</text><text x="808" y="152">→ server model ready</text>
+        <text x="808" y="322">server model predicts</text><text x="808" y="338">masks + scores on all</text><text x="808" y="354">photos, incl. unlabelled</text><text x="808" y="370">workshop photos</text>
+        <text x="614" y="322">small model learns</text><text x="614" y="338">from labels + teacher</text><text x="614" y="354">masks and scores</text><text x="614" y="370">~120 epochs</text>
+        <text x="420" y="322">INT8 / FP16</text><text x="420" y="338">Core ML (iPhone)</text><text x="420" y="354">LiteRT / ONNX</text><text x="420" y="370">(Android)</text>
+        <text x="226" y="322">accuracy vs server</text><text x="226" y="338">speed, memory, heat</text><text x="226" y="354">low / mid / high-end</text><text x="226" y="370">Android + iPhone</text>
+        <text x="32" y="322">pilot workshops</text><text x="32" y="338">first, then all</text><text x="32" y="354">versioned, can be</text><text x="32" y="370">rolled back</text>
+      </g>
+      <g stroke="#5b6577" stroke-width="2.2" marker-end="url(#a)" fill="none">
+        <line x1="196" y1="113" x2="211" y2="113"/><line x1="390" y1="113" x2="405" y2="113"/><line x1="584" y1="113" x2="599" y2="113"/><line x1="778" y1="113" x2="793" y2="113"/>
+        <path d="M884 168V273"/>
+        <line x1="796" y1="331" x2="781" y2="331"/><line x1="602" y1="331" x2="587" y2="331"/><line x1="408" y1="331" x2="393" y2="331"/><line x1="214" y1="331" x2="199" y2="331"/>
+      </g>
+      <text x="894" y="212" font-size="12" fill="#00727a" font-weight="600">teacher</text>
+    </svg>
+    <figcaption><b>Figure 4.</b> Training pipeline for one use case. Top: the bigger server model (A1–A5). Bottom: the phone model distilled from it (B1–B5).</figcaption>
+  </figure>
+
+  <h3>Starting settings</h3>
+  <table>
+    <thead><tr><th style="width:22%">Setting</th><th style="width:39%">Server model (bigger)</th><th>Phone model (small)</th></tr></thead>
+    <tbody>
+      <tr><td>Architecture</td><td>DINOv2 ViT-L/14 backbone + Mask2Former decoder; two heads (parts, damage)</td><td>Lightweight instance segmentation (RTMDet-Ins-S class); two heads (parts, damage)</td></tr>
+      <tr><td>Size</td><td>~330 M parameters, ~650 MB (FP16)</td><td>~10 M parameters, 10–25 MB (INT8 / FP16)</td></tr>
+      <tr><td>Input</td><td>1,024 px photos + 1,024 px tiles from full-resolution photos</td><td>1,024 px (exterior), 768 px (interior, undercarriage)</td></tr>
+      <tr><td>Training stages</td><td>A2: decoder only, ~20 epochs → A3: full fine-tune, ~50 epochs</td><td>~120 epochs of distillation, then ~10 epochs of quantisation-aware training</td></tr>
+      <tr><td>Learning rates</td><td>AdamW; 1e-4 decoder, 1e-5 backbone with layer-wise decay 0.9</td><td>AdamW or SGD; 1e-3 with cosine schedule</td></tr>
+      <tr><td>Losses</td><td>Mask: cross-entropy + Dice; class: focal. Thin damage (scratches): extra Dice weight</td><td>Ground-truth loss + teacher-matching loss on masks and scores</td></tr>
+      <tr><td>Hardware</td><td>8 × A100 / H100 GPUs; about 1–3 days per use case</td><td>1–2 GPUs; under 1 day per use case</td></tr>
+      <tr><td>Output</td><td>Server model + thresholds per damage type</td><td>Signed phone model files for iOS and Android</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:8.5pt;color:#5b6577">Epochs, sizes and training times are starting estimates. Tune them on the first dataset version of each use case.</p>
+</section>
+
+<!-- ============================ 5. PHONE PIPELINE ============================ -->
+<section>
+  <h2><span class="num">5</span>Processing pipeline on the phone</h2>
+  <p class="lead">What happens to each photo on the device, from camera to result. This must stay under 2 seconds per photo on a mid-range phone.</p>
+
+  <figure>
+    <svg viewBox="0 0 1000 340" font-family="Segoe UI, Arial, sans-serif">
+      <g fill="#eaf0fb" stroke="#24458e" stroke-width="1.8">
+        <rect x="10" y="20" width="176" height="108" rx="9"/><rect x="206" y="20" width="176" height="108" rx="9"/><rect x="402" y="20" width="176" height="108" rx="9"/><rect x="598" y="20" width="176" height="108" rx="9"/><rect x="794" y="20" width="196" height="108" rx="9"/>
+        <rect x="794" y="214" width="196" height="108" rx="9"/><rect x="598" y="214" width="176" height="108" rx="9"/><rect x="402" y="214" width="176" height="108" rx="9"/><rect x="206" y="214" width="176" height="108" rx="9"/>
+      </g>
+      <rect x="10" y="214" width="176" height="108" rx="9" fill="#e6f5ed" stroke="#22965e" stroke-width="1.8"/>
+      <rect x="206" y="214" width="176" height="108" rx="9" fill="#fff5e2" stroke="#b7791f" stroke-width="1.8"/>
+      <g font-size="13.5" font-weight="700" fill="#17213b">
+        <text x="22" y="44">P1 Camera preview</text><text x="218" y="44">P2 Live check</text><text x="414" y="44">P3 Capture</text><text x="610" y="44">P4 Preprocess</text><text x="806" y="44">P5 Phone model</text>
+        <text x="806" y="238">P6 Clean up output</text><text x="610" y="238">P7 Match to part</text><text x="414" y="238">P8 Size + severity</text><text x="218" y="238">P9 Fallback check</text><text x="22" y="238">P10 Show + save</text>
+      </g>
+      <g font-size="11.8" fill="#5b6577">
+        <text x="22" y="66">live camera frames</text><text x="22" y="82">with slot outline</text><text x="22" y="98">and guidance</text>
+        <text x="218" y="66">tiny model checks blur,</text><text x="218" y="82">light, glare, distance,</text><text x="218" y="98">angle on sampled frames</text>
+        <text x="414" y="66">full-resolution photo</text><text x="414" y="82">taken automatically</text><text x="414" y="98">when all checks pass</text>
+        <text x="610" y="66">resize to 1,024 px,</text><text x="610" y="82">normalise colours,</text><text x="610" y="98">keep full-res for crops</text>
+        <text x="806" y="66">parts head + damage</text><text x="806" y="82">head, one pass on the</text><text x="806" y="98">phone's AI chip (NPU)</text>
+        <text x="806" y="260">drop low scores,</text><text x="806" y="276">remove duplicate</text><text x="806" y="292">detections, final masks</text>
+        <text x="610" y="260">each damage mask is</text><text x="610" y="276">matched to the part</text><text x="610" y="292">mask it overlaps most</text>
+        <text x="414" y="260">% of part; mm when a</text><text x="414" y="276">known size is visible;</text><text x="414" y="292">severity 1–5 by rules</text>
+        <text x="218" y="260">confidence, quality,</text><text x="218" y="276">safety part → send to</text><text x="218" y="292">server? (Figure 8)</text>
+        <text x="22" y="260">result on screen,</text><text x="22" y="276">photo + result saved</text><text x="22" y="292">to the sync queue</text>
+      </g>
+      <g font-size="11.5" font-weight="700" fill="#24458e">
+        <text x="22" y="118">—</text><text x="218" y="118">~30 ms per frame</text><text x="414" y="118">—</text><text x="610" y="118">~20 ms</text><text x="806" y="118">~300–800 ms</text>
+        <text x="806" y="312">~50 ms</text><text x="610" y="312">~10 ms</text><text x="414" y="312">~10 ms</text><text x="218" y="312" fill="#8a5a10">~5 ms</text><text x="22" y="312" fill="#146b42">total &lt; 2 s</text>
+      </g>
+      <g stroke="#5b6577" stroke-width="2.2" marker-end="url(#a)" fill="none">
+        <line x1="186" y1="74" x2="203" y2="74"/><line x1="382" y1="74" x2="399" y2="74"/><line x1="578" y1="74" x2="595" y2="74"/><line x1="774" y1="74" x2="791" y2="74"/>
+        <path d="M892 128V211"/>
+        <line x1="794" y1="268" x2="777" y2="268"/><line x1="598" y1="268" x2="581" y2="268"/><line x1="402" y1="268" x2="385" y2="268"/><line x1="206" y1="268" x2="189" y2="268"/>
+      </g>
+      <text x="500" y="172" font-size="12.5" fill="#5b6577" text-anchor="middle">Top row runs left to right, bottom row right to left (P1 → P10)</text>
+    </svg>
+    <figcaption><b>Figure 5.</b> Phone processing per photo. Timings are design targets for a mid-range phone; confirm them on the test-phone set.</figcaption>
+  </figure>
+</section>
+
+<!-- ============================ 6. SERVER PIPELINE ============================ -->
+<section style="break-before:auto;margin-top:8mm">
+  <h2><span class="num">6</span>Processing pipeline on the server (bigger models)</h2>
+  <p class="lead">When a photo is sent to the server, the bigger model processes it more thoroughly. It uses higher resolution, extra passes and all the photos of the vehicle together.</p>
+
+  <figure>
+    <svg viewBox="0 0 1000 340" font-family="Segoe UI, Arial, sans-serif">
+      <g fill="#e7f7f8" stroke="#00a6b2" stroke-width="1.8">
+        <rect x="10" y="20" width="148" height="112" rx="9"/><rect x="176" y="20" width="148" height="112" rx="9"/><rect x="342" y="20" width="148" height="112" rx="9"/><rect x="508" y="20" width="148" height="112" rx="9"/><rect x="674" y="20" width="148" height="112" rx="9"/><rect x="840" y="20" width="150" height="112" rx="9"/>
+        <rect x="840" y="212" width="150" height="112" rx="9"/><rect x="674" y="212" width="148" height="112" rx="9"/><rect x="508" y="212" width="148" height="112" rx="9"/><rect x="342" y="212" width="148" height="112" rx="9"/><rect x="176" y="212" width="148" height="112" rx="9"/>
+      </g>
+      <rect x="10" y="212" width="148" height="112" rx="9" fill="#123a78"/>
+      <g font-size="13" font-weight="700" fill="#17213b">
+        <text x="20" y="44">S1 Receive</text><text x="186" y="44">S2 Check</text><text x="352" y="44">S3 Preprocess</text><text x="518" y="44">S4 Backbone</text><text x="684" y="44">S5 Decoder</text><text x="850" y="44">S6 Extra passes</text>
+        <text x="850" y="236">S7 Clean + match</text><text x="684" y="236">S8 Merge photos</text><text x="518" y="236">S9 Size + severity</text><text x="352" y="236">S10 Compare</text><text x="186" y="236">S11 Final result</text>
+        <text x="20" y="236" fill="#fff">S12 Store + learn</text>
+      </g>
+      <g font-size="11.5" fill="#5b6577">
+        <text x="20" y="66">photo + phone</text><text x="20" y="82">result arrive in</text><text x="20" y="98">the job queue</text>
+        <text x="186" y="66">file intact, photo</text><text x="186" y="82">usable, not a</text><text x="186" y="98">duplicate</text>
+        <text x="352" y="66">1,024–1,600 px</text><text x="352" y="82">+ full-res tiles</text><text x="352" y="98">for small damage</text>
+        <text x="518" y="66">DINOv2 ViT-L</text><text x="518" y="82">turns the photo</text><text x="518" y="98">into features</text>
+        <text x="684" y="66">Mask2Former finds</text><text x="684" y="82">part masks and</text><text x="684" y="98">damage masks</text>
+        <text x="850" y="66">mirrored + 2 sizes,</text><text x="850" y="82">results averaged</text><text x="850" y="98">(more stable)</text>
+        <text x="850" y="258">thresholds per type,</text><text x="850" y="274">damage matched to</text><text x="850" y="290">its part</text>
+        <text x="684" y="258">same damage seen</text><text x="684" y="274">in several photos</text><text x="684" y="290">counted once</text>
+        <text x="518" y="258">% of part; mm with</text><text x="518" y="274">a known size;</text><text x="518" y="290">severity 1–5 rules</text>
+        <text x="352" y="258">server vs phone:</text><text x="352" y="274">big difference →</text><text x="352" y="290">assessor review</text>
+        <text x="186" y="258">sent to the app,</text><text x="186" y="274">replaces phone result,</text><text x="186" y="290">report updated</text>
+        <text x="20" y="258" fill="#c9d6f2">photos, results and</text><text x="20" y="274" fill="#c9d6f2">corrections saved →</text><text x="20" y="290" fill="#c9d6f2">data pipeline (D1)</text>
+      </g>
+      <g stroke="#5b6577" stroke-width="2.2" marker-end="url(#a)" fill="none">
+        <line x1="158" y1="76" x2="173" y2="76"/><line x1="324" y1="76" x2="339" y2="76"/><line x1="490" y1="76" x2="505" y2="76"/><line x1="656" y1="76" x2="671" y2="76"/><line x1="822" y1="76" x2="837" y2="76"/>
+        <path d="M915 132V209"/>
+        <line x1="840" y1="268" x2="825" y2="268"/><line x1="674" y1="268" x2="659" y2="268"/><line x1="508" y1="268" x2="493" y2="268"/><line x1="342" y1="268" x2="327" y2="268"/><line x1="176" y1="268" x2="161" y2="268"/>
+      </g>
+      <text x="500" y="176" font-size="12.5" fill="#5b6577" text-anchor="middle">About 1–4 s per photo on one GPU; a whole inspection is processed in the background</text>
+    </svg>
+    <figcaption><b>Figure 6.</b> Server processing with the bigger model. S4–S6 are where the server model is stronger than the phone model: a larger backbone, higher resolution and extra passes. S8 uses every photo of the vehicle together.</figcaption>
+  </figure>
+
+  <table>
+    <thead><tr><th style="width:24%">Difference</th><th style="width:38%">Phone model</th><th>Server model (bigger)</th></tr></thead>
+    <tbody>
+      <tr><td>Model size</td><td>~10 M parameters, 10–25 MB</td><td>~330 M parameters, ~650 MB</td></tr>
+      <tr><td>Resolution</td><td>One pass at 768–1,024 px</td><td>1,024–1,600 px + full-resolution tiles</td></tr>
+      <tr><td>Passes per photo</td><td>1</td><td>4 (original, mirrored, 2 sizes), averaged</td></tr>
+      <tr><td>Photos used together</td><td>One photo at a time</td><td>All photos of the vehicle; duplicates merged</td></tr>
+      <tr><td>Time per photo</td><td>&lt; 2 s, offline</td><td>~1–4 s on a GPU, needs network</td></tr>
+      <tr><td>Role in training</td><td>Learns from the server model</td><td>Teaches the phone model (B1 in Figure 4)</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================ 3. FLOW ============================ -->
+<section>
+  <h2><span class="num">7</span>How one inspection works</h2>
+  <p class="lead">Six steps, the same for all three use cases.</p>
+
+  <figure>
+    <svg viewBox="0 0 1000 220" font-family="Segoe UI, Arial, sans-serif">
+      <g font-size="13" text-anchor="middle">
+        <g fill="#eaf0fb" stroke="#24458e" stroke-width="1.5">
+          <path d="M10 30H150L175 95L150 160H10Z"/><path d="M175 30H315L340 95L315 160H175L200 95Z"/><path d="M340 30H480L505 95L480 160H340L365 95Z"/><path d="M505 30H645L670 95L645 160H505L530 95Z"/>
+        </g>
+        <path d="M670 30H810L835 95L810 160H670L695 95Z" fill="#fff5e2" stroke="#b7791f" stroke-width="1.5"/>
+        <path d="M835 30H990V160H835L860 95Z" fill="#123a78"/>
+        <g fill="#17213b">
+          <text x="85" y="72" font-weight="700" font-size="22" fill="#24458e">1</text><text x="85" y="100" font-weight="700">Choose</text><text x="85" y="118">use case</text>
+          <text x="258" y="72" font-weight="700" font-size="22" fill="#24458e">2</text><text x="258" y="100" font-weight="700">Guided</text><text x="258" y="118">photos</text>
+          <text x="423" y="72" font-weight="700" font-size="22" fill="#24458e">3</text><text x="423" y="100" font-weight="700">Photo check</text><text x="423" y="118">sharp · lit · angle</text>
+          <text x="588" y="72" font-weight="700" font-size="22" fill="#24458e">4</text><text x="588" y="100" font-weight="700">Phone model</text><text x="588" y="118">parts + damage</text>
+          <text x="753" y="72" font-weight="700" font-size="22" fill="#b7791f">5</text><text x="753" y="100" font-weight="700">Server?</text><text x="753" y="118">only if needed</text>
+          <text x="915" y="72" font-weight="700" font-size="22" fill="#7fd8e0">6</text><text x="915" y="100" font-weight="700" fill="#fff">Report</text><text x="915" y="118" fill="#c9d6f2">shown + saved</text>
+        </g>
+      </g>
+      <g font-size="11.5" fill="#5b6577" text-anchor="middle">
+        <text x="85" y="190">exterior / interior /</text><text x="85" y="206">undercarriage</text>
+        <text x="258" y="190">10 · 8 · 8 photos,</text><text x="258" y="206">one named shot at a time</text>
+        <text x="423" y="190">retake prompt</text><text x="423" y="206">if it fails</text>
+        <text x="588" y="190">&lt; 2 s per photo,</text><text x="588" y="206">offline</text>
+        <text x="753" y="190">see Figure 8</text>
+        <text x="915" y="190">per part:</text><text x="915" y="206">damage, size, severity</text>
+      </g>
+    </svg>
+    <figcaption><b>Figure 7.</b> Inspection flow.</figcaption>
+  </figure>
+
+  <h3>When the phone sends a photo to the server</h3>
+  <figure>
+    <svg viewBox="0 0 1000 440" font-family="Segoe UI, Arial, sans-serif">
+      <rect x="380" y="8" width="240" height="46" rx="10" fill="#eaf0fb" stroke="#24458e" stroke-width="1.5"/>
+      <text x="500" y="37" font-size="14" font-weight="700" fill="#17213b" text-anchor="middle">Phone result ready</text>
+      <g font-size="13" fill="#17213b" text-anchor="middle">
+        <path d="M500 76L630 112L500 148L370 112Z" fill="#fff" stroke="#24458e" stroke-width="1.5"/><text x="500" y="108">Confidence below</text><text x="500" y="124">threshold?</text>
+        <path d="M500 168L630 204L500 240L370 204Z" fill="#fff" stroke="#24458e" stroke-width="1.5"/><text x="500" y="200">Photo quality</text><text x="500" y="216">borderline?</text>
+        <path d="M500 260L630 296L500 332L370 296Z" fill="#fff" stroke="#24458e" stroke-width="1.5"/><text x="500" y="292">Safety part</text><text x="500" y="308">involved?</text>
+        <path d="M500 352L630 388L500 424L370 388Z" fill="#fff" stroke="#24458e" stroke-width="1.5"/><text x="500" y="384">Technician asked</text><text x="500" y="400">for a check?</text>
+      </g>
+      <!-- "no" goes down the chain -->
+      <g stroke="#5b6577" stroke-width="2" marker-end="url(#a)"><path d="M500 54V74"/><path d="M500 148V166"/><path d="M500 240V258"/><path d="M500 332V350"/></g>
+      <g font-size="11.5" fill="#5b6577" font-weight="700"><text x="508" y="161">no</text><text x="508" y="253">no</text><text x="508" y="345">no</text></g>
+      <!-- "yes" collects on one bus into the server box -->
+      <g stroke="#b7791f" stroke-width="2" fill="none"><path d="M630 112H700"/><path d="M630 204H700"/><path d="M630 296H700"/><path d="M630 388H700"/><path d="M700 112V388"/></g>
+      <path d="M700 250H754" stroke="#b7791f" stroke-width="2.5" marker-end="url(#a)"/>
+      <g font-size="12" fill="#8a5a10" font-weight="700"><text x="640" y="104">yes</text><text x="640" y="196">yes</text><text x="640" y="288">yes</text><text x="640" y="380">yes</text></g>
+      <rect x="758" y="190" width="232" height="120" rx="10" fill="#fff5e2" stroke="#b7791f" stroke-width="1.5"/>
+      <use href="#server" x="774" y="206" width="34" height="34"/>
+      <text x="818" y="228" font-size="14" font-weight="700" fill="#8a5a10">Send to server</text>
+      <text x="774" y="264" font-size="12" fill="#17213b">Server model re-checks the photo;</text>
+      <text x="774" y="282" font-size="12" fill="#17213b">its result replaces the phone's.</text>
+      <text x="774" y="300" font-size="12" fill="#5b6577">No network → queued, "pending".</text>
+      <!-- final "no" -->
+      <path d="M370 388H254" stroke="#22965e" stroke-width="2.5" marker-end="url(#a)"/>
+      <text x="300" y="380" font-size="12" font-weight="700" fill="#146b42">no</text>
+      <rect x="10" y="338" width="240" height="96" rx="10" fill="#e6f5ed" stroke="#22965e" stroke-width="1.5"/>
+      <use href="#phone" x="24" y="350" width="22" height="38"/>
+      <text x="56" y="370" font-size="14" font-weight="700" fill="#146b42">Use phone result</text>
+      <text x="56" y="390" font-size="12" fill="#17213b">shown instantly;</text>
+      <text x="56" y="408" font-size="12" fill="#17213b">synced to the server later</text>
+      <g font-size="12" fill="#5b6577"><text x="10" y="100" font-weight="700" fill="#17213b">Starting thresholds</text><text x="10" y="120">confidence &lt; 0.6 → server</text><text x="10" y="138">blur / glare score near the limit</text><text x="10" y="156">safety parts: brakes, steering,</text><text x="10" y="174">suspension, pillars, airbag areas</text></g>
+    </svg>
+    <figcaption><b>Figure 8.</b> Fallback rules. Any "yes" sends the photo to the server. The thresholds are starting values to tune on real workshop photos.</figcaption>
+  </figure>
+</section>
+
+<!-- ============================ 4. CAPTURE ============================ -->
+<section>
+  <h2><span class="num">8</span>Guided capture for each use case</h2>
+  <p class="lead">The app asks for one named shot at a time, shows where to stand, checks the photo live, and takes it automatically when the frame is right.</p>
+
+  <h3>Exterior · 10 photos</h3>
+  <figure>
+    <svg viewBox="0 0 1000 540" font-family="Segoe UI, Arial, sans-serif">
+      <ellipse cx="500" cy="270" rx="300" ry="226" fill="none" stroke="#d6dde8" stroke-width="1.5" stroke-dasharray="6 5"/>
+      <rect x="430" y="130" width="140" height="290" rx="46" fill="#fff" stroke="#24458e" stroke-width="2.5"/>
+      <path d="M446 204Q500 186 554 204L546 242H454Z" fill="#eaf0fb" stroke="#24458e" stroke-width="1.5"/>
+      <rect x="452" y="246" width="96" height="92" rx="8" fill="#fff" stroke="#24458e" stroke-width="1.2"/>
+      <path d="M454 342H546L552 368Q500 382 448 368Z" fill="#eaf0fb" stroke="#24458e" stroke-width="1.5"/>
+      <g fill="#17213b"><rect x="420" y="158" width="12" height="38" rx="4"/><rect x="568" y="158" width="12" height="38" rx="4"/><rect x="420" y="352" width="12" height="38" rx="4"/><rect x="568" y="352" width="12" height="38" rx="4"/></g>
+      <text x="500" y="156" font-size="12" font-weight="700" fill="#24458e" text-anchor="middle">FRONT</text>
+      <text x="500" y="410" font-size="12" font-weight="700" fill="#24458e" text-anchor="middle">REAR</text>
+      <text x="444" y="448" font-size="11" fill="#5b6577" text-anchor="middle">LEFT</text><text x="556" y="448" font-size="11" fill="#5b6577" text-anchor="middle">RIGHT</text>
+      <text x="330" y="282" font-size="11.5" fill="#5b6577" text-anchor="middle">1.5–3 m</text>
+      <g stroke="#00a6b2" stroke-width="1.4" stroke-dasharray="5 4" fill="none">
+        <path d="M500 82V126"/><path d="M728 108L572 160"/><path d="M792 212L574 212"/><path d="M792 336L574 336"/><path d="M728 442L572 390"/>
+        <path d="M500 480V424"/><path d="M272 442L428 390"/><path d="M208 336L426 336"/><path d="M208 212L426 212"/><path d="M272 108L428 160"/>
+      </g>
+      <g fill="#00a6b2" stroke="#fff" stroke-width="2">
+        <circle cx="500" cy="70" r="15"/><circle cx="740" cy="102" r="15"/><circle cx="806" cy="212" r="15"/><circle cx="806" cy="336" r="15"/><circle cx="740" cy="448" r="15"/>
+        <circle cx="500" cy="492" r="15"/><circle cx="260" cy="448" r="15"/><circle cx="194" cy="336" r="15"/><circle cx="194" cy="212" r="15"/><circle cx="260" cy="102" r="15"/>
+      </g>
+      <g fill="#fff" font-size="12" font-weight="700" text-anchor="middle">
+        <text x="500" y="74">1</text><text x="740" y="106">2</text><text x="806" y="216">3</text><text x="806" y="340">4</text><text x="740" y="452">5</text>
+        <text x="500" y="496">6</text><text x="260" y="452">7</text><text x="194" y="340">8</text><text x="194" y="216">9</text><text x="260" y="106">10</text>
+      </g>
+      <g font-size="13" fill="#17213b">
+        <text x="522" y="30" font-weight="700">1 Front</text><text x="522" y="46" fill="#5b6577" font-size="12">bumper · grille · bonnet · lamps</text>
+        <text x="762" y="88" font-weight="700">2 Front-right corner</text>
+        <text x="828" y="208" font-weight="700">3 Right front</text><text x="828" y="224" fill="#5b6577" font-size="12">fender · front door</text>
+        <text x="828" y="332" font-weight="700">4 Right rear</text><text x="828" y="348" fill="#5b6577" font-size="12">rear door · quarter</text>
+        <text x="762" y="480" font-weight="700">5 Rear-right corner</text>
+        <text x="522" y="520" font-weight="700">6 Rear</text><text x="522" y="536" fill="#5b6577" font-size="12">boot · rear bumper · tail lamps</text>
+      </g>
+      <g font-size="13" fill="#17213b" text-anchor="end">
+        <text x="238" y="480" font-weight="700">7 Rear-left corner</text>
+        <text x="172" y="332" font-weight="700">8 Left rear</text><text x="172" y="348" fill="#5b6577" font-size="12">rear door · quarter</text>
+        <text x="172" y="208" font-weight="700">9 Left front</text><text x="172" y="224" fill="#5b6577" font-size="12">fender · front door</text>
+        <text x="238" y="88" font-weight="700">10 Front-left corner</text>
+      </g>
+    </svg>
+    <figcaption><b>Figure 9.</b> Exterior walk-around, car seen from above. Every panel appears in at least two photos. If the phone model spots possible damage, the app asks for one or two extra close-ups (30–60 cm).</figcaption>
+  </figure>
+
+  <div class="grid2">
+    <figure style="margin:0">
+      <svg viewBox="0 0 480 560" font-family="Segoe UI, Arial, sans-serif">
+        <text x="10" y="22" font-size="16" font-weight="700" fill="#123a78">Interior · 8 photos</text>
+        <!-- cabin outline (top view) -->
+        <rect x="130" y="50" width="220" height="440" rx="60" fill="#fff" stroke="#00a6b2" stroke-width="2.5"/>
+        <rect x="150" y="86" width="180" height="40" rx="8" fill="#e7f7f8" stroke="#00a6b2" stroke-width="1.5"/>
+        <text x="240" y="111" font-size="12" fill="#00727a" text-anchor="middle" font-weight="600">dashboard</text>
+        <circle cx="298" cy="150" r="16" fill="none" stroke="#00a6b2" stroke-width="2.5"/>
+        <rect x="224" y="150" width="32" height="96" rx="6" fill="#e7f7f8" stroke="#00a6b2" stroke-width="1.5"/>
+        <text x="240" y="204" font-size="9.5" fill="#00727a" text-anchor="middle" transform="rotate(-90 240 200)">console</text>
+        <use href="#seat" x="268" y="176" width="54" height="72"/><use href="#seat" x="158" y="176" width="54" height="72"/>
+        <rect x="160" y="318" width="160" height="62" rx="12" fill="#fff" stroke="#00a6b2" stroke-width="2.5"/><rect x="160" y="300" width="160" height="22" rx="8" fill="#fff" stroke="#00a6b2" stroke-width="2"/>
+        <text x="240" y="356" font-size="11" fill="#00727a" text-anchor="middle">rear seats</text>
+        <g stroke="#00a6b2" stroke-width="2.5"><path d="M130 170V260M130 290V380M350 170V260M350 290V380"/></g>
+        <g stroke="#5b6577" stroke-width="2"><path d="M130 170L96 196M130 290L96 316M350 170L384 196M350 290L384 316"/></g>
+        <text x="240" y="70" font-size="11" fill="#5b6577" text-anchor="middle">FRONT</text>
+        <!-- camera points -->
+        <g fill="#00a6b2" stroke="#fff" stroke-width="2">
+          <circle cx="240" cy="282" r="13"/><circle cx="410" cy="150" r="13"/><circle cx="70" cy="150" r="13"/><circle cx="410" cy="230" r="13"/>
+          <circle cx="70" cy="230" r="13"/><circle cx="240" cy="440" r="13"/><circle cx="70" cy="340" r="13"/><circle cx="410" cy="340" r="13"/>
+        </g>
+        <g fill="#fff" font-size="11" font-weight="700" text-anchor="middle">
+          <text x="240" y="286">1</text><text x="410" y="154">2</text><text x="70" y="154">3</text><text x="410" y="234">4</text><text x="70" y="234">5</text><text x="240" y="444">6</text><text x="70" y="344">7</text><text x="410" y="344">8</text>
+        </g>
+        <g stroke="#00a6b2" stroke-width="1.3" stroke-dasharray="4 3" fill="none">
+          <path d="M240 269V130"/><path d="M397 150H316"/><path d="M83 150H222"/><path d="M397 230H324"/><path d="M83 230H160"/><path d="M240 427V384"/><path d="M83 340H128"/><path d="M397 340H352"/>
+        </g>
+        <g font-size="11.5" fill="#17213b">
+          <text x="10" y="508" font-weight="700">1 Dashboard</text><text x="10" y="524">2 Cluster + steering</text><text x="10" y="540">3 Centre console</text>
+          <text x="170" y="508">4 Driver seat</text><text x="170" y="524">5 Passenger seat</text><text x="170" y="540">6 Rear seats</text>
+          <text x="320" y="508">7 Left door trims</text><text x="320" y="524">8 Right door trims</text><text x="320" y="540" fill="#5b6577">+ headliner (optional)</text>
+        </g>
+      </svg>
+      <figcaption><b>Figure 10.</b> Interior shots (cabin from above, right-hand drive shown). Doors open, cabin light on, flash allowed.</figcaption>
+    </figure>
+    <figure style="margin:0">
+      <svg viewBox="0 0 480 560" font-family="Segoe UI, Arial, sans-serif">
+        <text x="10" y="22" font-size="16" font-weight="700" fill="#5a3fb0">Undercarriage · 8 photos</text>
+        <!-- underside outline -->
+        <rect x="120" y="50" width="240" height="440" rx="50" fill="#fff" stroke="#7054c8" stroke-width="2.5"/>
+        <text x="240" y="70" font-size="11" fill="#5b6577" text-anchor="middle">FRONT</text>
+        <use href="#axle" x="110" y="96" width="260" height="130"/>
+        <use href="#axle" x="110" y="356" width="260" height="130"/>
+        <rect x="212" y="118" width="56" height="40" rx="6" fill="#f0ecfb" stroke="#7054c8" stroke-width="1.5"/><text x="240" y="143" font-size="10" fill="#5a3fb0" text-anchor="middle">oil pan</text>
+        <rect x="230" y="200" width="20" height="170" rx="6" fill="#f0ecfb" stroke="#7054c8" stroke-width="1.5"/>
+        <path d="M262 190C280 260 280 320 272 400" stroke="#8a8f9c" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <rect x="150" y="240" width="64" height="80" rx="8" fill="#f0ecfb" stroke="#7054c8" stroke-width="1.5"/><text x="182" y="276" font-size="10" fill="#5a3fb0" text-anchor="middle">tank /</text><text x="182" y="290" font-size="10" fill="#5a3fb0" text-anchor="middle">battery</text>
+        <text x="296" y="300" font-size="10" fill="#5b6577">exhaust</text>
+        <!-- zones -->
+        <g fill="none" stroke="#7054c8" stroke-width="1.5" stroke-dasharray="5 4">
+          <rect x="104" y="90" width="96" height="110" rx="8"/><rect x="280" y="90" width="96" height="110" rx="8"/><rect x="206" y="84" width="68" height="84" rx="8"/>
+          <rect x="142" y="232" width="80" height="96" rx="8"/><rect x="224" y="186" width="72" height="200" rx="8"/><rect x="104" y="350" width="96" height="110" rx="8"/><rect x="280" y="350" width="96" height="110" rx="8"/><rect x="206" y="380" width="68" height="84" rx="8"/>
+        </g>
+        <g fill="#7054c8" stroke="#fff" stroke-width="2">
+          <circle cx="104" cy="90" r="13"/><circle cx="376" cy="90" r="13"/><circle cx="240" cy="84" r="13"/><circle cx="296" cy="186" r="13"/>
+          <circle cx="142" cy="232" r="13"/><circle cx="104" cy="460" r="13"/><circle cx="376" cy="460" r="13"/><circle cx="240" cy="464" r="13"/>
+        </g>
+        <g fill="#fff" font-size="11" font-weight="700" text-anchor="middle">
+          <text x="104" y="94">1</text><text x="376" y="94">2</text><text x="240" y="88">3</text><text x="296" y="190">4</text><text x="142" y="236">5</text><text x="104" y="464">6</text><text x="376" y="464">7</text><text x="240" y="468">8</text>
+        </g>
+        <g font-size="11.5" fill="#17213b">
+          <text x="10" y="508" font-weight="700">1 Front-left corner</text><text x="10" y="524">2 Front-right corner</text><text x="10" y="540">3 Front centre</text>
+          <text x="170" y="508">4 Centre tunnel</text><text x="170" y="524">5 Tank / battery</text><text x="170" y="540">6 Rear-left corner</text>
+          <text x="320" y="508">7 Rear-right corner</text><text x="320" y="524">8 Rear centre</text><text x="320" y="540" fill="#5b6577">car on a lift</text>
+        </g>
+      </svg>
+      <figcaption><b>Figure 11.</b> Undercarriage zones (car seen from below). Car on a lift, torch on, about 1 m from each zone.</figcaption>
+    </figure>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:18%">Use case</th><th class="c" style="width:10%">Photos</th><th>Shots</th><th style="width:26%">Conditions</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag t-ext">Exterior</span></td><td class="c">10 (+ close-ups)</td><td>Front, rear, 4 corners at 45°, front and rear half of each side</td><td>1.5–3 m, flash off, car dry, no direct sun behind the car</td></tr>
+      <tr><td><span class="tag t-int">Interior</span></td><td class="c">8</td><td>Dashboard, cluster + steering, console, driver seat, passenger seat, rear seats, left and right door trims</td><td>Doors open, cabin light on, flash allowed</td></tr>
+      <tr><td><span class="tag t-und">Undercarriage</span></td><td class="c">8</td><td>Four corners (suspension, CV boots, brakes), front centre, centre tunnel, tank / battery, rear centre</td><td>Car on a lift, torch on; never crawl under a car that isn't supported</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================ 5. OUTPUT ============================ -->
+<section style="break-before:auto;margin-top:8mm">
+  <h2><span class="num">9</span>What the report shows</h2>
+  <p class="lead">One report per vehicle, with a section for each use case that was inspected. Every damage lists its part, type, size, severity, confidence, and whether the phone or the server produced it.</p>
+
+  <figure>
+    <svg viewBox="0 0 1000 600" font-family="Segoe UI, Arial, sans-serif">
+      <rect x="6" y="6" width="988" height="588" rx="12" fill="#fff" stroke="#d6dde8"/>
+      <rect x="6" y="6" width="988" height="66" rx="12" fill="#123a78"/><rect x="6" y="54" width="988" height="18" fill="#123a78"/>
+      <text x="28" y="36" font-size="18" font-weight="700" fill="#fff">Vehicle inspection report</text>
+      <text x="28" y="58" font-size="12.5" fill="#c9d6f2">Hatchback 2021 · pearl white · Job RO-24117 · 4 Nov 2026</text>
+      <g font-size="12.5" font-weight="700">
+        <rect x="610" y="22" width="114" height="32" rx="16" fill="#e3eaf8"/><text x="667" y="43" text-anchor="middle" fill="#123a78">Exterior · 2</text>
+        <rect x="734" y="22" width="114" height="32" rx="16" fill="#e7f7f8"/><text x="791" y="43" text-anchor="middle" fill="#00727a">Interior · 1</text>
+        <rect x="858" y="22" width="120" height="32" rx="16" fill="#f0ecfb"/><text x="918" y="43" text-anchor="middle" fill="#5a3fb0">Under · 1</text>
+      </g>
+      <!-- photo with overlay -->
+      <rect x="26" y="92" width="330" height="200" rx="8" fill="#b9c4d8"/>
+      <use href="#carside" x="44" y="130" width="296" height="104"/>
+      <rect x="176" y="150" width="60" height="44" fill="#2a78d6" fill-opacity="0.2" stroke="#2a78d6" stroke-width="2"/>
+      <path d="M184 176C200 170 214 172 230 164" stroke="#2a78d6" stroke-width="3" fill="none"/>
+      <rect x="292" y="182" width="42" height="34" fill="#eb6834" fill-opacity="0.2" stroke="#eb6834" stroke-width="2"/>
+      <rect x="40" y="102" width="112" height="22" rx="4" fill="#17213b" opacity="0.8"/><text x="48" y="117" font-size="11" fill="#fff">photo 3 · right front</text>
+      <text x="26" y="312" font-size="11.5" fill="#5b6577">Damage outlined on the photo; tap a row to open it.</text>
+      <!-- summary cards -->
+      <g font-size="12.5">
+        <rect x="26" y="330" width="330" height="70" rx="8" fill="#f4f6fa"/><text x="40" y="354" font-weight="700" fill="#17213b">Photos</text><text x="40" y="374" fill="#5b6577">Exterior 10 + 2 close-ups · interior 8 ·</text><text x="40" y="390" fill="#5b6577">undercarriage 8 · all passed photo check</text>
+        <rect x="26" y="410" width="330" height="70" rx="8" fill="#fff5e2"/><text x="40" y="434" font-weight="700" fill="#8a5a10">Needs technician</text><text x="40" y="454" fill="#17213b">Undercarriage: possible leak on</text><text x="40" y="470" fill="#17213b">front-left shock (safety part)</text>
+      </g>
+      <!-- table -->
+      <g font-size="12.5">
+        <rect x="376" y="92" width="600" height="30" fill="#24458e"/>
+        <g fill="#fff" font-weight="600"><text x="388" y="112">Part</text><text x="530" y="112">Damage</text><text x="640" y="112">Size</text><text x="734" y="112">Severity</text><text x="812" y="112">Conf.</text><text x="878" y="112">Source</text></g>
+        <g fill="#17213b">
+          <rect x="376" y="122" width="600" height="44" fill="#fff"/><text x="388" y="149" font-weight="600">R front door</text><text x="530" y="149">scratch</text><text x="640" y="149">140 mm</text><text x="734" y="149">2 minor</text><text x="812" y="149">0.93</text>
+          <rect x="376" y="166" width="600" height="44" fill="#f4f6fa"/><text x="388" y="193" font-weight="600">R quarter panel</text><text x="530" y="193">dent</text><text x="640" y="193">4% panel</text><text x="734" y="193">3 moderate</text><text x="812" y="193">0.71</text>
+          <rect x="376" y="210" width="600" height="44" fill="#fff"/><text x="388" y="237" font-weight="600">Driver seat</text><text x="530" y="237">tear</text><text x="640" y="237">35 mm</text><text x="734" y="237">2 minor</text><text x="812" y="237">0.90</text>
+          <rect x="376" y="254" width="600" height="44" fill="#f4f6fa"/><text x="388" y="281" font-weight="600">FL shock absorber</text><text x="530" y="281">leak</text><text x="640" y="281">–</text><text x="734" y="281">check</text><text x="812" y="281">0.66</text>
+        </g>
+        <g font-size="11.5" font-weight="700">
+          <rect x="876" y="134" width="70" height="22" rx="11" fill="#e6f5ed"/><text x="911" y="149" text-anchor="middle" fill="#146b42">phone</text>
+          <rect x="876" y="178" width="70" height="22" rx="11" fill="#fff5e2"/><text x="911" y="193" text-anchor="middle" fill="#8a5a10">server</text>
+          <rect x="876" y="222" width="70" height="22" rx="11" fill="#e6f5ed"/><text x="911" y="237" text-anchor="middle" fill="#146b42">phone</text>
+          <rect x="876" y="266" width="70" height="22" rx="11" fill="#fff5e2"/><text x="911" y="281" text-anchor="middle" fill="#8a5a10">server</text>
+        </g>
+        <g font-size="10.5" font-weight="700">
+          <rect x="488" y="138" width="34" height="16" rx="3" fill="#e3eaf8"/><text x="505" y="150" text-anchor="middle" fill="#123a78">EXT</text>
+          <rect x="488" y="182" width="34" height="16" rx="3" fill="#e3eaf8"/><text x="505" y="194" text-anchor="middle" fill="#123a78">EXT</text>
+          <rect x="488" y="226" width="34" height="16" rx="3" fill="#e7f7f8"/><text x="505" y="238" text-anchor="middle" fill="#00727a">INT</text>
+          <rect x="488" y="270" width="34" height="16" rx="3" fill="#f0ecfb"/><text x="505" y="282" text-anchor="middle" fill="#5a3fb0">UND</text>
+        </g>
+      </g>
+      <!-- severity scale -->
+      <text x="376" y="330" font-size="12.5" font-weight="700" fill="#17213b">Severity scale</text>
+      <g font-size="11.5" text-anchor="middle">
+        <rect x="376" y="340" width="116" height="40" rx="6" fill="#e6f5ed"/><text x="434" y="358" font-weight="700" fill="#146b42">1 trivial</text><text x="434" y="373" fill="#5b6577">polish</text>
+        <rect x="496" y="340" width="116" height="40" rx="6" fill="#e6f5ed"/><text x="554" y="358" font-weight="700" fill="#146b42">2 minor</text><text x="554" y="373" fill="#5b6577">spot repair</text>
+        <rect x="616" y="340" width="116" height="40" rx="6" fill="#fff5e2"/><text x="674" y="358" font-weight="700" fill="#8a5a10">3 moderate</text><text x="674" y="373" fill="#5b6577">repair + paint</text>
+        <rect x="736" y="340" width="116" height="40" rx="6" fill="#fbeaea"/><text x="794" y="358" font-weight="700" fill="#c9302c">4 major</text><text x="794" y="373" fill="#5b6577">large repair</text>
+        <rect x="856" y="340" width="120" height="40" rx="6" fill="#fbeaea"/><text x="916" y="358" font-weight="700" fill="#c9302c">5 replace</text><text x="916" y="373" fill="#5b6577">part swap</text>
+      </g>
+      <rect x="376" y="400" width="600" height="80" rx="8" fill="#e7f7f8"/>
+      <text x="392" y="424" font-size="12.5" font-weight="700" fill="#00727a">Technician sign-off</text>
+      <text x="392" y="446" font-size="12" fill="#17213b">☐ Findings confirmed   ☐ Corrected   ☐ Sent to customer / DMS</text>
+      <text x="392" y="466" font-size="11.5" fill="#5b6577">Every correction is saved and used to improve the models.</text>
+      <rect x="26" y="500" width="950" height="78" rx="8" fill="#f4f6fa"/>
+      <text x="40" y="524" font-size="12.5" font-weight="700" fill="#17213b">Each damage record contains</text>
+      <text x="40" y="546" font-size="12" fill="#5b6577">use case · part (and side) · damage type · outline on photo · size (mm when a known reference size is visible, otherwise % of the part) ·</text>
+      <text x="40" y="564" font-size="12" fill="#5b6577">severity 1–5 · confidence · source (phone / server) · photo IDs · model version</text>
+    </svg>
+    <figcaption><b>Figure 12.</b> Illustrative report. The same data is available in the app, as a PDF, and as JSON for the workshop's DMS / ERP system.</figcaption>
+  </figure>
+</section>
+
+<!-- ============================ 6. BUILD ============================ -->
+<section>
+  <h2><span class="num">10</span>Plan: data, targets, timeline &amp; technology</h2>
+  <p class="lead">What each use case needs before release, and the order of work.</p>
+
+  <div class="grid2">
+    <table>
+      <thead><tr><th>Use case</th><th class="c">Labelled photos (start)</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag t-ext">Exterior</span></td><td class="c">~20,000</td></tr>
+        <tr><td><span class="tag t-int">Interior</span></td><td class="c">~10,000</td></tr>
+        <tr><td><span class="tag t-und">Undercarriage</span></td><td class="c">~8,000</td></tr>
+      </tbody>
+    </table>
+    <table>
+      <thead><tr><th>Release target</th><th class="c">Value</th></tr></thead>
+      <tbody>
+        <tr><td>Damage found (recall)</td><td class="c">≥ 95%</td></tr>
+        <tr><td>False alarms on clean parts</td><td class="c">≤ 5%</td></tr>
+        <tr><td>Phone time per photo</td><td class="c">&lt; 2 s</td></tr>
+        <tr><td>Phone model size</td><td class="c">10–25 MB</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="small" style="font-size:8.5pt;color:#5b6577">Photos are split by vehicle into training and test sets, so no car appears in both. Targets are checked per use case on a held-out test set of real workshop photos.</p>
+
+  <h3>Timeline</h3>
+  <figure>
+    <svg viewBox="0 0 1000 200" font-family="Segoe UI, Arial, sans-serif">
+      <g font-size="12" fill="#5b6577">
+        <line x1="180" y1="30" x2="990" y2="30" stroke="#d6dde8"/>
+        <text x="180" y="22">month 0</text><text x="342" y="22">2</text><text x="504" y="22">4</text><text x="666" y="22">6</text><text x="828" y="22">8</text><text x="966" y="22">10</text>
+        <g stroke="#eef1f6"><line x1="342" y1="30" x2="342" y2="190"/><line x1="504" y1="30" x2="504" y2="190"/><line x1="666" y1="30" x2="666" y2="190"/><line x1="828" y1="30" x2="828" y2="190"/></g>
+      </g>
+      <g font-size="14" font-weight="700" fill="#17213b"><text x="10" y="70">1 Exterior</text><text x="10" y="120">2 Interior</text><text x="10" y="170">3 Undercarriage</text></g>
+      <g font-size="12.5" font-weight="600" fill="#fff">
+        <rect x="180" y="48" width="324" height="34" rx="6" fill="#24458e"/><text x="192" y="70">app + capture + phone and server model</text>
+        <rect x="504" y="98" width="243" height="34" rx="6" fill="#00a6b2"/><text x="516" y="120">interior models</text>
+        <rect x="747" y="148" width="243" height="34" rx="6" fill="#7054c8"/><text x="759" y="170">undercarriage models</text>
+      </g>
+      <g fill="none" stroke-width="2" stroke-dasharray="5 4"><rect x="180" y="98" width="324" height="34" rx="6" stroke="#00a6b2"/><rect x="180" y="148" width="567" height="34" rx="6" stroke="#7054c8"/></g>
+      <g font-size="11.5"><text x="192" y="120" fill="#00727a">collect + label interior photos</text><text x="192" y="170" fill="#5a3fb0">collect + label undercarriage photos (workshop lifts)</text></g>
+    </svg>
+    <figcaption><b>Figure 13.</b> Ten-month plan. Dashed bars show photo collection starting early, so each use case has labelled data ready when its build begins.</figcaption>
+  </figure>
+
+  <h3>Technology</h3>
+  <table>
+    <thead><tr><th style="width:24%">Layer</th><th>Choice</th></tr></thead>
+    <tbody>
+      <tr><td>Mobile app</td><td>React Native + VisionCamera; native inference module (Swift / Kotlin)</td></tr>
+      <tr><td>Phone inference</td><td>Core ML on iPhone; LiteRT or ONNX Runtime on Android</td></tr>
+      <tr><td>Server</td><td>FastAPI; PyTorch / ONNX Runtime on GPU</td></tr>
+      <tr><td>Storage</td><td>Photos in object storage; results in PostgreSQL</td></tr>
+      <tr><td>Training</td><td>PyTorch; Mask2Former + DINOv2 (Apache 2.0); lightweight instance segmentation for the phone (Apache 2.0)</td></tr>
+    </tbody>
+  </table>
+</section>
+
+</body>
+</html>

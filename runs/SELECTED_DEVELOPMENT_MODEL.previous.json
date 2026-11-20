@@ -1,0 +1,43 @@
+{
+  "status": "development_only_not_production_approved",
+  "production_approved": false,
+  "selected_on": "expanded_coco_clean_and_user_asserted_part_hard_negative_candidate",
+  "architecture": "DINOv2 ViT-S/14 shared-backbone dense segmentation",
+  "selection": "development candidate: DINOv2 hard-negative refinement with COCO clean scenes, user clean-car, handle, fuel-cap, and side-view augmentations, plus a 1200-pixel component guard; not production approved",
+  "artifacts": {
+    "checkpoint": {
+      "path": "runs/pilot_cc0_dinov2_parts_hardneg_long/best.pt",
+      "sha256": "f830d168bdda7a77f7caed552426dc2680321b7fe1cecce18d982e7c79806244",
+      "bytes": 98920828
+    },
+    "development_profile": {
+      "path": "runs/pilot_cc0_dinov2_parts_hardneg_long/calibration-fp16-comp1200.json",
+      "sha256": "f1b490d1d9aa3818c82e42f72f38ed3081e28b7b62292bd3587ee4d62da9d9fb",
+      "bytes": 810
+    },
+    "parts_model": {
+      "path": "runs/pilot_cc0_dinov2_parts_hardneg_long/parts/parts-v1.onnx",
+      "sha256": "1d3b42a93c87037799cddc0d3801387c2f3c7ff453d15976b962c83b5f5be455",
+      "bytes": 93044890,
+      "note": "optional; frozen damage backbone + part head; held-out mIoU 0.62"
+    }
+  },
+  "current_candidate_metrics": {
+    "damage_cases": 98,
+    "detected_cases": 91,
+    "case_recall": 0.9285714285714286,
+    "clean_images": 100,
+    "clean_alerts": 1,
+    "clean_false_alert_rate": 0.01,
+    "supplied_clean_regression_damage_pixels": 0,
+    "component_guard_pixels": 1200,
+    "production_approved": false
+  },
+  "warnings": [
+    "Thresholds, component filter, and checkpoint selection consumed development data.",
+    "The public validation split contains no independently reviewed clean groups.",
+    "Synthetic stress results are diagnostics, not real nuisance-slice evidence.",
+    "Severe low resolution adds 10 false regions relative to the previous selected model.",
+    "Fresh first-party calibration and an untouched clean-inclusive test are required."
+  ]
+}

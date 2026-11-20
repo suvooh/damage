@@ -1,0 +1,30 @@
+[
+ {
+  "class_name": "crack_or_breakage",
+  "part": "front_bumper",
+  "part_id": 9,
+  "part_overlap": 0.6537257357545397,
+  "panel_area_pct": 3.3893902993312124,
+  "severity": {
+   "score": 3,
+   "label": "moderate",
+   "reason": "crack or breakage, 3% of panel (not in the rubric; rated on the d3 row)",
+   "basis": "extension:rated_on_d3_row",
+   "depth_class": null,
+   "depth_assumed": false,
+   "area_basis": "panel",
+   "area_fraction": 0.033893902993312124
+  },
+  "score": 0.5731062293052673,
+  "bbox": [
+   238,
+   315,
+   337,
+   351
+  ],
+  "area_pixels": 1597,
+  "area_frac": 0.007989034462403514,
+  "kind": "segmentation",
+  "side": null
+ }
+]

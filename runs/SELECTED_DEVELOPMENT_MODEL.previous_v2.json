@@ -1,0 +1,39 @@
+{
+  "status": "development_only_not_production_approved",
+  "production_approved": false,
+  "selected_on": "expanded_coco_clean_and_user_asserted_part_hard_negative_candidate",
+  "architecture": "DINOv2 ViT-S/14 shared-backbone dense segmentation",
+  "selection": "ft_v2: last 3 DINOv2 blocks + heads fine-tuned with Wikimedia 'wild' clean hard negatives; threshold 0.381 from proxy calibration; checked in the tiled pipeline on 10 held-out clean photos (0 detections) and 5 damaged samples (all detected); development only, not production approved",
+  "artifacts": {
+    "checkpoint": {
+      "path": "runs/ft_v2_wild_hardneg/best.pt",
+      "sha256": "2bc19f27e2c15f737ef559b0e921028b71f8fa8a26898c34ddcb2f04c196f6d9",
+      "bytes": 98931668
+    },
+    "development_profile": {
+      "path": "runs/ft_v2_wild_hardneg/profile.json",
+      "sha256": "2ed18f0966da39925f1e7109a740f74358b527cd72201d5cee559ae03ca671cb",
+      "bytes": 844
+    },
+    "parts_model": {
+      "path": "runs/pilot_cc0_dinov2_parts_hardneg_long/parts/parts-v1.onnx",
+      "sha256": "1d3b42a93c87037799cddc0d3801387c2f3c7ff453d15976b962c83b5f5be455",
+      "bytes": 93044890,
+      "note": "optional; frozen damage backbone + part head; held-out mIoU 0.62"
+    }
+  },
+  "current_candidate_metrics": {
+    "protocol": "single-scale 784px proxy; held-out Wikimedia clean photos (test split 72, validation 71)",
+    "wild_clean_false_alert_test_shipped_prev": 0.542,
+    "wild_clean_false_alert_test_v2": 0.0,
+    "test_recall_at_1pct_clean_false_alert_prev": 0.457,
+    "test_recall_at_1pct_clean_false_alert_v2": 0.963,
+    "tiled_pipeline_check": "10 held-out clean photos: previous model flagged 8, v2 flagged 0; damaged samples 5/5 detected",
+    "production_approved": false
+  },
+  "warnings": [
+    "Thresholds were chosen on a proxy protocol and a small real-pipeline check; fresh first-party calibration is required.",
+    "Validation selected the checkpoint; the clean wild set is Wikimedia curated photos, not customer photos.",
+    "NPU context graph is not regenerated for this checkpoint."
+  ]
+}

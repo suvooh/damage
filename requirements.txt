@@ -1,0 +1,19 @@
+# Damage-only FastAPI service
+fastapi>=0.115,<1
+uvicorn[standard]>=0.30,<1
+python-multipart>=0.0.20,<1
+
+# DINOv2 segmentation inference
+numpy>=2.0,<3
+scipy>=1.13,<2
+Pillow>=11,<13
+timm>=1.0,<2
+torch>=2.3
+torchvision>=0.18
+
+# CUDA-free inference path (CPU on any platform, Qualcomm GPU/NPU where available)
+onnx>=1.17
+onnxruntime>=1.23
+
+# Qualcomm Adreno GPU / Hexagon NPU (Snapdragon Windows-on-ARM): picked up automatically
+onnxruntime-qnn>=2.6; platform_machine == "ARM64"

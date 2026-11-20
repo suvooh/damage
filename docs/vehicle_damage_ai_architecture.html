@@ -1,0 +1,1919 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Vehicle Damage Foundation Model Architecture</title>
+<style>
+  :root {
+    --navy: #24458e; --navy-dark: #123a78; --teal: #00a6b2; --teal-pale: #e7f7f8;
+    --ink: #17213b; --grey: #5b6577; --line: #d6dde8; --soft: #f4f6fa;
+    --amber: #b7791f; --amber-pale: #fff5e2; --green: #22965e; --green-pale: #e6f5ed;
+    --red: #c9302c; --red-pale: #fbeaea; --purple: #7054c8; --purple-pale: #f0ecfb;
+  }
+  @page {
+    size: A4;
+    margin: 18mm 16mm 18mm 16mm;
+    @bottom-left { content: "Vehicle Damage AI · Foundation Model & Platform Architecture · Draft v1.0"; font: 7.5pt "Segoe UI", Arial, sans-serif; color: #5b6577; }
+    @bottom-right { content: counter(page) " / " counter(pages); font: 7.5pt "Segoe UI", Arial, sans-serif; color: #5b6577; }
+  }
+  @page :first { margin: 0; @bottom-left { content: none; } @bottom-right { content: none; } }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0; background: #fff; color: var(--ink); font: 9.6pt/1.5 "Segoe UI", "Aptos", Arial, sans-serif; }
+  h1, h2, h3, h4 { color: var(--navy-dark); line-height: 1.2; margin: 0; }
+  h2 { font-size: 17pt; margin: 0 0 3mm; padding-bottom: 2mm; border-bottom: 2px solid var(--teal); }
+  h2 .num { color: var(--teal); margin-right: 3mm; }
+  h3 { font-size: 11.5pt; margin: 5mm 0 2mm; }
+  h4 { font-size: 10pt; margin: 3mm 0 1mm; color: var(--ink); }
+  p { margin: 0 0 2.4mm; }
+  ul, ol { margin: 0 0 2.6mm; padding-left: 5mm; }
+  li { margin-bottom: 0.9mm; }
+  section { break-before: auto; margin-top: 9mm; }
+  section.page { break-before: page; margin-top: 0; }
+  h2, h3, h4, .lead { break-after: avoid; }
+  .lead { font-size: 10.5pt; color: var(--grey); margin-bottom: 4mm; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5mm 0 4mm; font-size: 8.6pt; break-inside: auto; }
+  thead { display: table-header-group; }
+  tr { break-inside: avoid; }
+  th { background: var(--navy); color: #fff; text-align: left; font-weight: 600; padding: 1.6mm 2mm; }
+  td { padding: 1.5mm 2mm; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tbody tr:nth-child(even) td { background: var(--soft); }
+  td.c, th.c { text-align: center; }
+  .fail { color: var(--red); font-weight: 600; }
+  .weak { color: var(--amber); font-weight: 600; }
+  .ok { color: var(--green); font-weight: 600; }
+  .callout { border-left: 3.5px solid var(--teal); background: var(--teal-pale); padding: 3mm 4mm; margin: 3mm 0 4mm; break-inside: avoid; }
+  .callout.amber { border-color: var(--amber); background: var(--amber-pale); }
+  .callout.navy { border-color: var(--navy); background: #eaf0fb; }
+  .callout strong:first-child { color: var(--navy-dark); }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; margin: 2mm 0 4mm; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3.5mm; margin: 2mm 0 4mm; }
+  .card { border: 1px solid var(--line); border-top: 3px solid var(--navy); border-radius: 1.5mm; padding: 3mm 3.5mm; break-inside: avoid; background: #fff; }
+  .card.teal { border-top-color: var(--teal); } .card.green { border-top-color: var(--green); }
+  .card.amber { border-top-color: var(--amber); } .card.purple { border-top-color: var(--purple); } .card.red { border-top-color: var(--red); }
+  .card h4 { margin-top: 0; }
+  .card p, .card ul { font-size: 8.8pt; margin-bottom: 1mm; }
+  .kpi { font-size: 18pt; font-weight: 700; color: var(--navy); line-height: 1.1; }
+  .kpi small { font-size: 8pt; font-weight: 400; color: var(--grey); display: block; margin-top: 1mm; }
+  figure { margin: 3mm 0 5mm; break-inside: avoid; }
+  figure svg { width: 100%; height: auto; display: block; }
+  figcaption { font-size: 8pt; color: var(--grey); margin-top: 1.5mm; }
+  figcaption b { color: var(--ink); }
+  pre { background: #0f1a33; color: #dbe6ff; font: 7.8pt/1.45 Consolas, "Cascadia Mono", monospace; padding: 3mm 4mm; border-radius: 1.5mm; white-space: pre-wrap; break-inside: avoid; margin: 2mm 0 4mm; }
+  pre .k { color: #7fd8e0; } pre .s { color: #ffd28a; } pre .c { color: #8a97b5; }
+  .tag { display: inline-block; font-size: 7.4pt; font-weight: 600; padding: 0.3mm 1.6mm; border-radius: 1mm; background: var(--teal-pale); color: #00727a; margin-right: 1mm; }
+  .tag.navy { background: #e3eaf8; color: var(--navy-dark); } .tag.amber { background: var(--amber-pale); color: #8a5a10; }
+  .tag.red { background: var(--red-pale); color: var(--red); } .tag.green { background: var(--green-pale); color: #146b42; }
+  .muted { color: var(--grey); }
+  .small { font-size: 8.4pt; }
+  .avoid { break-inside: avoid; }
+
+  /* cover */
+  .cover { height: 297mm; width: 210mm; background: var(--navy-dark); color: #fff; position: relative; overflow: hidden; break-after: page; }
+  .cover .band { position: absolute; left: 0; right: 0; bottom: 0; height: 92mm; background: #fff; }
+  .cover .inner { position: absolute; left: 20mm; right: 20mm; top: 46mm; }
+  .cover .eyebrow { font-size: 9pt; letter-spacing: 0.22em; text-transform: uppercase; color: #7fd8e0; font-weight: 600; }
+  .cover h1 { color: #fff; font-size: 30pt; line-height: 1.12; margin: 6mm 0 5mm; font-weight: 700; }
+  .cover .sub { font-size: 12.5pt; color: #c9d6f2; max-width: 150mm; line-height: 1.45; }
+  .cover .rule { width: 30mm; height: 3px; background: var(--teal); margin: 9mm 0 7mm; }
+  .cover .meta { font-size: 9.5pt; color: #c9d6f2; line-height: 1.7; }
+  .cover .meta b { color: #fff; font-weight: 600; }
+  .cover .foot { position: absolute; left: 20mm; right: 20mm; bottom: 20mm; color: var(--ink); }
+  .cover .foot .grid3 { gap: 6mm; }
+  .cover .foot .kpi { font-size: 15pt; }
+  .cover svg.deco { position: absolute; right: -30mm; top: 18mm; width: 150mm; opacity: 0.16; }
+
+  .toc { columns: 2; column-gap: 8mm; font-size: 9.4pt; margin-top: 2mm; }
+  .toc div { break-inside: avoid; padding: 1.2mm 0; border-bottom: 1px dotted var(--line); }
+  .toc b { color: var(--teal); display: inline-block; width: 7mm; }
+
+  /* step layouts (merged sections) */
+  .step { display: grid; grid-template-columns: 1fr 1.05fr; gap: 4mm; border: 1px solid var(--line); border-left: 4px solid var(--navy); border-radius: 1.5mm; padding: 3mm 3.5mm; margin: 0 0 3.5mm; break-inside: avoid; }
+  .no { font-size: 7.6pt; font-weight: 700; color: var(--teal); letter-spacing: 0.08em; text-transform: uppercase; }
+  .step h4, .ncard h4 { margin: 0.5mm 0 1.5mm; font-size: 10.5pt; color: var(--navy-dark); }
+  .step p, .step li { font-size: 8.5pt; margin-bottom: 1.5mm; }
+  .step .kv { font-size: 7.8pt; color: var(--grey); }
+  .thumbs { display: flex; gap: 2mm; align-items: flex-start; }
+  .thumbs figure { margin: 0; flex: 1; min-width: 0; }
+  .thumbs img { width: 100%; height: 43mm; object-fit: contain; background: #f4f6fa; border-radius: 1mm; display: block; }
+  .thumbs figcaption { font-size: 7pt; margin-top: 0.8mm; text-align: center; }
+  .fix { font-size: 8.1pt; background: var(--teal-pale); border-radius: 1mm; padding: 1.6mm 2.2mm; margin-top: 2mm; }
+  .fix b { color: #00727a; }
+  table.mini { font-size: 7.9pt; margin: 0.5mm 0 1.5mm; }
+  table.mini td { padding: 0.7mm 1.4mm; }
+  .ngrid { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5mm; }
+  .ncard { border: 1px solid var(--line); border-top: 3px solid var(--teal); border-radius: 1.5mm; padding: 2.5mm 3mm; break-inside: avoid; }
+  .ncard svg { width: 100%; height: auto; display: block; margin: 1mm 0 2mm; background: #f8fafc; border-radius: 1mm; }
+  .ncard dl { margin: 0; font-size: 7.9pt; display: grid; grid-template-columns: 15mm 1fr; gap: 0.6mm 2mm; line-height: 1.4; }
+  .ncard dt { color: var(--grey); font-weight: 600; }
+  .ncard dd { margin: 0; }
+  img.chart { width: 100%; display: block; }
+  .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3mm; }
+  .gallery figure { margin: 0; }
+  .gallery img { width: 100%; height: 36mm; object-fit: cover; border-radius: 1mm; display: block; }
+  .gallery figcaption { font-size: 7pt; margin-top: 0.8mm; }
+
+  .capgrid { display: grid; grid-template-columns: 1.55fr 1fr; gap: 4mm; align-items: start; margin: 2mm 0; break-inside: avoid; }
+  .capgrid svg { width: 100%; height: auto; display: block; }
+  .capgrid .card ul { padding-left: 4mm; }
+  table.cov td, table.cov th { padding: 1mm 1.4mm; }
+  table.cov td.c { color: var(--navy); font-size: 9pt; }
+  /* frag-merged */
+</style>
+</head>
+<body>
+
+<!-- ============================ COVER ============================ -->
+<div class="cover">
+  <svg class="deco" viewBox="0 0 400 400" aria-hidden="true">
+    <g fill="none" stroke="#7fd8e0" stroke-width="1.2">
+      <circle cx="200" cy="200" r="190"/><circle cx="200" cy="200" r="150"/><circle cx="200" cy="200" r="110"/><circle cx="200" cy="200" r="70"/>
+      <path d="M10 200H390M200 10V390M66 66L334 334M334 66L66 334"/>
+    </g>
+  </svg>
+  <div class="band"></div>
+  <div class="inner">
+    <div class="eyebrow">Architecture overview · Draft v1.0</div>
+    <h1>Automotive Vision<br>Foundation Model<br>&amp; Inspection Platform</h1>
+    <div class="sub">A production architecture for a vehicle damage inspection model: a domain-pretrained foundation backbone, specialist task heads, multi-view fusion, measured severity and an auditable source of truth, deployed on phones with a server of record.</div>
+    <div class="rule"></div>
+    <div class="meta">
+      <b>Scope:</b> Exterior first; interior and undercarriage on the same platform<br>
+      <b>Input:</b> ordinary 2D phone photos from a 10-slot guided capture<br>
+      <b>Date:</b> 4 November 2026 &nbsp;·&nbsp; <b>Status:</b> Proposal for review
+    </div>
+  </div>
+  <div class="foot">
+    <div class="grid3">
+      <div><div class="kpi">1 backbone<small>Domain-pretrained foundation model shared by every inspection task</small></div></div>
+      <div><div class="kpi">Edge + server<small>The phone gives an instant provisional result; the server result is the record of truth</small></div></div>
+      <div><div class="kpi">Measured, not assumed<small>Every number carries its method, uncertainty and provenance</small></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================ CONTENTS + EXEC SUMMARY ============================ -->
+<section style="margin-top:0">
+  <h2>Contents</h2>
+  <div class="toc">
+    <div><b>1</b>Executive summary</div>
+    <div><b>2</b>Design principles</div>
+    <div><b>3</b>End-to-end system architecture</div>
+    <div><b>4</b>Final product: capture, inputs, parameters &amp; outputs</div>
+    <div><b>5</b>Inference pipeline, step by step</div>
+    <div><b>6</b>Training &amp; release pipeline, step by step</div>
+    <div><b>7</b>Source of truth &amp; ground truth</div>
+    <div><b>8</b>Data engine</div>
+    <div><b>9</b>Foundation model (AVFM)</div>
+    <div><b>10</b>Task model architecture</div>
+    <div><b>11</b>Multi-view fusion &amp; measurement</div>
+    <div><b>12</b>Calibration &amp; decision routing</div>
+    <div><b>13</b>Distillation &amp; edge deployment</div>
+    <div><b>14</b>Serving platform &amp; technology stack</div>
+    <div><b>15</b>Evaluation, release gates &amp; monitoring</div>
+    <div><b>16</b>Security, privacy &amp; licensing</div>
+    <div><b>17</b>Roadmap, team &amp; compute</div>
+    <div><b>18</b>Risks &amp; mitigations</div>
+    <div><b>A</b>Glossary</div>
+  </div>
+
+  <h2 style="margin-top:9mm"><span class="num">1</span>Executive summary</h2>
+  <p class="lead">This document specifies a vehicle damage inspection system for service centres. It must say whether a car is damaged, <em>what</em> the damage is, <em>where</em> it is and <em>how severe</em> it is, reliably enough to act on. It combines a vehicle-domain foundation model, a guided 2D photo capture app, and a data and truth system that keeps the model reliable. Neither the model nor the data system is enough on its own.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h4>What we build</h4>
+      <ul>
+        <li><b>AVFM</b>, an Automotive Vision Foundation Model: DINOv2 ViT-L/14 further self-supervised on millions of unlabelled vehicle photos, so its features understand paint, panels, reflections and trim.</li>
+        <li><b>Specialist task heads</b> on that backbone: panel instances with sides, damage instances (multi-label), nuisance classes (reflection, dirt, seams), viewpoint, keypoints, material, severity.</li>
+        <li><b>A high-resolution surface specialist</b> for scratches, chips and paint defects on panel crops.</li>
+        <li><b>Distilled edge students</b> for iOS and Android; full teachers run on the server.</li>
+        <li><b>Assisted capture</b>: a 10-photo guided walk-around plus prompted close-ups, using ordinary 2D phone photos only, with no LiDAR or depth sensor (§4).</li>
+      </ul>
+    </div>
+    <div class="card teal">
+      <h4>How it becomes reliable</h4>
+      <ul>
+        <li><b>An append-only inspection ledger</b> holds every image, prediction, correction and repair outcome, with hashes and model versions.</li>
+        <li><b>Ground-truth tiers:</b> repair orders and physical measurements outrank assessor labels, and assessor labels outrank model output.</li>
+        <li><b>Multi-view fusion:</b> damage has to stay in the same place on the panel across photos, so reflections and glare drop out.</li>
+        <li><b>Calibrated, fail-closed decisions</b> with a guaranteed miss rate on auto-cleared vehicles.</li>
+      </ul>
+    </div>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:34%">Key decision</th><th>Choice</th><th style="width:30%">Why</th></tr></thead>
+    <tbody>
+      <tr><td>Foundation model</td><td>Continue pretraining DINOv2 ViT-L/14 (Apache 2.0) on our own vehicle images. Do not train from scratch.</td><td>Most of the domain gain for about 1–5% of the cost of training from scratch</td></tr>
+      <tr><td>Dense decoder</td><td>ViT-Adapter + Mask2Former (instance masks, multi-scale, stride 4)</td><td>Fine masks at stride 4; one instance per damage</td></tr>
+      <tr><td>Damage output</td><td>Multi-label instances + explicit nuisance classes</td><td>A dent can also be scratched; reflections are learned, not filtered</td></tr>
+      <tr><td>Unit of decision</td><td>Vehicle-level damage list fused from a guided capture set</td><td>Single photos cannot separate glare from damage</td></tr>
+      <tr><td>Severity / repair</td><td>Versioned rules engine fed by measured evidence</td><td>Auditable; no assumed dent depth</td></tr>
+      <tr><td>Edge vs server</td><td>Edge is provisional and offline-capable; server is the record of truth</td><td>Fast UX without trusting a small model for the final result</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout navy"><strong>Bottom line.</strong> Of the improvement we expect, roughly 60% comes from data and ground truth (expert labelling, first-party gold sets, gauge-measured depth labels, repair outcomes), 25% from architecture (foundation pretraining, instance decoder, high-resolution branch) and 15% from system design (multi-view fusion, calibration). These shares are a planning judgement, not a measurement. Phase 0 starts data collection on day one for this reason.</div>
+</section>
+
+<!-- ============================ 3. PRINCIPLES ============================ -->
+<section>
+  <h2><span class="num">2</span>Design principles</h2>
+  <p class="lead">These rules constrain every component that follows. Any proposal that breaks one needs an explicit exception.</p>
+  <div class="grid2">
+    <div class="card"><h4>P1 · Evidence is separate from decisions</h4><p>Models output observations: masks, types, measurements and their uncertainty. A versioned rules engine turns evidence into severity and repair options. Models never output "replace".</p></div>
+    <div class="card"><h4>P2 · Fail closed</h4><p>Uncertain, low-quality or disagreeing results go to recapture or human review. A missing measurement is <code>null</code> with a reason, never a default value.</p></div>
+    <div class="card teal"><h4>P3 · One append-only record of truth</h4><p>Every image, inference, correction and repair outcome is an immutable event with hashes and versions. Any past result can be replayed exactly.</p></div>
+    <div class="card teal"><h4>P4 · Ground truth has tiers</h4><p>Repair orders and physical measurements outrank assessor labels, which outrank model output. Every label records its tier and author.</p></div>
+    <div class="card green"><h4>P5 · The vehicle is the unit of decision</h4><p>Results are fused across a guided capture set. A finding seen consistently from several angles is more credible than one strong pixel blob.</p></div>
+    <div class="card green"><h4>P6 · Edge is provisional; server is authoritative</h4><p>The phone gives instant, offline feedback. Every inspection is re-scored by server teachers, and disagreements feed review and training.</p></div>
+    <div class="card purple"><h4>P7 · Only real-pipeline numbers decide</h4><p>Models are selected and gated on the full deployed pipeline over frozen first-party test sets, sliced by paint, light, device and damage size. Proxy metrics are for debugging only.</p></div>
+    <div class="card purple"><h4>P8 · Everything pinned and reversible</h4><p>Models, profiles, rules, taxonomies and datasets are content-hashed and promoted through a registry. Rollback is a pointer change.</p></div>
+  </div>
+</section>
+
+<!-- ============================ 4. SYSTEM ARCHITECTURE ============================ -->
+<section class="page">
+  <h2><span class="num">3</span>End-to-end system architecture</h2>
+  <p class="lead">Three planes: the <b>edge plane</b> captures and gives instant feedback, the <b>inspection plane</b> produces the authoritative result, and the <b>learning plane</b> turns verified outcomes into better models.</p>
+
+  <figure>
+    <svg viewBox="0 0 1000 760" font-family="Segoe UI, Arial, sans-serif">
+      <defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#5b6577"/></marker>
+        <marker id="art" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#00a6b2"/></marker>
+      </defs>
+      <!-- planes -->
+      <rect x="10" y="10" width="980" height="170" rx="10" fill="#eaf0fb" stroke="#24458e" stroke-width="1.2"/>
+      <text x="26" y="36" font-size="17" font-weight="700" fill="#123a78">EDGE PLANE · React Native app + native ML module</text>
+      <rect x="10" y="200" width="980" height="300" rx="10" fill="#e7f7f8" stroke="#00a6b2" stroke-width="1.2"/>
+      <text x="26" y="226" font-size="17" font-weight="700" fill="#00727a">INSPECTION PLANE · online services (authoritative result)</text>
+      <rect x="10" y="520" width="980" height="230" rx="10" fill="#f0ecfb" stroke="#7054c8" stroke-width="1.2"/>
+      <text x="26" y="546" font-size="17" font-weight="700" fill="#5a3fb0">LEARNING PLANE · truth, data engine and model factory</text>
+
+      <!-- edge boxes -->
+      <g font-size="13.5" fill="#17213b">
+        <rect x="28" y="54" width="170" height="104" rx="7" fill="#fff" stroke="#24458e"/>
+        <text x="40" y="76" font-weight="700">Guided capture</text>
+        <text x="40" y="96">2D photos only</text><text x="40" y="114">10 named slots + close-ups</text><text x="40" y="132">VIN / plate, odometer</text>
+
+        <rect x="214" y="54" width="170" height="104" rx="7" fill="#fff" stroke="#24458e"/>
+        <text x="226" y="76" font-weight="700">Live quality model</text>
+        <text x="226" y="96">blur, exposure, glare</text><text x="226" y="114">view coverage check</text><text x="226" y="132">sampled frames only</text>
+
+        <rect x="400" y="54" width="190" height="104" rx="7" fill="#fff" stroke="#24458e"/>
+        <text x="412" y="76" font-weight="700">Edge students</text>
+        <text x="412" y="96">panel + view + damage</text><text x="412" y="114">surface specialist on crops</text><text x="412" y="132">Core ML / QNN / LiteRT</text>
+
+        <rect x="606" y="54" width="170" height="104" rx="7" fill="#fff" stroke="#24458e"/>
+        <text x="618" y="76" font-weight="700">Local fusion</text>
+        <text x="618" y="96">provisional verdict</text><text x="618" y="114">recapture prompts</text><text x="618" y="132">uncertainty flags</text>
+
+        <rect x="792" y="54" width="180" height="104" rx="7" fill="#fff" stroke="#24458e"/>
+        <text x="804" y="76" font-weight="700">Encrypted outbox</text>
+        <text x="804" y="96">SQLite + image store</text><text x="804" y="114">idempotent sync</text><text x="804" y="132">works offline</text>
+      </g>
+      <g stroke="#5b6577" stroke-width="1.6" marker-end="url(#ar)">
+        <line x1="198" y1="106" x2="212" y2="106"/><line x1="384" y1="106" x2="398" y2="106"/>
+        <line x1="590" y1="106" x2="604" y2="106"/><line x1="776" y1="106" x2="790" y2="106"/>
+      </g>
+      <path d="M882 158V200" stroke="#00a6b2" stroke-width="2.2" fill="none" marker-end="url(#art)"/>
+      <text x="892" y="190" font-size="12.5" fill="#00727a" font-weight="600">sync all evidence</text>
+
+      <!-- inspection plane -->
+      <g font-size="13.5" fill="#17213b">
+        <rect x="792" y="244" width="180" height="96" rx="7" fill="#fff" stroke="#00a6b2"/>
+        <text x="804" y="266" font-weight="700">Ingestion API</text>
+        <text x="804" y="286">auth, tenant, dedupe</text><text x="804" y="304">by SHA-256</text><text x="804" y="322">append events</text>
+
+        <rect x="574" y="244" width="200" height="96" rx="7" fill="#fff" stroke="#00a6b2"/>
+        <text x="586" y="266" font-weight="700">Teacher inference</text>
+        <text x="586" y="286">AVFM-L task heads</text><text x="586" y="304">+ surface specialist</text><text x="586" y="322">GPU, Triton, async</text>
+
+        <rect x="356" y="244" width="200" height="96" rx="7" fill="#fff" stroke="#00a6b2"/>
+        <text x="368" y="266" font-weight="700">Multi-view fusion</text>
+        <text x="368" y="286">panel coordinate frame</text><text x="368" y="304">cross-view consistency</text><text x="368" y="322">vehicle damage list</text>
+
+        <rect x="28" y="244" width="310" height="96" rx="7" fill="#fff" stroke="#00a6b2"/>
+        <text x="40" y="266" font-weight="700">Measurement service</text>
+        <text x="40" y="286">scale: multi-view geometry + VIN dims</text><text x="40" y="304">length, area, dent depth + uncertainty</text><text x="40" y="322">method recorded per number</text>
+
+        <rect x="28" y="370" width="310" height="110" rx="7" fill="#fff" stroke="#00a6b2"/>
+        <text x="40" y="392" font-weight="700">Rules engine (versioned)</text>
+        <text x="40" y="412">severity rubric 1–5, repair options</text><text x="40" y="430">OEM / safety constraints</text><text x="40" y="448">every output cites its basis</text>
+
+        <rect x="356" y="370" width="200" height="110" rx="7" fill="#fff" stroke="#00a6b2"/>
+        <text x="368" y="392" font-weight="700">Calibrated router</text>
+        <text x="368" y="412">auto-accept</text><text x="368" y="430">assessor review</text><text x="368" y="448">recapture · escalate</text>
+
+        <rect x="574" y="370" width="200" height="110" rx="7" fill="#fff" stroke="#00a6b2"/>
+        <text x="586" y="392" font-weight="700">Assessor review UI</text>
+        <text x="586" y="412">confirm / correct masks,</text><text x="586" y="430">types, panels, severity</text><text x="586" y="448">edge vs teacher diff</text>
+
+        <rect x="792" y="370" width="180" height="110" rx="7" fill="#fff" stroke="#00a6b2"/>
+        <text x="804" y="392" font-weight="700">Report &amp; DMS / ERP</text>
+        <text x="804" y="412">final inspection report</text><text x="804" y="430">estimate hand-off</text><text x="804" y="448">customer copy</text>
+      </g>
+      <g stroke="#5b6577" stroke-width="1.6" marker-end="url(#ar)" fill="none">
+        <line x1="792" y1="292" x2="776" y2="292"/><line x1="574" y1="292" x2="558" y2="292"/><line x1="356" y1="292" x2="340" y2="292"/>
+        <line x1="183" y1="340" x2="183" y2="368"/><line x1="338" y1="425" x2="354" y2="425"/>
+        <line x1="556" y1="425" x2="572" y2="425"/><line x1="774" y1="425" x2="790" y2="425"/>
+      </g>
+
+      <!-- learning plane -->
+      <g font-size="13.5" fill="#17213b">
+        <rect x="792" y="566" width="180" height="160" rx="7" fill="#fff" stroke="#7054c8"/>
+        <text x="804" y="588" font-weight="700">Inspection ledger</text>
+        <text x="804" y="608">append-only events</text><text x="804" y="626">Postgres + outbox</text><text x="804" y="644">object store (CAS)</text><text x="804" y="662">repair-order outcomes</text><text x="804" y="680">consent &amp; licence</text>
+
+        <rect x="574" y="566" width="200" height="160" rx="7" fill="#fff" stroke="#7054c8"/>
+        <text x="586" y="588" font-weight="700">Data engine</text>
+        <text x="586" y="608">active-learning queue</text><text x="586" y="626">annotation + adjudication</text><text x="586" y="644">gold sets, IAA checks</text><text x="586" y="662">versioned snapshots</text><text x="586" y="680">splits by vehicle/site</text>
+
+        <rect x="356" y="566" width="200" height="160" rx="7" fill="#fff" stroke="#7054c8"/>
+        <text x="368" y="588" font-weight="700">Model factory</text>
+        <text x="368" y="608">AVFM SSL pretraining</text><text x="368" y="626">multi-task teachers</text><text x="368" y="644">distil → students</text><text x="368" y="662">export, quantise</text><text x="368" y="680">device parity tests</text>
+
+        <rect x="28" y="566" width="310" height="160" rx="7" fill="#fff" stroke="#7054c8"/>
+        <text x="40" y="588" font-weight="700">Evaluation &amp; release</text>
+        <text x="40" y="608">frozen first-party test sets, sliced</text><text x="40" y="626">automated release gates</text><text x="40" y="644">shadow → canary → rollout</text><text x="40" y="662">signed model bundles to registry</text><text x="40" y="680">drift &amp; override monitoring</text>
+      </g>
+      <g stroke="#5b6577" stroke-width="1.6" marker-end="url(#ar)" fill="none">
+        <line x1="792" y1="646" x2="776" y2="646"/><line x1="574" y1="646" x2="558" y2="646"/><line x1="356" y1="646" x2="340" y2="646"/>
+      </g>
+      <path d="M882 480V564" stroke="#7054c8" stroke-width="2.2" fill="none" marker-end="url(#art)"/>
+      <text x="892" y="528" font-size="12.5" fill="#5a3fb0" font-weight="600">every event</text>
+      <path d="M674 480V564" stroke="#7054c8" stroke-width="2" stroke-dasharray="5 4" fill="none" marker-end="url(#art)"/>
+      <text x="684" y="528" font-size="12.5" fill="#5a3fb0" font-weight="600">corrections</text>
+      <!-- release back to edge and server -->
+      <path d="M28 700H4V106H26" stroke="#7054c8" stroke-width="2" stroke-dasharray="6 4" fill="none" marker-end="url(#art)"/>    </svg>
+    <figcaption><b>Figure 1.</b> System architecture. Solid arrows show the flow of a single inspection; dashed arrows show the learning loop, including the line on the left edge that releases signed models and rules back to the phone and server.</figcaption>
+  </figure>
+
+  <h3>Lifecycle of one inspection</h3>
+  <ol class="small">
+    <li><b>Capture.</b> The app walks the technician through a fixed view set. The live quality model rejects blur, glare and bad framing before the shutter.</li>
+    <li><b>Edge inference.</b> Panel/viewpoint and damage students run once per photo, and the surface specialist runs only on flagged panel crops. The result is shown as <i>provisional</i>.</li>
+    <li><b>Sync.</b> All evidence is synced, not just low-confidence cases. Ingestion deduplicates by content hash and appends events.</li>
+    <li><b>Teacher re-score.</b> Full-size teachers re-run on every image. Disagreement with the edge result is stored as a first-class signal.</li>
+    <li><b>Fusion and measurement.</b> Detections from all views are mapped into panel coordinates and combined into one vehicle-level damage list. Lengths, areas and depths are measured where the method allows.</li>
+    <li><b>Rules and routing.</b> The rules engine computes severity and repair options. The calibrated router decides between auto-accept, assessor review, recapture and escalation.</li>
+    <li><b>Close the loop.</b> Assessor corrections and the eventual repair order are appended to the ledger and become training and evaluation data.</li>
+  </ol>
+</section>
+
+<!-- ============================ FINAL PRODUCT SPEC ============================ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="pp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5b6577"/></marker>
+    <!-- unfolded vehicle damage map, 400 x 400 -->
+    <symbol id="unfold" viewBox="0 0 400 400">
+      <g stroke="#24458e" stroke-width="2" fill="#fff">
+        <rect x="150" y="18" width="100" height="26" rx="10"/>
+        <rect x="150" y="48" width="100" height="72" rx="6"/>
+        <rect x="155" y="124" width="90" height="30" rx="4" fill="#eaf0fb"/>
+        <rect x="155" y="158" width="90" height="108" rx="4"/>
+        <rect x="155" y="270" width="90" height="26" rx="4" fill="#eaf0fb"/>
+        <rect x="150" y="300" width="100" height="50" rx="6"/>
+        <rect x="150" y="354" width="100" height="26" rx="10"/>
+        <rect x="64" y="48" width="70" height="72" rx="6"/><rect x="64" y="124" width="70" height="82" rx="4"/><rect x="64" y="210" width="70" height="82" rx="4"/><rect x="64" y="296" width="70" height="54" rx="6"/>
+        <rect x="266" y="48" width="70" height="72" rx="6"/><rect x="266" y="124" width="70" height="82" rx="4"/><rect x="266" y="210" width="70" height="82" rx="4"/><rect x="266" y="296" width="70" height="54" rx="6"/>
+        <rect x="42" y="128" width="16" height="22" rx="4" fill="#eaf0fb"/><rect x="342" y="128" width="16" height="22" rx="4" fill="#eaf0fb"/>
+      </g>
+      <g fill="#17213b"><rect x="44" y="64" width="14" height="40" rx="4"/><rect x="44" y="300" width="14" height="40" rx="4"/><rect x="342" y="64" width="14" height="40" rx="4"/><rect x="342" y="300" width="14" height="40" rx="4"/></g>
+      <g font-size="11" fill="#5b6577" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif">
+        <text x="200" y="35">front bumper</text><text x="200" y="88">bonnet</text><text x="200" y="143">windshield</text><text x="200" y="214">roof</text><text x="200" y="287">rear glass</text><text x="200" y="329">boot / tailgate</text><text x="200" y="371">rear bumper</text>
+        <text x="99" y="88">L fender</text><text x="99" y="168">L front door</text><text x="99" y="254">L rear door</text><text x="99" y="327">L quarter</text>
+        <text x="301" y="88">R fender</text><text x="301" y="168">R front door</text><text x="301" y="254">R rear door</text><text x="301" y="327">R quarter</text>
+        <text x="200" y="12" font-weight="700" fill="#17213b">FRONT</text><text x="200" y="397" font-weight="700" fill="#17213b">REAR</text>
+        <text x="99" y="40" font-weight="700" fill="#17213b">LEFT side</text><text x="301" y="40" font-weight="700" fill="#17213b">RIGHT side</text>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<section class="page">
+  <h2><span class="num">4</span>Final product: capture, inputs, parameters &amp; outputs</h2>
+  <p class="lead">This is what a service-centre technician does, what the system receives, which settings control it, and what comes out. The product is designed for <b>ordinary 2D phone photos only</b>: no LiDAR, depth sensor, AR depth or special hardware.</p>
+
+  <div class="grid3">
+    <div class="card"><div class="kpi">10 photos<small>Required guided walk-around per vehicle, each panel seen from at least 2 angles</small></div></div>
+    <div class="card teal"><div class="kpi">+ 0–8 close-ups<small>2 per suspected damage, prompted by the app. Typical total: 14–16 photos</small></div></div>
+    <div class="card green"><div class="kpi">≈ 4 minutes<small>Target capture time per vehicle, including retakes</small></div></div>
+  </div>
+
+  <h3>4.1 Capture plan: which photos, from where</h3>
+  <figure>
+    <svg viewBox="0 0 1000 560" font-family="Segoe UI, Arial, sans-serif">
+      <ellipse cx="500" cy="280" rx="300" ry="232" fill="none" stroke="#d6dde8" stroke-width="1.5" stroke-dasharray="6 5"/>
+      <text x="330" y="292" font-size="11.5" fill="#5b6577" text-anchor="middle">walk-around</text><text x="330" y="307" font-size="11.5" fill="#5b6577" text-anchor="middle">ring 1.5–3 m</text>
+      <!-- car top-down -->
+      <rect x="430" y="140" width="140" height="290" rx="46" fill="#fff" stroke="#24458e" stroke-width="2.5"/>
+      <path d="M446 214Q500 196 554 214L546 252H454Z" fill="#eaf0fb" stroke="#24458e" stroke-width="1.5"/>
+      <rect x="452" y="256" width="96" height="92" rx="8" fill="#fff" stroke="#24458e" stroke-width="1.2"/>
+      <path d="M454 352H546L552 378Q500 392 448 378Z" fill="#eaf0fb" stroke="#24458e" stroke-width="1.5"/>
+      <rect x="414" y="226" width="16" height="12" rx="3" fill="#eaf0fb" stroke="#24458e"/><rect x="570" y="226" width="16" height="12" rx="3" fill="#eaf0fb" stroke="#24458e"/>
+      <g fill="#17213b"><rect x="420" y="168" width="12" height="38" rx="4"/><rect x="568" y="168" width="12" height="38" rx="4"/><rect x="420" y="362" width="12" height="38" rx="4"/><rect x="568" y="362" width="12" height="38" rx="4"/></g>
+      <path d="M430 296H570" stroke="#24458e" stroke-width="1" stroke-dasharray="3 3"/>
+      <text x="500" y="166" font-size="12" font-weight="700" fill="#24458e" text-anchor="middle">FRONT</text>
+      <text x="500" y="420" font-size="12" font-weight="700" fill="#24458e" text-anchor="middle">REAR</text>
+      <text x="500" y="306" font-size="11" fill="#5b6577" text-anchor="middle">roof</text>
+      <text x="444" y="458" font-size="11" fill="#5b6577" text-anchor="middle">LEFT</text><text x="556" y="458" font-size="11" fill="#5b6577" text-anchor="middle">RIGHT</text>
+      <!-- sight lines -->
+      <g stroke="#00a6b2" stroke-width="1.4" stroke-dasharray="5 4" fill="none">
+        <path d="M500 92V136"/><path d="M728 118L572 170"/><path d="M792 222L574 222"/><path d="M792 346L574 346"/><path d="M728 452L572 400"/>
+        <path d="M500 490V434"/><path d="M272 452L428 400"/><path d="M208 346L426 346"/><path d="M208 222L426 222"/><path d="M272 118L428 170"/>
+      </g>
+      <!-- cameras -->
+      <g fill="#00a6b2" stroke="#fff" stroke-width="2">
+        <circle cx="500" cy="80" r="15"/><circle cx="740" cy="112" r="15"/><circle cx="806" cy="222" r="15"/><circle cx="806" cy="346" r="15"/><circle cx="740" cy="458" r="15"/>
+        <circle cx="500" cy="502" r="15"/><circle cx="260" cy="458" r="15"/><circle cx="194" cy="346" r="15"/><circle cx="194" cy="222" r="15"/><circle cx="260" cy="112" r="15"/>
+      </g>
+      <g fill="#fff" font-size="11.5" font-weight="700" text-anchor="middle">
+        <text x="500" y="84">S1</text><text x="740" y="116">S2</text><text x="806" y="226">S3</text><text x="806" y="350">S4</text><text x="740" y="462">S5</text>
+        <text x="500" y="506">S6</text><text x="260" y="462">S7</text><text x="194" y="350">S8</text><text x="194" y="226">S9</text><text x="260" y="116">S10</text>
+      </g>
+      <!-- labels -->
+      <g font-size="12.5" fill="#17213b">
+        <text x="522" y="28" font-weight="700">S1 Front</text><text x="522" y="44" fill="#5b6577">bumper · grille · bonnet · lamps · windshield</text>
+        <text x="762" y="98" font-weight="700">S2 Front-right 45°</text><text x="762" y="114" fill="#5b6577">R lamp · R fender · bumper corner</text>
+        <text x="828" y="210" font-weight="700">S3 Right side, front</text><text x="828" y="226" fill="#5b6577">R fender · R front door</text><text x="828" y="242" fill="#5b6577">R mirror · front wheel</text>
+        <text x="828" y="334" font-weight="700">S4 Right side, rear</text><text x="828" y="350" fill="#5b6577">R rear door · R quarter</text><text x="828" y="366" fill="#5b6577">rocker · rear wheel</text>
+        <text x="762" y="484" font-weight="700">S5 Rear-right 45°</text><text x="762" y="500" fill="#5b6577">R tail lamp · quarter · bumper corner</text>
+        <text x="522" y="532" font-weight="700">S6 Rear</text><text x="522" y="548" fill="#5b6577">boot / tailgate · rear bumper · rear glass</text>
+      </g>
+      <g font-size="12.5" fill="#17213b" text-anchor="end">
+        <text x="238" y="484" font-weight="700">S7 Rear-left 45°</text><text x="238" y="500" fill="#5b6577">L tail lamp · quarter · bumper corner</text>
+        <text x="172" y="334" font-weight="700">S8 Left side, rear</text><text x="172" y="350" fill="#5b6577">L rear door · L quarter</text><text x="172" y="366" fill="#5b6577">rocker · rear wheel</text>
+        <text x="172" y="210" font-weight="700">S9 Left side, front</text><text x="172" y="226" fill="#5b6577">L fender · L front door</text><text x="172" y="242" fill="#5b6577">L mirror · front wheel</text>
+        <text x="238" y="98" font-weight="700">S10 Front-left 45°</text><text x="238" y="114" fill="#5b6577">L lamp · L fender · bumper corner</text>
+      </g>
+      <!-- close-up inset -->
+      <g>
+        <circle cx="586" cy="268" r="12" fill="#fff5e2" stroke="#b7791f" stroke-width="2"/><path d="M594 276L606 288" stroke="#b7791f" stroke-width="3" stroke-linecap="round"/>
+        <rect x="612" y="270" width="150" height="50" rx="6" fill="#fff5e2" stroke="#b7791f"/>
+        <text x="620" y="288" font-size="11.5" font-weight="700" fill="#8a5a10">C1 + C2 close-ups</text>
+        <text x="620" y="304" font-size="11" fill="#5b6577">30–60 cm, 2 angles ≥ 20°</text>
+        <text x="620" y="316" font-size="10.5" fill="#5b6577">apart, prompted by the app</text>
+      </g>
+    </svg>
+    <figcaption><b>Figure 2.</b> The 10-position guided walk-around (S1–S10, car shown from above with the front at the top). Left and right are the car's own sides as seen from the driver's seat. Close-ups (C) are requested only where the phone model sees a possible damage.</figcaption>
+  </figure>
+
+  <table>
+    <thead><tr><th style="width:8%">Slot</th><th style="width:19%">Name</th><th style="width:22%">Camera position</th><th>Must be in frame</th><th class="c" style="width:10%">Required</th></tr></thead>
+    <tbody>
+      <tr><td>S1</td><td>Front</td><td>Centre line, 2–3 m, lens at bumper height</td><td>Whole front: bumper, grille, both headlamps, bonnet, windshield, front plate</td><td class="c">yes</td></tr>
+      <tr><td>S2 / S10</td><td>Front-right / front-left 45°</td><td>45° off the corner, 2–3 m</td><td>Corner of bumper, headlamp, fender, bonnet edge, front wheel</td><td class="c">yes</td></tr>
+      <tr><td>S3 / S9</td><td>Right / left side, front half</td><td>Perpendicular to the front door, 1.5–2.5 m</td><td>Fender, front door, mirror, A-pillar, front wheel, rocker (front half)</td><td class="c">yes</td></tr>
+      <tr><td>S4 / S8</td><td>Right / left side, rear half</td><td>Perpendicular to the rear door, 1.5–2.5 m</td><td>Rear door, quarter panel, C-pillar, rear wheel, rocker (rear half)</td><td class="c">yes</td></tr>
+      <tr><td>S5 / S7</td><td>Rear-right / rear-left 45°</td><td>45° off the corner, 2–3 m</td><td>Corner of rear bumper, tail lamp, quarter panel, boot edge</td><td class="c">yes</td></tr>
+      <tr><td>S6</td><td>Rear</td><td>Centre line, 2–3 m</td><td>Boot / tailgate, rear bumper, both tail lamps, rear glass, rear plate</td><td class="c">yes</td></tr>
+      <tr><td>C1…Cn</td><td>Close-ups</td><td>30–60 cm, two shots ≥ 20° apart</td><td>The flagged region with some undamaged surface around it</td><td class="c">when prompted</td></tr>
+      <tr><td>I1</td><td>Identity</td><td>Number plate or VIN plate</td><td>Readable plate / VIN (skipped if VIN scanned at start)</td><td class="c">if not scanned</td></tr>
+      <tr><td>O1–O3</td><td>Optional</td><td>Roof from a step, windshield close, odometer</td><td>Roof panel, glass chips, odometer reading for the record</td><td class="c">optional</td></tr>
+    </tbody>
+  </table>
+
+  <h3>4.2 Panel coverage: why 10 photos</h3>
+  <p class="small">Multi-view fusion (N9) needs every panel in at least two photos taken from different angles. That is what separates real damage from reflections. Ten positions is the smallest set that achieves this for all side and end panels of a sedan, hatchback or SUV. Fewer photos leave doors or quarter panels with a single view.</p>
+  <table class="cov">
+    <thead><tr><th style="width:22%">Panel</th><th class="c">S1</th><th class="c">S2</th><th class="c">S3</th><th class="c">S4</th><th class="c">S5</th><th class="c">S6</th><th class="c">S7</th><th class="c">S8</th><th class="c">S9</th><th class="c">S10</th><th class="c">Views</th></tr></thead>
+    <tbody>
+      <tr><td>Front bumper, grille</td><td class="c">●</td><td class="c">●</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="c">●</td><td class="c">3</td></tr>
+      <tr><td>Bonnet, windshield</td><td class="c">●</td><td class="c">◐</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="c">◐</td><td class="c">3</td></tr>
+      <tr><td>R headlamp · R fender</td><td class="c">◐</td><td class="c">●</td><td class="c">●</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="c">3</td></tr>
+      <tr><td>R front door · R mirror</td><td></td><td class="c">◐</td><td class="c">●</td><td class="c">◐</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="c">3</td></tr>
+      <tr><td>R rear door</td><td></td><td></td><td class="c">◐</td><td class="c">●</td><td class="c">◐</td><td></td><td></td><td></td><td></td><td></td><td class="c">3</td></tr>
+      <tr><td>R quarter · R tail lamp</td><td></td><td></td><td></td><td class="c">●</td><td class="c">●</td><td class="c">◐</td><td></td><td></td><td></td><td></td><td class="c">3</td></tr>
+      <tr><td>Boot / tailgate, rear bumper</td><td></td><td></td><td></td><td></td><td class="c">●</td><td class="c">●</td><td class="c">●</td><td></td><td></td><td></td><td class="c">3</td></tr>
+      <tr><td>L quarter · L tail lamp</td><td></td><td></td><td></td><td></td><td></td><td class="c">◐</td><td class="c">●</td><td class="c">●</td><td></td><td></td><td class="c">3</td></tr>
+      <tr><td>L rear door</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="c">◐</td><td class="c">●</td><td class="c">◐</td><td></td><td class="c">3</td></tr>
+      <tr><td>L front door · L mirror</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="c">◐</td><td class="c">●</td><td class="c">◐</td><td class="c">3</td></tr>
+      <tr><td>L headlamp · L fender</td><td class="c">◐</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="c">●</td><td class="c">●</td><td class="c">3</td></tr>
+      <tr><td>Rockers, wheels</td><td></td><td></td><td class="c">●</td><td class="c">●</td><td></td><td></td><td></td><td class="c">●</td><td class="c">●</td><td></td><td class="c">2 per side</td></tr>
+      <tr><td>Roof</td><td colspan="10" class="muted">visible only on low cars from S1/S6; otherwise O1 from a step</td><td class="c weak">0–1</td></tr>
+    </tbody>
+  </table>
+  <p class="small muted">● panel fully in frame · ◐ partly in frame or at a steep angle. A panel with fewer than two usable views is reported as <code>insufficient_views</code>, never as "no damage".</p>
+
+  <h3>4.3 Assisted capture in the app</h3>
+  <p class="small">The app never asks for "a photo of the car". It asks for one named slot at a time, shows where to stand, checks the frame live, and takes the photo automatically when the frame is right. Screens below are illustrative wireframes, not final UI.</p>
+  <figure>
+    <svg viewBox="0 0 1000 610" font-family="Segoe UI, Arial, sans-serif">
+      <!-- phone A -->
+      <g transform="translate(18 6)">
+        <rect width="300" height="596" rx="36" fill="#17213b"/><rect x="12" y="14" width="276" height="568" rx="26" fill="#fff"/>
+        <rect x="118" y="22" width="64" height="8" rx="4" fill="#17213b"/>
+        <text x="30" y="62" font-size="17" font-weight="700" fill="#123a78">New inspection</text>
+        <text x="30" y="82" font-size="11.5" fill="#5b6577">Job RO-24117 · Bay 3</text>
+        <rect x="26" y="96" width="248" height="96" rx="12" fill="#eaf0fb"/>
+        <text x="40" y="118" font-size="11" fill="#5b6577">Vehicle (from VIN scan)</text>
+        <text x="40" y="140" font-size="15" font-weight="700" fill="#17213b">Hatchback · 2021</text>
+        <text x="40" y="160" font-size="12" fill="#17213b">Pearl white · metallic</text>
+        <text x="40" y="179" font-size="11" fill="#5b6577">VIN ✓ · panel map: hatchback-v3</text>
+        <rect x="26" y="206" width="248" height="44" rx="10" fill="#fff" stroke="#22965e"/><text x="42" y="233" font-size="13" fill="#146b42" font-weight="600">✓  VIN / plate scanned</text>
+        <rect x="26" y="258" width="248" height="88" rx="10" fill="#fff" stroke="#d6dde8"/>
+        <text x="42" y="282" font-size="13" font-weight="700" fill="#17213b">Walk-around</text>
+        <text x="42" y="301" font-size="11.5" fill="#5b6577">10 photos · about 4 min</text>
+        <text x="42" y="319" font-size="11.5" fill="#5b6577">Start at the front, go clockwise</text>
+        <text x="42" y="337" font-size="11.5" fill="#5b6577">Close-ups will be asked for if needed</text>
+        <rect x="26" y="356" width="248" height="70" rx="10" fill="#fff" stroke="#d6dde8"/>
+        <text x="42" y="380" font-size="12" font-weight="700" fill="#17213b">Before you start</text>
+        <text x="42" y="398" font-size="11" fill="#5b6577">Flash off · car dry · no direct sun</text>
+        <text x="42" y="414" font-size="11" fill="#5b6577">behind the car if possible</text>
+        <rect x="26" y="436" width="248" height="40" rx="10" fill="#f4f6fa"/>
+        <text x="42" y="461" font-size="11.5" fill="#17213b">Use photos to improve the model</text>
+        <rect x="228" y="447" width="34" height="18" rx="9" fill="#00a6b2"/><circle cx="253" cy="456" r="7" fill="#fff"/>
+        <rect x="26" y="500" width="248" height="52" rx="14" fill="#24458e"/><text x="150" y="532" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">Start walk-around</text>
+      </g>
+      <!-- phone B -->
+      <g transform="translate(350 6)">
+        <rect width="300" height="596" rx="36" fill="#17213b"/><rect x="12" y="14" width="276" height="568" rx="26" fill="#3a4357"/>
+        <rect x="118" y="22" width="64" height="8" rx="4" fill="#17213b"/>
+        <rect x="12" y="40" width="276" height="74" fill="#17213b" opacity="0.85"/>
+        <text x="28" y="64" font-size="12" fill="#7fd8e0" font-weight="700">STEP 3 OF 10</text>
+        <text x="28" y="86" font-size="16" fill="#fff" font-weight="700">Right side · front</text>
+        <text x="28" y="104" font-size="11" fill="#c9d6f2">Fender · front door · mirror · wheel</text>
+        <!-- scene -->
+        <rect x="12" y="114" width="276" height="300" fill="#5a6378"/>
+        <use href="#carside" x="22" y="190" width="256" height="92"/>
+        <path d="M42 250V237Q45 225 70 222L111 218L137 197Q143 192 156 192H211Q224 192 234 202L252 220Q278 222 280 235V250Z" fill="none" stroke="#7fd8e0" stroke-width="2.5" stroke-dasharray="7 5"/>
+        <text x="150" y="160" font-size="11.5" fill="#fff" text-anchor="middle">Line up the car with the outline</text>
+        <!-- chips -->
+        <g font-size="11.5" font-weight="600">
+          <rect x="22" y="314" width="118" height="26" rx="13" fill="#e6f5ed"/><text x="34" y="331" fill="#146b42">✓ Distance 2.1 m</text>
+          <rect x="148" y="314" width="64" height="26" rx="13" fill="#e6f5ed"/><text x="160" y="331" fill="#146b42">✓ Level</text>
+          <rect x="22" y="346" width="200" height="26" rx="13" fill="#fbeaea"/><text x="34" y="363" fill="#c9302c">✕ Glare on door · step left</text>
+        </g>
+        <!-- mini map -->
+        <rect x="218" y="342" width="62" height="64" rx="8" fill="#17213b" opacity="0.85"/>
+        <rect x="240" y="352" width="18" height="44" rx="7" fill="none" stroke="#c9d6f2" stroke-width="1.5"/>
+        <g fill="#22965e"><circle cx="249" cy="347" r="3"/><circle cx="268" cy="352" r="3"/></g>
+        <circle cx="272" cy="364" r="5" fill="#00a6b2" stroke="#fff" stroke-width="1.5"/>
+        <g fill="#8a8f9c"><circle cx="272" cy="384" r="3"/><circle cx="268" cy="398" r="3"/><circle cx="230" cy="398" r="3"/><circle cx="226" cy="384" r="3"/><circle cx="226" cy="364" r="3"/><circle cx="230" cy="352" r="3"/></g>
+        <!-- bottom controls -->
+        <rect x="12" y="414" width="276" height="168" fill="#17213b"/>
+        <circle cx="150" cy="490" r="34" fill="none" stroke="#3a4357" stroke-width="6"/>
+        <path d="M150 456A34 34 0 0 1 182 500" fill="none" stroke="#00a6b2" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="150" cy="490" r="24" fill="#fff"/>
+        <text x="150" y="546" font-size="11" fill="#c9d6f2" text-anchor="middle">Auto-captures when all checks pass</text>
+        <rect x="34" y="470" width="44" height="40" rx="6" fill="#3a4357"/><text x="56" y="495" font-size="10" fill="#c9d6f2" text-anchor="middle">S2 ✓</text>
+        <text x="244" y="495" font-size="11" fill="#c9d6f2" text-anchor="middle">Help</text>
+      </g>
+      <!-- phone C -->
+      <g transform="translate(682 6)">
+        <rect width="300" height="596" rx="36" fill="#17213b"/><rect x="12" y="14" width="276" height="568" rx="26" fill="#3a4357"/>
+        <rect x="118" y="22" width="64" height="8" rx="4" fill="#17213b"/>
+        <rect x="12" y="40" width="276" height="92" fill="#fff5e2"/>
+        <text x="28" y="64" font-size="12" fill="#8a5a10" font-weight="700">CLOSE-UP 1 OF 2</text>
+        <text x="28" y="86" font-size="16" fill="#17213b" font-weight="700">Right front door</text>
+        <text x="28" y="104" font-size="11" fill="#5b6577">Possible scratch found in step 3.</text>
+        <text x="28" y="120" font-size="11" fill="#5b6577">Hold the phone about 40 cm away.</text>
+        <rect x="12" y="132" width="276" height="282" fill="#b9c4d8"/>
+        <path d="M12 300C90 280 200 286 288 262V414H12Z" fill="#a7b3ca"/>
+        <path d="M82 238C120 226 160 232 214 214" stroke="#eef2f8" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <rect x="64" y="196" width="170" height="70" rx="6" fill="none" stroke="#b7791f" stroke-width="2.5" stroke-dasharray="8 5"/>
+        <text x="150" y="186" font-size="11.5" fill="#17213b" text-anchor="middle" font-weight="600">Keep the box filled</text>
+        <g font-size="11.5" font-weight="600">
+          <rect x="22" y="330" width="126" height="26" rx="13" fill="#e6f5ed"/><text x="34" y="347" fill="#146b42">✓ Sharp · 41 cm</text>
+          <rect x="22" y="362" width="244" height="26" rx="13" fill="#e3eaf8"/><text x="34" y="379" fill="#123a78">Next: move 20° to the left for shot 2</text>
+        </g>
+        <rect x="12" y="414" width="276" height="168" fill="#17213b"/>
+        <circle cx="150" cy="490" r="30" fill="#fff"/>
+        <rect x="30" y="462" width="56" height="56" rx="6" fill="#3a4357"/><text x="58" y="494" font-size="10" fill="#c9d6f2" text-anchor="middle">S3</text>
+        <text x="236" y="494" font-size="11" fill="#c9d6f2" text-anchor="middle">Skip ›</text>
+        <text x="150" y="546" font-size="11" fill="#c9d6f2" text-anchor="middle">Skipping marks the spot "not verified"</text>
+      </g>
+    </svg>
+    <figcaption><b>Figure 3.</b> Assisted capture, part 1. <b>A</b>: the vehicle is identified from the VIN, which selects the panel map and the known dimensions used for scale. <b>B</b>: a named slot with a ghost outline, live checks, a mini-map of the walk-around and auto-capture. <b>C</b>: a close-up requested because the phone model flagged a possible scratch.</figcaption>
+  </figure>
+  <div class="grid2">
+      <div class="card teal">
+        <h4>Capture rules the app enforces</h4>
+        <ul>
+          <li>One named slot at a time, in a fixed clockwise order starting at S1.</li>
+          <li>Live checks on preview frames: sharpness, exposure, glare on the target panel, distance band, horizon level, and whether the predicted view matches the slot.</li>
+          <li>Auto-capture when all checks pass. Manual capture is allowed after 3 failed attempts and is logged as an override.</li>
+          <li>Full camera resolution (≥ 12 MP), flash off, no digital zoom, no beauty or HDR-merge filters if the phone allows.</li>
+          <li>Close-ups are requested by the phone model, two per region, at least 20° apart, so reflections can be told apart from damage.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Technician guidance shown before step 1</h4>
+        <ul>
+          <li>Car washed or at least dry; open shade or even workshop light.</li>
+          <li>Do not stand where your own reflection falls on the panel.</li>
+          <li>Keep 1.5–3 m for walk-around slots; the app shows the distance.</li>
+          <li>Doors, boot and bonnet closed; mirrors unfolded.</li>
+        </ul>
+      </div>
+  </div>
+
+  <figure>
+    <div style="width:70%;margin:0 auto"><svg viewBox="0 0 660 610" font-family="Segoe UI, Arial, sans-serif">
+        <!-- phone D -->
+        <g transform="translate(10 6)">
+          <rect width="300" height="596" rx="36" fill="#17213b"/><rect x="12" y="14" width="276" height="568" rx="26" fill="#fff"/>
+          <rect x="118" y="22" width="64" height="8" rx="4" fill="#17213b"/>
+          <text x="30" y="62" font-size="17" font-weight="700" fill="#123a78">Coverage check</text>
+          <text x="30" y="82" font-size="11.5" fill="#5b6577">10 of 10 slots · 3 close-ups</text>
+          <use href="#unfold" x="26" y="94" width="248" height="248"/>
+          <g fill="#22965e" fill-opacity="0.28">
+            <rect x="119" y="105" width="62" height="16"/><rect x="119" y="124" width="62" height="45"/><rect x="66" y="124" width="43" height="45"/><rect x="191" y="124" width="43" height="45"/>
+            <rect x="66" y="171" width="43" height="51"/><rect x="191" y="171" width="43" height="51"/><rect x="66" y="224" width="43" height="51"/><rect x="191" y="224" width="43" height="51"/>
+            <rect x="66" y="277" width="43" height="34"/><rect x="191" y="277" width="43" height="34"/><rect x="119" y="280" width="62" height="31"/><rect x="119" y="313" width="62" height="16"/>
+          </g>
+          <rect x="122" y="192" width="56" height="67" fill="#8a8f9c" fill-opacity="0.35"/>
+          <g font-size="11">
+            <rect x="30" y="352" width="12" height="12" rx="2" fill="#22965e" fill-opacity="0.5"/><text x="48" y="362" fill="#17213b">seen in ≥ 2 views</text>
+            <rect x="30" y="370" width="12" height="12" rx="2" fill="#b7791f" fill-opacity="0.5"/><text x="48" y="380" fill="#17213b">1 view · retake suggested</text>
+            <rect x="30" y="388" width="12" height="12" rx="2" fill="#8a8f9c" fill-opacity="0.5"/><text x="48" y="398" fill="#17213b">not inspected (roof)</text>
+          </g>
+          <rect x="26" y="414" width="248" height="56" rx="10" fill="#f4f6fa"/>
+          <text x="40" y="436" font-size="12" font-weight="700" fill="#17213b">Roof not visible</text>
+          <text x="40" y="455" font-size="11" fill="#5b6577">Add O1 from a step, or submit as "not inspected"</text>
+          <rect x="26" y="480" width="118" height="44" rx="12" fill="#fff" stroke="#24458e"/><text x="85" y="507" font-size="13" fill="#24458e" text-anchor="middle" font-weight="600">Add roof</text>
+          <rect x="156" y="480" width="118" height="44" rx="12" fill="#24458e"/><text x="215" y="507" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">Submit</text>
+          <text x="150" y="552" font-size="10.5" fill="#5b6577" text-anchor="middle">Photos upload in the background, also offline</text>
+        </g>
+        <!-- phone E -->
+        <g transform="translate(350 6)">
+          <rect width="300" height="596" rx="36" fill="#17213b"/><rect x="12" y="14" width="276" height="568" rx="26" fill="#fff"/>
+          <rect x="118" y="22" width="64" height="8" rx="4" fill="#17213b"/>
+          <text x="30" y="62" font-size="17" font-weight="700" fill="#123a78">Result</text>
+          <rect x="150" y="47" width="126" height="22" rx="11" fill="#e6f5ed"/><text x="213" y="62" font-size="10.5" fill="#146b42" text-anchor="middle" font-weight="700">✓ Verified by server</text>
+          <use href="#unfold" x="26" y="78" width="248" height="248"/>
+          <g font-size="11" font-weight="700" fill="#fff" text-anchor="middle">
+            <circle cx="213" cy="198" r="11" fill="#eb6834" stroke="#fff" stroke-width="2"/><text x="213" y="202">1</text>
+            <circle cx="182" cy="90" r="11" fill="#c9302c" stroke="#fff" stroke-width="2"/><text x="182" y="94">2</text>
+          </g>
+          <g font-size="11.5">
+            <rect x="24" y="334" width="252" height="74" rx="10" fill="#fff" stroke="#eb6834"/>
+            <text x="38" y="354" font-weight="700" fill="#17213b">1 · Right front door</text>
+            <text x="38" y="371" fill="#17213b">Scratch · 142 ± 14 mm · severity 2</text>
+            <text x="38" y="388" fill="#5b6577">Polish / refinish · seen in 3 photos</text>
+            <text x="38" y="403" fill="#5b6577" font-size="10.5">tap for photos with overlay</text>
+            <rect x="24" y="416" width="252" height="74" rx="10" fill="#fff" stroke="#c9302c"/>
+            <text x="38" y="436" font-weight="700" fill="#17213b">2 · Front bumper</text>
+            <text x="38" y="453" fill="#17213b">Dent · depth class d2 (estimated)</text>
+            <text x="38" y="470" fill="#5b6577">Severity 3 · assessor review</text>
+            <text x="38" y="485" fill="#5b6577" font-size="10.5">reason: depth not measured</text>
+          </g>
+          <rect x="24" y="502" width="252" height="44" rx="12" fill="#24458e"/><text x="150" y="529" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">Confirm / correct &amp; sign</text>
+          <text x="150" y="564" font-size="10.5" fill="#5b6577" text-anchor="middle">Roof: not inspected · report v1.3.0</text>
+        </g>
+      </svg></div>
+    <figcaption><b>Figure 4.</b> Assisted capture, part 2. <b>D</b>: coverage check before submit. Each panel is coloured by how many usable views it has; uninspected panels are named. <b>E</b>: the result on the unfolded vehicle map, after the server has verified it. Each finding keeps its photos, measurement method and route.</figcaption>
+  </figure>
+
+  <h3>4.4 Inputs</h3>
+  <table>
+    <thead><tr><th style="width:21%">Input</th><th class="c" style="width:12%">Required</th><th>Specification</th><th style="width:22%">Used for</th></tr></thead>
+    <tbody>
+      <tr><td><b>Vehicle identity</b></td><td class="c">yes</td><td>VIN (17 characters) scanned or typed, or registration plate; looked up to make, model, year, body style and paint</td><td>Panel map per body style; known dimensions for scale</td></tr>
+      <tr><td><b>Walk-around photos</b></td><td class="c">10</td><td>Slots S1–S10; JPEG at full sensor resolution (≥ 12 MP, never below 8 MP); 1.5–3 m; flash off</td><td>Panels, damage, fusion</td></tr>
+      <tr><td><b>Close-up photos</b></td><td class="c">when prompted</td><td>2 per flagged region (typically 0–8 total); 30–60 cm; ≥ 20° apart</td><td>Fine damage, depth class, length</td></tr>
+      <tr><td><b>Identity / optional photos</b></td><td class="c">optional</td><td>Plate or VIN plate (I1), roof (O1), windshield close (O2), odometer (O3)</td><td>Record, roof coverage, glass</td></tr>
+      <tr><td><b>Photo metadata</b> (automatic)</td><td class="c">yes</td><td>Slot ID, timestamp, device model, EXIF focal length and sensor size, phone orientation (gravity sensor), exposure, app and model versions. Location is off by default</td><td>Pose, scale, audit, drift monitoring</td></tr>
+      <tr><td><b>Technician inputs</b></td><td class="c">optional</td><td>Customer-reported damage, notes, prior-repair flag; a dent-gauge reading if the workshop has one</td><td>Review context; ground truth</td></tr>
+      <tr><td><b>Job context</b></td><td class="c">yes</td><td>Tenant / workshop, repair order or job ID, technician ID, consent scope for training use</td><td>Ledger, access control, training eligibility</td></tr>
+    </tbody>
+  </table>
+
+  <h3>4.5 Product parameters</h3>
+  <p class="small">Every parameter is versioned in a profile that is hash-pinned with the model bundle. Values marked "calibrated" are set on the first-party calibration set, not by hand. Defaults are starting points.</p>
+  <table>
+    <thead><tr><th style="width:16%">Group</th><th style="width:31%">Parameter</th><th style="width:21%">Initial value</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td rowspan="7"><b>Capture</b></td><td>Required walk-around slots</td><td>10 (S1–S10)</td><td>Per body-style template; pickups and vans get their own</td></tr>
+      <tr><td>Minimum photo resolution</td><td>12 MP (reject &lt; 8 MP)</td><td>Long side ≥ 3,000 px native, never upscaled</td></tr>
+      <tr><td>Distance band</td><td>1.5–3.0 m · close-ups 0.3–0.6 m</td><td>Estimated from car size in frame and known dimensions</td></tr>
+      <tr><td>Slot angle tolerance</td><td>± 15° from slot azimuth</td><td>Checked by the viewpoint head</td></tr>
+      <tr><td>Live quality limits</td><td>blur, exposure, glare scores</td><td>Calibrated so &lt; 5% of accepted photos are later judged unusable</td></tr>
+      <tr><td>Close-ups per flagged region</td><td>2, at least 20° apart</td><td>Up to 8 per vehicle before the app asks for review instead</td></tr>
+      <tr><td>Retakes before manual override</td><td>3</td><td>Overrides logged and reviewed</td></tr>
+      <tr><td rowspan="6"><b>Model</b></td><td>Model bundle</td><td>e.g. avfm-ext-1.3.0</td><td>Edge student + server teacher pair, signed</td></tr>
+      <tr><td>Main input size · crop tile</td><td>1,024 px · 1,024 px full-res crops</td><td>Crops only on flagged panels</td></tr>
+      <tr><td>Per-class temperature</td><td>calibrated</td><td>Target ECE ≤ 0.05</td></tr>
+      <tr><td>Nuisance suppression margin</td><td>calibrated</td><td>Damage kept only if p(damage) exceeds p(nuisance) by the margin</td></tr>
+      <tr><td>Minimum reported damage size</td><td>5 mm length or 25 mm² area</td><td>Smaller findings are logged, not reported</td></tr>
+      <tr><td>Minimum consistent views</td><td>2 (of views where the spot is visible)</td><td>Single-view findings go to review or close-up</td></tr>
+      <tr><td rowspan="3"><b>Measurement</b></td><td>Scale sources, in priority order</td><td>multi-view geometry + VIN dimensions → plate → none</td><td>2D-only methods (§4.7)</td></tr>
+      <tr><td>Maximum scale uncertainty to report mm</td><td>± 10%</td><td>Above it, length is reported as % of panel only</td></tr>
+      <tr><td>Depth output policy</td><td>class d1 / d2 / d3 + probability</td><td>mm only when a gauge reading is entered</td></tr>
+      <tr><td rowspan="4"><b>Decision</b></td><td>Auto-clear miss-rate target α</td><td>2%</td><td>Conformal risk control on the calibration set</td></tr>
+      <tr><td>Auto-accept allowed</td><td>off at launch, per tenant</td><td>Switched on after the canary phase</td></tr>
+      <tr><td>Safety-critical zones (always escalate)</td><td>pillars, sills, airbag areas, HV battery, lamps with cracks</td><td>OEM-specific list</td></tr>
+      <tr><td>Audit sample rate</td><td>5% of auto-decided vehicles</td><td>Assessor re-check, feeds monitoring</td></tr>
+      <tr><td rowspan="2"><b>Rules</b></td><td>Severity rubric version</td><td>sev-rubric-2.1</td><td>Initial panel rubric, fed with measured inputs</td></tr>
+      <tr><td>Repair option rules</td><td>per OEM / panel material</td><td>Cannot be overridden by any model</td></tr>
+      <tr><td rowspan="2"><b>Privacy</b></td><td>Face and plate blurring</td><td>on for training copies</td><td>Originals per retention policy</td></tr>
+      <tr><td>Retention · training consent default</td><td>per contract · opt-in</td><td>Stored per image in the ledger</td></tr>
+    </tbody>
+  </table>
+
+  <h3>4.6 Outputs</h3>
+  <figure>
+    <svg viewBox="0 0 1000 520" font-family="Segoe UI, Arial, sans-serif">
+      <rect x="6" y="6" width="988" height="508" rx="10" fill="#fff" stroke="#d6dde8"/>
+      <rect x="6" y="6" width="988" height="62" rx="10" fill="#123a78"/><rect x="6" y="50" width="988" height="18" fill="#123a78"/>
+      <text x="26" y="34" font-size="17" font-weight="700" fill="#fff">Vehicle inspection report</text>
+      <text x="26" y="56" font-size="12" fill="#c9d6f2">Hatchback 2021 · pearl white · VIN …4821 · Job RO-24117 · 4 Nov 2026 14:42</text>
+      <rect x="760" y="20" width="220" height="32" rx="16" fill="#fff5e2"/><text x="870" y="41" font-size="12.5" font-weight="700" fill="#8a5a10" text-anchor="middle">Route: assessor review</text>
+      <use href="#unfold" x="24" y="84" width="330" height="330"/>
+      <g font-size="12" font-weight="700" fill="#fff" text-anchor="middle">
+        <circle cx="272" cy="246" r="13" fill="#eb6834" stroke="#fff" stroke-width="2"/><text x="272" y="250">1</text>
+        <circle cx="238" cy="98" r="13" fill="#c9302c" stroke="#fff" stroke-width="2"/><text x="238" y="102">2</text>
+      </g>
+      <text x="26" y="438" font-size="11.5" fill="#5b6577">Coverage: 13 of 14 panel groups seen in ≥ 2 views · roof not inspected</text>
+      <text x="26" y="456" font-size="11.5" fill="#5b6577">Photos: 10 walk-around + 3 close-ups · all passed quality</text>
+      <!-- table -->
+      <g font-size="12">
+        <rect x="372" y="84" width="604" height="28" fill="#24458e"/>
+        <g fill="#fff" font-weight="600"><text x="382" y="103">#</text><text x="404" y="103">Panel</text><text x="520" y="103">Damage</text><text x="620" y="103">Measurement</text><text x="770" y="103">Severity</text><text x="870" y="103">Action</text></g>
+        <rect x="372" y="112" width="604" height="74" fill="#f4f6fa"/>
+        <g fill="#17213b"><text x="382" y="134" font-weight="700">1</text><text x="404" y="134" font-weight="700">R front door</text><text x="520" y="134">scratch 0.93</text><text x="620" y="134">length 142 ± 14 mm</text><text x="770" y="134" font-weight="700">2 minor</text><text x="870" y="134">polish / refinish</text></g>
+        <g fill="#5b6577" font-size="11"><text x="404" y="153">right · 3/3 views</text><text x="520" y="153">+ scuff 0.41</text><text x="620" y="153">0.8% of panel · width 0.6 mm</text><text x="770" y="153">scratch-area</text><text x="870" y="153">auto-accept ok</text>
+        <text x="404" y="172">photos S2 · S3 · C1</text><text x="620" y="172">scale: multi-view + VIN dims</text></g>
+        <rect x="372" y="186" width="604" height="74" fill="#fff"/>
+        <g fill="#17213b"><text x="382" y="208" font-weight="700">2</text><text x="404" y="208" font-weight="700">Front bumper</text><text x="520" y="208">dent 0.88</text><text x="620" y="208">⌀ 60 ± 9 mm · d2 (est.)</text><text x="770" y="208" font-weight="700">3 moderate</text><text x="870" y="208">repair · review</text></g>
+        <g fill="#5b6577" font-size="11"><text x="404" y="227">centre-left · 3/3 views</text><text x="520" y="227">+ paint 0.37</text><text x="620" y="227">2D class · p = 0.71</text><text x="770" y="227">dent-area-d2</text><text x="870" y="227">reason: depth</text>
+        <text x="404" y="246">photos S1 · S10 · C2 · C3</text><text x="620" y="246">mm depth: not measured</text><text x="870" y="246">not measured</text></g>
+        <rect x="372" y="260" width="604" height="40" fill="#f4f6fa"/>
+        <text x="382" y="285" font-size="11.5" fill="#5b6577">Not inspected: roof (no view). Insufficient views: none. Suppressed as reflection: 2 (logged, sampled for audit).</text>
+      </g>
+      <!-- evidence strip -->
+      <text x="372" y="326" font-size="12" font-weight="700" fill="#17213b">Evidence for finding 1</text>
+      <g>
+        <rect x="372" y="336" width="140" height="96" rx="6" fill="#b9c4d8"/><path d="M392 396C420 386 446 390 490 372" stroke="#2a78d6" stroke-width="3" fill="none"/><text x="380" y="426" font-size="10.5" fill="#17213b">S3 · overlay</text>
+        <rect x="522" y="336" width="140" height="96" rx="6" fill="#b9c4d8"/><path d="M540 384C568 372 600 378 646 358" stroke="#2a78d6" stroke-width="3" fill="none"/><text x="530" y="426" font-size="10.5" fill="#17213b">S2 · overlay</text>
+        <rect x="672" y="336" width="140" height="96" rx="6" fill="#b9c4d8"/><path d="M682 400C716 380 760 372 804 346" stroke="#2a78d6" stroke-width="5" fill="none"/><text x="680" y="426" font-size="10.5" fill="#17213b">C1 · close-up</text>
+      </g>
+      <rect x="822" y="336" width="154" height="96" rx="6" fill="#f4f6fa" stroke="#d6dde8"/>
+      <g font-size="10.5" fill="#5b6577"><text x="832" y="356" font-weight="700" fill="#17213b">Provenance</text><text x="832" y="374">teacher avfm-ext-1.3.0</text><text x="832" y="390">edge avfm-ext-s-1.3.0</text><text x="832" y="406">fusion 1.1 · rules 2.1</text><text x="832" y="422">ledger insp_01J…</text></g>
+      <rect x="372" y="448" width="604" height="48" rx="6" fill="#e7f7f8"/>
+      <text x="386" y="468" font-size="11.5" fill="#00727a" font-weight="700">Technician / assessor sign-off</text>
+      <text x="386" y="486" font-size="11" fill="#17213b">☐ Findings confirmed   ☐ Corrected (opens editor)   ☐ Customer copy sent</text>
+    </svg>
+    <figcaption><b>Figure 5.</b> Illustrative final report for one vehicle: damage map, findings table, evidence photos with overlays, coverage statement, provenance and sign-off. The same content is available as JSON over the API, as a PDF, and in the app (screen E).</figcaption>
+  </figure>
+
+  <table>
+    <thead><tr><th style="width:22%">Output</th><th>Contents</th><th style="width:20%">Format</th></tr></thead>
+    <tbody>
+      <tr><td><b>Inspection result</b></td><td>Route (auto-accept, auto-clear, review, measure, recapture, escalate), reason codes, <code>automated_decision_allowed</code>, provisional or verified status</td><td>JSON (API), app</td></tr>
+      <tr><td><b>Findings list</b></td><td>Per damage: panel and side, types with probabilities (multi-label), location on the panel (u, v), the photos it was seen in, consistency, measurements with method and uncertainty, depth class, severity 1–5 with rule, repair options</td><td>JSON, PDF table</td></tr>
+      <tr><td><b>Coverage statement</b></td><td>Per panel: number of usable views, <code>insufficient_views</code> or <code>not_inspected</code>; capture overrides</td><td>JSON, PDF</td></tr>
+      <tr><td><b>Evidence images</b></td><td>Each photo with mask overlay, close-up crops, unfolded vehicle damage map</td><td>JPEG / PNG, PDF</td></tr>
+      <tr><td><b>Provenance</b></td><td>Model, fusion, rules and profile versions with hashes; edge vs server agreement; ledger ID</td><td>JSON</td></tr>
+      <tr><td><b>Sign-off record</b></td><td>Technician or assessor confirmation or corrections, timestamp, user</td><td>Ledger event</td></tr>
+      <tr><td><b>Hand-off</b></td><td>Estimate-ready line items (panel, operation, severity) to DMS / ERP</td><td>API / webhook</td></tr>
+    </tbody>
+  </table>
+<pre><span class="c">// one finding in the API output (2D photos only)</span>
+{ <span class="k">"id"</span>: <span class="s">"dmg_2"</span>, <span class="k">"panel"</span>: <span class="s">"front_bumper"</span>, <span class="k">"side"</span>: <span class="s">"centre_left"</span>,
+  <span class="k">"types"</span>: { <span class="k">"dent"</span>: 0.88, <span class="k">"paint_damage"</span>: 0.37 }, <span class="k">"uv"</span>: [0.34, 0.58],
+  <span class="k">"views"</span>: [<span class="s">"S1"</span>, <span class="s">"S10"</span>, <span class="s">"C2"</span>, <span class="s">"C3"</span>], <span class="k">"consistency"</span>: 1.0,
+  <span class="k">"diameter_mm"</span>: { <span class="k">"value"</span>: 60, <span class="k">"uncertainty"</span>: 9, <span class="k">"method"</span>: <span class="s">"multiview_vin_scale"</span> },
+  <span class="k">"depth"</span>: { <span class="k">"class"</span>: <span class="s">"d2"</span>, <span class="k">"probability"</span>: 0.71, <span class="k">"method"</span>: <span class="s">"2d_appearance_classifier"</span>, <span class="k">"mm"</span>: null,
+             <span class="k">"reason"</span>: <span class="s">"no_gauge_reading"</span> },
+  <span class="k">"severity"</span>: { <span class="k">"level"</span>: 3, <span class="k">"rule"</span>: <span class="s">"sev-rubric-2.1/dent-area-d2"</span> },
+  <span class="k">"repair_options"</span>: [<span class="s">"pdr"</span>, <span class="s">"repair_refinish"</span>], <span class="k">"route"</span>: <span class="s">"assessor_review"</span> }</pre>
+
+  <h3>4.7 What 2D photos can and cannot measure</h3>
+  <p class="small">With no depth sensor, every measurement comes from the photos themselves. Overlapping walk-around and close-up photos give camera poses through multi-view geometry (structure-from-motion). Known dimensions from the VIN lookup (wheel rim diameter, wheelbase, lamp and handle sizes) or a regulated number-plate size turn that geometry into millimetres. Targets below are design goals to be validated on gauge-measured ground truth.</p>
+  <table>
+    <thead><tr><th style="width:17%">Quantity</th><th>2D method</th><th style="width:22%">Reported as</th><th style="width:20%">Target / limit</th></tr></thead>
+    <tbody>
+      <tr><td>Panel, side, location</td><td>Panel instances + viewpoint + keypoints; damage placed in panel (u, v)</td><td>Panel ID, side, (u, v)</td><td>Side accuracy ≥ 98%</td></tr>
+      <tr><td>Scratch length</td><td>Centreline of the instance mask × metric scale; curved panels corrected with the multi-view surface</td><td>mm ± mm</td><td>≤ 10 mm or 10% error</td></tr>
+      <tr><td>Scratch width</td><td>Mask width on full-resolution close-up crops</td><td>mm, coarse</td><td>Resolution-limited (~0.3 mm/px at 40 cm)</td></tr>
+      <tr><td>Damage area, % of panel</td><td>Instance area ÷ visible panel area in panel coordinates</td><td>% of panel, cm² when scaled</td><td>± 20% relative</td></tr>
+      <tr><td>Dent diameter</td><td>Instance outline × scale from the close-up pair</td><td>mm ± mm</td><td>± 15%</td></tr>
+      <tr><td>Dent depth</td><td><b>Classifier, not a measurement.</b> d1 / d2 / d3 from 2D cues: shading gradients, distortion of reflected lines and highlights, crease or edge involvement, and how these change between the two close-ups. Trained on dents whose depth was gauge-measured or adjudicated by assessors</td><td>Depth class + probability, "estimated"; mm only from a gauge entry</td><td>Class agreement ≥ 80% (exact), ≥ 95% (±1)</td></tr>
+      <tr><td>Paint layer reached</td><td>Colour and texture of the scratch floor on close-ups (clear coat vs base coat vs primer or metal)</td><td>Likelihood per layer</td><td>Advisory only</td></tr>
+      <tr><td>Hidden, structural or mechanical damage</td><td>Not observable in photos</td><td>Escalation rule only</td><td>Never claimed</td></tr>
+    </tbody>
+  </table>
+  <div class="callout"><strong>Ground truth without special hardware.</strong> The product itself needs only the phone. To <i>train and validate</i> the depth classifier, partner workshops record a handheld dent-depth gauge reading on a sample of dents during data collection (a low-cost tool, needed for the labelled set, not in production). Where no gauge exists, adjudicated assessor depth classes (tier T3) are used. Scale and length are validated against tape-measure readings on the same sample.</div>
+</section>
+
+<!-- ============================ NEW INFERENCE PIPELINE STEP BY STEP ============================ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="nx" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5b6577"/></marker>
+    <symbol id="carside" viewBox="0 0 200 70">
+      <path d="M8 50V40Q10 31 30 29L62 26L82 10Q87 6 97 6H140Q150 6 158 14L172 27Q192 29 194 39V50Z" fill="#fff" stroke="#24458e" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M88 12H124V27H70ZM130 12H146Q152 12 156 17L164 27H130Z" fill="#eaf0fb" stroke="#24458e" stroke-width="1.4"/>
+      <circle cx="46" cy="52" r="12" fill="#17213b"/><circle cx="46" cy="52" r="5" fill="#d6dde8"/>
+      <circle cx="160" cy="52" r="12" fill="#17213b"/><circle cx="160" cy="52" r="5" fill="#d6dde8"/>
+    </symbol>
+  </defs>
+</svg>
+
+<section class="page">
+  <h2><span class="num">5</span>Inference pipeline, step by step</h2>
+  <p class="lead">What happens to one vehicle, from the first photo to the record of truth. Steps N1–N8 run on the phone (as students) and again on the server (as teachers). N9–N14 run on the server, with a provisional version of N9 and N11 on the phone.</p>
+
+  <figure>
+    <svg viewBox="0 0 1000 150" font-family="Segoe UI, Arial, sans-serif">
+      <g font-size="12.5" font-weight="600" text-anchor="middle">
+        <g fill="#eaf0fb" stroke="#24458e"><rect x="5" y="30" width="64" height="46" rx="6"/><rect x="76" y="30" width="64" height="46" rx="6"/><rect x="147" y="30" width="64" height="46" rx="6"/><rect x="218" y="30" width="64" height="46" rx="6"/><rect x="289" y="30" width="64" height="46" rx="6"/><rect x="360" y="30" width="64" height="46" rx="6"/><rect x="431" y="30" width="64" height="46" rx="6"/><rect x="502" y="30" width="64" height="46" rx="6"/></g>
+        <g fill="#e7f7f8" stroke="#00a6b2"><rect x="573" y="30" width="64" height="46" rx="6"/><rect x="644" y="30" width="64" height="46" rx="6"/><rect x="715" y="30" width="64" height="46" rx="6"/><rect x="786" y="30" width="64" height="46" rx="6"/><rect x="857" y="30" width="64" height="46" rx="6"/><rect x="928" y="30" width="64" height="46" rx="6"/></g>
+        <g fill="#17213b">
+          <text x="37" y="50">N1</text><text x="108" y="50">N2</text><text x="179" y="50">N3</text><text x="250" y="50">N4</text><text x="321" y="50">N5</text><text x="392" y="50">N6</text><text x="463" y="50">N7</text><text x="534" y="50">N8</text>
+          <text x="605" y="50">N9</text><text x="676" y="50">N10</text><text x="747" y="50">N11</text><text x="818" y="50">N12</text><text x="889" y="50">N13</text><text x="960" y="50">N14</text>
+        </g>
+        <g fill="#5b6577" font-weight="400" font-size="10.5">
+          <text x="37" y="67">capture</text><text x="108" y="67">quality</text><text x="179" y="67">crops</text><text x="250" y="67">features</text><text x="321" y="67">panels</text><text x="392" y="67">damage</text><text x="463" y="67">nuisance</text><text x="534" y="67">surface</text>
+          <text x="605" y="67">fusion</text><text x="676" y="67">measure</text><text x="747" y="67">route</text><text x="818" y="67">rules</text><text x="889" y="67">re-score</text><text x="960" y="67">record</text>
+        </g>
+      </g>
+      <g stroke="#24458e" stroke-width="2"><line x1="5" y1="98" x2="566" y2="98"/></g>
+      <g stroke="#00a6b2" stroke-width="2"><line x1="573" y1="98" x2="992" y2="98"/></g>
+      <text x="285" y="118" font-size="12.5" fill="#123a78" text-anchor="middle" font-weight="600">per photo · phone students, then server teachers</text>
+      <text x="782" y="118" font-size="12.5" fill="#00727a" text-anchor="middle" font-weight="600">per vehicle · server (provisional copy on phone)</text>
+      <text x="5" y="18" font-size="12" fill="#5b6577">One inspection flows left to right; each step is detailed below with its own diagram.</text>
+    </svg>
+    <figcaption><b>Figure 6.</b> The fourteen steps of the inference pipeline.</figcaption>
+  </figure>
+
+  <div class="ngrid">
+
+    <div class="ncard">
+      <div class="no">N1 · Phone</div><h4>Guided capture set</h4>
+      <svg viewBox="0 0 320 120" font-family="Segoe UI, Arial, sans-serif">
+        <ellipse cx="160" cy="60" rx="108" ry="48" fill="none" stroke="#d6dde8" stroke-dasharray="4 4"/>
+        <rect x="136" y="24" width="48" height="72" rx="14" fill="#fff" stroke="#24458e" stroke-width="2"/>
+        <path d="M142 42H178M142 80H178" stroke="#24458e" stroke-width="1.5"/>
+        <text x="160" y="64" font-size="9" text-anchor="middle" fill="#5b6577">front ↑</text>
+        <g fill="#00a6b2" stroke="#fff" stroke-width="1.5"><circle cx="160" cy="12" r="8"/><circle cx="229" cy="23" r="8"/><circle cx="264" cy="48" r="8"/><circle cx="264" cy="72" r="8"/><circle cx="229" cy="97" r="8"/><circle cx="160" cy="108" r="8"/><circle cx="91" cy="97" r="8"/><circle cx="56" cy="72" r="8"/><circle cx="56" cy="48" r="8"/><circle cx="91" cy="23" r="8"/></g>
+        <g fill="#fff" font-size="7.5" font-weight="700" text-anchor="middle"><text x="160" y="15">1</text><text x="229" y="26">2</text><text x="264" y="51">3</text><text x="264" y="75">4</text><text x="229" y="100">5</text><text x="160" y="111">6</text><text x="91" y="100">7</text><text x="56" y="75">8</text><text x="56" y="51">9</text><text x="91" y="26">10</text></g>
+        <rect x="284" y="44" width="30" height="32" rx="4" fill="#fff5e2" stroke="#b7791f"/><text x="299" y="64" font-size="9" text-anchor="middle" fill="#8a5a10">+zoom</text>
+        <text x="4" y="117" font-size="9" fill="#17213b" font-weight="600">VIN scan first</text>
+      </svg>
+      <dl><dt>Does</dt><dd>Walks the technician through 10 named slots S1–S10 (front, rear, four corners, two per side; §4.1), then two close-ups of any region the edge model flags. Records phone orientation, device and lighting per shot.</dd>
+      <dt>Output</dt><dd>Capture set with metadata; vehicle identity from VIN/plate</dd>
+      <dt>Gate</dt><dd>Every slot filled; ≥ 12 MP native; every panel in ≥ 2 views</dd></dl>
+    </div>
+
+    <div class="ncard">
+      <div class="no">N2 · Phone</div><h4>Live quality and coverage</h4>
+      <svg viewBox="0 0 320 120" font-family="Segoe UI, Arial, sans-serif">
+        <rect x="14" y="6" width="96" height="108" rx="12" fill="#17213b"/>
+        <rect x="20" y="14" width="84" height="92" rx="6" fill="#f4f6fa"/>
+        <use href="#carside" x="24" y="40" width="76" height="30"/>
+        <path d="M26 22h10M26 22v10M98 22h-10M98 22v10M26 98h10M26 98v-10M98 98h-10M98 98v-10" stroke="#00a6b2" stroke-width="2" fill="none"/>
+        <g font-size="10.5" fill="#17213b">
+          <text x="128" y="24">Sharpness</text><rect x="196" y="15" width="90" height="10" rx="5" fill="#e6f5ed"/><rect x="196" y="15" width="78" height="10" rx="5" fill="#22965e"/><text x="292" y="24" fill="#22965e" font-weight="700">✓</text>
+          <text x="128" y="48">Exposure</text><rect x="196" y="39" width="90" height="10" rx="5" fill="#e6f5ed"/><rect x="196" y="39" width="64" height="10" rx="5" fill="#22965e"/><text x="292" y="48" fill="#22965e" font-weight="700">✓</text>
+          <text x="128" y="72">Glare</text><rect x="196" y="63" width="90" height="10" rx="5" fill="#fbeaea"/><rect x="196" y="63" width="70" height="10" rx="5" fill="#c9302c"/><text x="292" y="72" fill="#c9302c" font-weight="700">✕</text>
+          <text x="128" y="96">Slot / view</text><text x="196" y="96" font-weight="600">3 of 8 · right side</text>
+          <text x="128" y="114" font-size="9.5" fill="#c9302c">"Step one pace left to lose the reflection"</text>
+        </g>
+      </svg>
+      <dl><dt>Does</dt><dd>A nano CNN runs on sampled preview frames (≈ 3–5 fps): blur, exposure, glare, distance, and whether the view matches the requested slot.</dd>
+      <dt>Output</dt><dd>Pass/fail per slot with spoken or on-screen guidance</dd>
+      <dt>Gate</dt><dd>Shutter blocked until pass; any override is logged</dd></dl>
+    </div>
+
+    <div class="ncard">
+      <div class="no">N3 · Phone + server</div><h4>Native resolution and panel crops</h4>
+      <svg viewBox="0 0 320 120" font-family="Segoe UI, Arial, sans-serif">
+        <defs><marker id="n3m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5b6577"/></marker></defs>
+        <rect x="8" y="10" width="170" height="100" rx="4" fill="#f4f6fa" stroke="#d6dde8"/>
+        <use href="#carside" x="16" y="28" width="154" height="58"/>
+        <rect x="74" y="44" width="40" height="32" fill="none" stroke="#b7791f" stroke-width="2" stroke-dasharray="4 3"/>
+        <rect x="116" y="44" width="40" height="32" fill="none" stroke="#b7791f" stroke-width="2" stroke-dasharray="4 3"/>
+        <text x="12" y="104" font-size="9" fill="#5b6577">full photo · 4,000 px native</text>
+        <g stroke="#5b6577" stroke-width="1.5" marker-end="url(#n3m)" fill="none"><path d="M114 50L206 26"/><path d="M156 70L206 84"/></g>
+        <rect x="210" y="8" width="102" height="44" rx="4" fill="#fff5e2" stroke="#b7791f"/><text x="261" y="28" font-size="10" text-anchor="middle" fill="#17213b" font-weight="600">front door crop</text><text x="261" y="43" font-size="9" text-anchor="middle" fill="#5b6577">1024 px tiles, no resize</text>
+        <rect x="210" y="66" width="102" height="44" rx="4" fill="#fff5e2" stroke="#b7791f"/><text x="261" y="86" font-size="10" text-anchor="middle" fill="#17213b" font-weight="600">rear door crop</text><text x="261" y="101" font-size="9" text-anchor="middle" fill="#5b6577">only if flagged</text>
+      </svg>
+      <dl><dt>Does</dt><dd>The main model sees the photo at ~1,024 px. Panels with candidate surface damage are cropped from the <i>original</i> pixels for the surface specialist. Nothing is ever upscaled.</dd>
+      <dt>Output</dt><dd>Working image + full-resolution panel crops</dd>
+      <dt>Gate</dt><dd>Crop must contain ≥ 1 px per 0.3 mm at the estimated scale</dd></dl>
+    </div>
+
+    <div class="ncard">
+      <div class="no">N4 · Model</div><h4>Foundation features (AVFM)</h4>
+      <svg viewBox="0 0 320 120" font-family="Segoe UI, Arial, sans-serif">
+        <defs><marker id="n4m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5b6577"/></marker></defs>
+        <rect x="8" y="28" width="62" height="62" rx="3" fill="#f4f6fa" stroke="#d6dde8"/><use href="#carside" x="10" y="44" width="58" height="22"/>
+        <g stroke="#24458e" stroke-width="1"><rect x="96" y="28" width="62" height="62" fill="#eaf0fb"/><path d="M106.3 28V90M116.6 28V90M126.9 28V90M137.2 28V90M147.5 28V90M96 38.3H158M96 48.6H158M96 58.9H158M96 69.2H158M96 79.5H158"/></g>
+        <text x="127" y="104" font-size="9" text-anchor="middle" fill="#5b6577">14 px patch tokens</text>
+        <g fill="#24458e"><rect x="186" y="12" width="64" height="18" rx="3" opacity="0.35"/><rect x="194" y="38" width="48" height="18" rx="3" opacity="0.55"/><rect x="202" y="64" width="32" height="18" rx="3" opacity="0.75"/><rect x="210" y="90" width="16" height="18" rx="3"/></g>
+        <g font-size="9.5" fill="#17213b"><text x="258" y="25">F4 · 1/4</text><text x="258" y="51">F8 · 1/8</text><text x="258" y="77">F16 · 1/16</text><text x="258" y="103">F32 · 1/32</text></g>
+        <g stroke="#5b6577" stroke-width="1.5" marker-end="url(#n4m)"><line x1="72" y1="59" x2="93" y2="59"/><line x1="160" y1="59" x2="183" y2="59"/></g>
+      </svg>
+      <dl><dt>Does</dt><dd>One backbone pass. The ViT-Adapter injects a CNN spatial prior and returns a 4-level pyramid that every head shares.</dd>
+      <dt>Model</dt><dd>Edge: AVFM-S/14 or mobile CNN · Server: AVFM-L/14</dd>
+      <dt>Output</dt><dd>Multi-scale feature maps (strides 4–32)</dd></dl>
+    </div>
+
+    <div class="ncard">
+      <div class="no">N5 · Model</div><h4>Panels, side, viewpoint, keypoints</h4>
+      <svg viewBox="0 0 320 120" font-family="Segoe UI, Arial, sans-serif">
+        <defs><clipPath id="cp5"><path d="M12 92V78Q14 66 40 63L84 59L111 37Q118 31 131 31H190Q204 31 215 42L233 60Q261 63 264 76V92Z"/></clipPath></defs>
+        <g clip-path="url(#cp5)">
+          <rect x="0" y="20" width="60" height="80" fill="#fde4d6"/><rect x="60" y="20" width="50" height="80" fill="#e3eaf8"/>
+          <rect x="110" y="20" width="58" height="80" fill="#cfe0f7"/><rect x="168" y="20" width="50" height="80" fill="#e7f7f8"/><rect x="218" y="20" width="60" height="80" fill="#f0ecfb"/>
+        </g>
+        <path d="M12 92V78Q14 66 40 63L84 59L111 37Q118 31 131 31H190Q204 31 215 42L233 60Q261 63 264 76V92Z" fill="none" stroke="#24458e" stroke-width="2"/>
+        <path d="M60 60V92M110 40V92M168 31V92M218 47V92" stroke="#24458e" stroke-width="1" stroke-dasharray="3 2"/>
+        <circle cx="64" cy="94" r="14" fill="#17213b"/><circle cx="220" cy="94" r="14" fill="#17213b"/>
+        <g fill="#c9302c" stroke="#fff" stroke-width="1.2"><circle cx="64" cy="94" r="4"/><circle cx="220" cy="94" r="4"/><circle cx="16" cy="76" r="4"/><circle cx="262" cy="76" r="4"/><circle cx="108" cy="44" r="4"/><circle cx="150" cy="66" r="4"/></g>
+        <g font-size="9" fill="#17213b"><text x="22" y="16">front_left_fender</text><text x="114" y="16" font-weight="700">front_left_door 0.97</text></g>
+        <path d="M140 20L140 52" stroke="#17213b" stroke-width="0.8"/>
+        <rect x="272" y="30" width="44" height="40" rx="4" fill="#fff" stroke="#24458e"/><text x="294" y="46" font-size="9" text-anchor="middle" fill="#17213b">view</text><text x="294" y="60" font-size="9" text-anchor="middle" fill="#17213b" font-weight="700">L 90°±8</text>
+      </svg>
+      <dl><dt>Does</dt><dd>Panel instances in an OEM-aligned taxonomy with explicit sides; semantic keypoints (wheel centres, lamp corners, mirror base, handles); camera azimuth and elevation.</dd>
+      <dt>Output</dt><dd>Panel masks + a 2-D panel coordinate frame (u, v) per panel</dd>
+      <dt>Gate</dt><dd>Predicted view must match the capture slot, otherwise recapture</dd></dl>
+    </div>
+
+    <div class="ncard">
+      <div class="no">N6 · Model</div><h4>Damage instances (multi-label)</h4>
+      <svg viewBox="0 0 320 120" font-family="Segoe UI, Arial, sans-serif">
+        <rect x="10" y="12" width="176" height="96" rx="10" fill="#e3eaf8" stroke="#24458e" stroke-width="1.5"/>
+        <text x="16" y="26" font-size="9" fill="#5b6577">front_left_door</text>
+        <ellipse cx="76" cy="66" rx="30" ry="20" fill="#eb6834" fill-opacity="0.18" stroke="#eb6834" stroke-width="2" stroke-dasharray="4 3"/>
+        <path d="M52 58C70 54 86 66 104 60S130 52 160 40" stroke="#2a78d6" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+        <path d="M122 88C138 86 150 90 170 84" stroke="#2a78d6" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+        <g font-size="10" fill="#17213b">
+          <rect x="196" y="22" width="118" height="40" rx="5" fill="#fff" stroke="#eb6834"/><text x="204" y="38" font-weight="700">#1 dent 0.91</text><text x="204" y="54">+ scratch 0.77</text>
+          <rect x="196" y="72" width="118" height="30" rx="5" fill="#fff" stroke="#2a78d6"/><text x="204" y="91" font-weight="700">#2 scratch 0.88</text>
+        </g>
+      </svg>
+      <dl><dt>Does</dt><dd>The Mask2Former query decoder returns each damage as its own instance, with an independent probability per type (types are not mutually exclusive), plus per-instance severity and material priors.</dd>
+      <dt>Output</dt><dd>Instance masks, type probabilities, priors</dd></dl>
+    </div>
+
+    <div class="ncard">
+      <div class="no">N7 · Model</div><h4>Nuisance separation</h4>
+      <svg viewBox="0 0 320 120" font-family="Segoe UI, Arial, sans-serif">
+        <defs><linearGradient id="rfl" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="0.5" stop-color="#fff" stop-opacity="1"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+        <rect x="10" y="12" width="176" height="96" rx="10" fill="#cfd6e3" stroke="#24458e" stroke-width="1.5"/>
+        <path d="M40 12L80 12L30 108L10 108L10 70Z" fill="url(#rfl)"/>
+        <rect x="104" y="84" width="70" height="8" rx="4" fill="#fff" stroke="#7054c8" stroke-width="1.5"/>
+        <circle cx="140" cy="40" r="6" fill="#eb6834" stroke="#fff" stroke-width="1.5"/>
+        <g font-size="9.6" fill="#17213b">
+          <rect x="196" y="10" width="118" height="30" rx="5" fill="#fff" stroke="#8a8f9c"/><text x="203" y="24" font-weight="700">reflection 0.93</text><text x="203" y="35" fill="#5b6577">suppressed, logged</text>
+          <rect x="196" y="46" width="118" height="30" rx="5" fill="#fff" stroke="#7054c8"/><text x="203" y="60" font-weight="700">lamp / DRL 0.96</text><text x="203" y="71" fill="#5b6577">a panel, not damage</text>
+          <rect x="196" y="82" width="118" height="30" rx="5" fill="#fff" stroke="#eb6834"/><text x="203" y="96" font-weight="700">paint chip 0.81</text><text x="203" y="107" fill="#5b6577">kept as damage</text>
+        </g>
+      </svg>
+      <dl><dt>Does</dt><dd>Learned classes for reflection, glare, lamp/DRL, dirt, water, panel seam, sticker and aftermarket parts. A damage candidate that a nuisance class explains better is suppressed and logged for review sampling.</dd>
+      <dt>Output</dt><dd>Damage instances minus explained nuisance</dd></dl>
+    </div>
+
+    <div class="ncard">
+      <div class="no">N8 · Model</div><h4>Surface specialist on crops</h4>
+      <svg viewBox="0 0 320 120" font-family="Segoe UI, Arial, sans-serif">
+        <rect x="10" y="22" width="110" height="76" rx="8" fill="#e3eaf8" stroke="#24458e" stroke-width="1.5"/>
+        <rect x="56" y="46" width="30" height="24" fill="none" stroke="#b7791f" stroke-width="2"/>
+        <path d="M86 46L170 10M86 70L170 110" stroke="#b7791f" stroke-width="1" stroke-dasharray="3 3"/>
+        <rect x="170" y="10" width="142" height="100" rx="6" fill="#fff5e2" stroke="#b7791f" stroke-width="1.5"/>
+        <path d="M182 82C210 74 230 62 252 58S290 40 304 30" stroke="#2a78d6" stroke-width="6" stroke-opacity="0.35" fill="none" stroke-linecap="round"/>
+        <path d="M182 82C210 74 230 62 252 58S290 40 304 30" stroke="#17213b" stroke-width="1.2" fill="none" stroke-dasharray="1 3"/>
+        <g stroke="#c9302c" stroke-width="1.2"><path d="M226 60V76M222 60H230M222 76H230"/></g>
+        <text x="234" y="94" font-size="9" fill="#17213b">width 0.6 mm</text>
+        <text x="178" y="24" font-size="9" fill="#5b6577">1/2-res mask + skeleton</text>
+      </svg>
+      <dl><dt>Does</dt><dd>AVFM-B features plus a stride-2 CNN stem and U-Net decoder on full-resolution crops, trained with clDice, Tversky and boundary losses for 2–3 px scratches, chips and paint defects.</dd>
+      <dt>Output</dt><dd>Thin masks, centrelines (skeletons), width estimates</dd></dl>
+    </div>
+
+    <div class="ncard">
+      <div class="no">N9 · Vehicle</div><h4>Multi-view fusion</h4>
+      <svg viewBox="0 0 320 120" font-family="Segoe UI, Arial, sans-serif">
+        <g stroke="#24458e" stroke-width="1.2" fill="#e3eaf8">
+          <rect x="8" y="16" width="60" height="60" rx="4"/><rect x="78" y="16" width="60" height="60" rx="4"/><rect x="148" y="16" width="60" height="60" rx="4"/>
+        </g>
+        <g stroke="#b9c4d8" stroke-width="0.8"><path d="M23 16V76M38 16V76M53 16V76M8 31H68M8 46H68M8 61H68M93 16V76M108 16V76M123 16V76M78 31H138M78 46H138M78 61H138M163 16V76M178 16V76M193 16V76M148 31H208M148 46H208M148 61H208"/></g>
+        <g fill="#eb6834" stroke="#fff" stroke-width="1.4"><circle cx="46" cy="40" r="5"/><circle cx="116" cy="40" r="5"/><circle cx="186" cy="40" r="5"/></g>
+        <g fill="#2a78d6" stroke="#fff" stroke-width="1.4"><circle cx="18" cy="64" r="5"/><circle cx="108" cy="58" r="5"/><circle cx="198" cy="24" r="5"/></g>
+        <g font-size="9" fill="#5b6577" text-anchor="middle"><text x="38" y="90">view 2</text><text x="108" y="90">view 3</text><text x="178" y="90">close-up</text></g>
+        <text x="8" y="108" font-size="9" fill="#5b6577">panel coordinates (u, v) of front_left_door</text>
+        <g font-size="9.6"><rect x="218" y="18" width="96" height="28" rx="5" fill="#e6f5ed" stroke="#22965e"/><text x="225" y="36" fill="#146b42" font-weight="700">damage · 3/3 ✓</text>
+        <rect x="218" y="54" width="96" height="28" rx="5" fill="#fbeaea" stroke="#c9302c"/><text x="225" y="72" fill="#c9302c" font-weight="700">reflection drifts ✕</text></g>
+      </svg>
+      <dl><dt>Does</dt><dd>Maps every damage instance into its panel's (u, v) frame, matches instances across views (position, type, appearance) and scores consistency: seen in <i>k</i> of the <i>n</i> views where that spot was visible.</dd>
+      <dt>Output</dt><dd>One vehicle-level damage list with view references</dd></dl>
+    </div>
+
+    <div class="ncard">
+      <div class="no">N10 · Vehicle</div><h4>Measurement</h4>
+      <svg viewBox="0 0 320 120" font-family="Segoe UI, Arial, sans-serif">
+        <path d="M14 40C50 30 90 34 130 22" stroke="#2a78d6" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <g stroke="#17213b" stroke-width="1"><path d="M14 56H134"/><path d="M14 52V60M38 54V58M62 52V60M86 54V58M110 52V60M134 52V60"/></g>
+        <text x="14" y="76" font-size="10.5" fill="#17213b" font-weight="700">length 142 ± 8 mm</text>
+        <text x="14" y="90" font-size="9" fill="#5b6577">skeleton × scale (multi-view + VIN)</text>
+        <text x="14" y="104" font-size="9" fill="#5b6577">area 0.8% of panel (u, v)</text>
+        <rect x="160" y="12" width="152" height="96" rx="6" fill="#f4f6fa" stroke="#d6dde8"/>
+        <path d="M170 44H302" stroke="#5b6577" stroke-dasharray="4 3"/>
+        <path d="M170 44C200 44 214 44 224 52S246 72 256 58S276 44 302 44" stroke="#eb6834" stroke-width="2.4" fill="none"/>
+        <path d="M246 46V70" stroke="#c9302c" stroke-width="1.2"/>
+        <text x="170" y="30" font-size="9" fill="#5b6577">reflected line bends over the dent</text>
+        <text x="170" y="92" font-size="10.5" fill="#17213b" font-weight="700">depth class d2 · p = 0.71</text>
+        <text x="170" y="104" font-size="9" fill="#5b6577">2D estimate · mm only from a gauge</text>
+      </svg>
+      <dl><dt>Does</dt><dd>Metric scale from the multi-view geometry of the photos plus VIN-known dimensions (wheel rim, wheelbase) or the number plate. Length comes from the skeleton, area from panel coordinates. Dent depth is a d1–d3 class estimated from 2D cues; millimetres only if a gauge reading is entered (§4.7).</dd>
+      <dt>Output</dt><dd>Each value with uncertainty, method and quality, or <code>null</code> with a reason</dd></dl>
+    </div>
+
+    <div class="ncard">
+      <div class="no">N11 · Vehicle</div><h4>Calibration and routing</h4>
+      <svg viewBox="0 0 320 120" font-family="Segoe UI, Arial, sans-serif">
+        <defs><linearGradient id="cal" x1="0" x2="1"><stop offset="0" stop-color="#e6f5ed"/><stop offset="1" stop-color="#fbeaea"/></linearGradient>
+        <marker id="n11m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5b6577"/></marker></defs>
+        <rect x="10" y="50" width="110" height="14" rx="7" fill="url(#cal)" stroke="#d6dde8"/>
+        <path d="M44 44V70" stroke="#17213b" stroke-width="1.6"/><text x="10" y="40" font-size="9" fill="#5b6577">λ from α = 2% (conformal)</text>
+        <text x="10" y="84" font-size="9" fill="#5b6577">per-class temperature scaling</text>
+        <path d="M150 57L170 42L190 57L170 72Z" fill="#fff" stroke="#24458e"/>
+        <g stroke="#5b6577" stroke-width="1.2" fill="none" marker-end="url(#n11m)"><path d="M122 57H148"/><path d="M190 57H200V14H210"/><path d="M200 33H210"/><path d="M200 52H210"/><path d="M200 71H210"/><path d="M200 57V90H210"/><path d="M200 90V109H210"/></g>
+        <g font-size="9.4" font-weight="600">
+          <rect x="212" y="6" width="100" height="16" rx="3" fill="#e6f5ed"/><text x="218" y="18" fill="#146b42">auto-accept</text>
+          <rect x="212" y="25" width="100" height="16" rx="3" fill="#e6f5ed"/><text x="218" y="37" fill="#146b42">auto-clear</text>
+          <rect x="212" y="44" width="100" height="16" rx="3" fill="#e3eaf8"/><text x="218" y="56" fill="#123a78">assessor review</text>
+          <rect x="212" y="63" width="100" height="16" rx="3" fill="#e3eaf8"/><text x="218" y="75" fill="#123a78">measure</text>
+          <rect x="212" y="82" width="100" height="16" rx="3" fill="#fff5e2"/><text x="218" y="94" fill="#8a5a10">recapture</text>
+          <rect x="212" y="101" width="100" height="16" rx="3" fill="#fbeaea"/><text x="218" y="113" fill="#c9302c">escalate</text>
+        </g>
+      </svg>
+      <dl><dt>Does</dt><dd>Per-class calibrated probabilities, fused across views. Auto-clear uses a threshold λ set by conformal risk control so that missed damage on auto-cleared vehicles stays at or below α.</dd>
+      <dt>Output</dt><dd>Route + reason codes; <code>automated_decision_allowed</code></dd></dl>
+    </div>
+
+    <div class="ncard">
+      <div class="no">N12 · Vehicle</div><h4>Rules engine: severity and repair options</h4>
+      <svg viewBox="0 0 320 120" font-family="Segoe UI, Arial, sans-serif">
+        <defs><marker id="n12m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5b6577"/></marker></defs>
+        <g font-size="9.2" fill="#17213b">
+          <rect x="8" y="8" width="88" height="20" rx="3" fill="#fff" stroke="#d6dde8"/><text x="14" y="22">fused damage</text>
+          <rect x="8" y="34" width="88" height="20" rx="3" fill="#fff" stroke="#d6dde8"/><text x="14" y="48">measurements</text>
+          <rect x="8" y="60" width="88" height="20" rx="3" fill="#fff" stroke="#d6dde8"/><text x="14" y="74">panel material</text>
+          <rect x="8" y="86" width="88" height="20" rx="3" fill="#fff" stroke="#d6dde8"/><text x="14" y="100">OEM / safety rules</text>
+        </g>
+        <g stroke="#5b6577" stroke-width="1.2" marker-end="url(#n12m)"><path d="M96 18L120 50"/><path d="M96 44L120 54"/><path d="M96 70L120 60"/><path d="M96 96L120 66"/><path d="M204 58H220"/></g>
+        <rect x="122" y="34" width="82" height="46" rx="6" fill="#e7f7f8" stroke="#00a6b2"/>
+        <text x="163" y="54" font-size="10" text-anchor="middle" font-weight="700" fill="#17213b">rules</text><text x="163" y="69" font-size="9" text-anchor="middle" fill="#5b6577">sev-rubric-2.1</text>
+        <rect x="222" y="22" width="92" height="72" rx="6" fill="#fff" stroke="#24458e"/>
+        <g font-size="9.2" fill="#17213b"><text x="230" y="40" font-weight="700">severity 2 · minor</text><text x="230" y="55">polish / refinish</text><text x="230" y="70" fill="#5b6577">rule: scratch-area</text><text x="230" y="85" fill="#5b6577">inputs cited</text></g>
+      </svg>
+      <dl><dt>Does</dt><dd>A versioned, unit-tested rules service. The initial panel rubric is v1, fed with measured area and the estimated depth class. Each output names the rule and inputs that produced it.</dd>
+      <dt>Output</dt><dd>Severity 1–5, permitted repair options, basis</dd></dl>
+    </div>
+
+    <div class="ncard">
+      <div class="no">N13 · Server</div><h4>Teacher re-score and reconciliation</h4>
+      <svg viewBox="0 0 320 120" font-family="Segoe UI, Arial, sans-serif">
+        <defs><marker id="n13m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5b6577"/></marker></defs>
+        <rect x="8" y="10" width="110" height="40" rx="6" fill="#eaf0fb" stroke="#24458e"/><text x="16" y="27" font-size="9.6" font-weight="700" fill="#17213b">edge student</text><text x="16" y="42" font-size="9" fill="#5b6577">scratch 0.71 · route: accept</text>
+        <rect x="8" y="70" width="110" height="40" rx="6" fill="#e7f7f8" stroke="#00a6b2"/><text x="16" y="87" font-size="9.6" font-weight="700" fill="#17213b">server teacher</text><text x="16" y="102" font-size="9" fill="#5b6577">scratch 0.88 · dent 0.40</text>
+        <g stroke="#5b6577" stroke-width="1.3" fill="none" marker-end="url(#n13m)"><path d="M118 30H140L152 52"/><path d="M118 90H140L152 68"/><path d="M190 60H206"/><path d="M210 48V28H222"/><path d="M210 72V92H222"/></g>
+        <circle cx="170" cy="60" r="20" fill="#fff" stroke="#24458e"/><text x="170" y="57" font-size="8.5" text-anchor="middle" fill="#17213b">same</text><text x="170" y="68" font-size="8.5" text-anchor="middle" fill="#17213b">route?</text>
+        <rect x="224" y="14" width="90" height="28" rx="5" fill="#e6f5ed" stroke="#22965e"/><text x="231" y="32" font-size="9.4" fill="#146b42" font-weight="600">yes → final</text>
+        <rect x="224" y="78" width="90" height="28" rx="5" fill="#fff5e2" stroke="#b7791f"/><text x="231" y="96" font-size="9.4" fill="#8a5a10" font-weight="600">no → review + mine</text>
+      </svg>
+      <dl><dt>Does</dt><dd>Full-size teachers (with TTA) re-score every synced image. Edge and server results are both stored; any change of route goes to an assessor and into the active-learning queue.</dd>
+      <dt>Output</dt><dd>Authoritative result; disagreement events</dd></dl>
+    </div>
+
+    <div class="ncard">
+      <div class="no">N14 · Server</div><h4>Report, ledger and learning loop</h4>
+      <svg viewBox="0 0 320 120" font-family="Segoe UI, Arial, sans-serif">
+        <defs><marker id="n14m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5b6577"/></marker></defs>
+        <path d="M14 10H64L80 26V110H14Z" fill="#fff" stroke="#24458e" stroke-width="1.5"/><path d="M64 10V26H80" fill="none" stroke="#24458e"/>
+        <g stroke="#b9c4d8" stroke-width="3"><path d="M22 40H70M22 52H66M22 64H70M22 76H58M22 88H68"/></g>
+        <g fill="#f0ecfb" stroke="#7054c8"><rect x="118" y="14" width="88" height="16" rx="3"/><rect x="118" y="34" width="88" height="16" rx="3"/><rect x="118" y="54" width="88" height="16" rx="3"/><rect x="118" y="74" width="88" height="16" rx="3"/><rect x="118" y="94" width="88" height="16" rx="3"/></g>
+        <g font-size="8.4" fill="#17213b"><text x="124" y="26">ServerInference</text><text x="124" y="46">VehicleFused</text><text x="124" y="66">AssessorReviewed</text><text x="124" y="86">ReportIssued</text><text x="124" y="106">RepairOrderClosed</text></g>
+        <g stroke="#5b6577" stroke-width="1.3" fill="none" marker-end="url(#n14m)"><path d="M80 60H114"/><path d="M206 60H230"/><path d="M272 92V112H150"/></g>
+        <rect x="232" y="40" width="80" height="44" rx="6" fill="#e7f7f8" stroke="#00a6b2"/><text x="272" y="58" font-size="9.4" text-anchor="middle" fill="#17213b" font-weight="700">data engine</text><text x="272" y="72" font-size="8.6" text-anchor="middle" fill="#5b6577">labels · gold · mining</text>
+      </svg>
+      <dl><dt>Does</dt><dd>Issues the report to DMS/ERP and appends every event to the ledger. Assessor corrections and the eventual repair order are joined back to the inspection and flow into the training pipeline (§6).</dd>
+      <dt>Output</dt><dd>Final report; immutable event stream; new ground truth</dd></dl>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ TRAINING PIPELINE STEP BY STEP ============================ -->
+<section>
+  <h2><span class="num">6</span>Training &amp; release pipeline, step by step</h2>
+  <p class="lead">How a photo captured in a workshop becomes part of a released model. Every step produces a versioned artefact and has a gate that must pass before the next step can start.</p>
+
+  <figure>
+    <svg viewBox="0 0 1000 300" font-family="Segoe UI, Arial, sans-serif">
+      <defs><marker id="tp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5b6577"/></marker></defs>
+      <g font-size="12.5" text-anchor="middle">
+        <!-- row 1: data -->
+        <g fill="#e7f7f8" stroke="#00a6b2">
+          <rect x="10" y="20" width="145" height="58" rx="7"/><rect x="175" y="20" width="145" height="58" rx="7"/><rect x="340" y="20" width="145" height="58" rx="7"/>
+          <rect x="505" y="20" width="145" height="58" rx="7"/><rect x="670" y="20" width="145" height="58" rx="7"/><rect x="835" y="20" width="155" height="58" rx="7"/>
+        </g>
+        <g fill="#17213b">
+          <text x="82" y="44" font-weight="700">T1 Capture</text><text x="82" y="62" font-size="11" fill="#5b6577">consent scope</text>
+          <text x="247" y="44" font-weight="700">T2 Ingest</text><text x="247" y="62" font-size="11" fill="#5b6577">hash, dedupe, ledger</text>
+          <text x="412" y="44" font-weight="700">T3 De-identify</text><text x="412" y="62" font-size="11" fill="#5b6577">faces, plates</text>
+          <text x="577" y="44" font-weight="700">T4 Curate</text><text x="577" y="62" font-size="11" fill="#5b6577">clusters, quotas</text>
+          <text x="742" y="44" font-weight="700">T5 Mine</text><text x="742" y="62" font-size="11" fill="#5b6577">disagreement, overrides</text>
+          <text x="912" y="44" font-weight="700">T6 Pre-label</text><text x="912" y="62" font-size="11" fill="#5b6577">teacher + SAM 2</text>
+        </g>
+        <!-- row 2: labels & model (right to left) -->
+        <g fill="#e7f7f8" stroke="#00a6b2"><rect x="835" y="120" width="155" height="58" rx="7"/><rect x="670" y="120" width="145" height="58" rx="7"/><rect x="505" y="120" width="145" height="58" rx="7"/></g>
+        <g fill="#eaf0fb" stroke="#24458e"><rect x="340" y="120" width="145" height="58" rx="7"/><rect x="175" y="120" width="145" height="58" rx="7"/><rect x="10" y="120" width="145" height="58" rx="7"/></g>
+        <g fill="#17213b">
+          <text x="912" y="144" font-weight="700">T7 Annotate ×2</text><text x="912" y="162" font-size="11" fill="#5b6577">independent labels</text>
+          <text x="742" y="144" font-weight="700">T8 Adjudicate</text><text x="742" y="162" font-size="11" fill="#5b6577">senior assessor, IAA</text>
+          <text x="577" y="144" font-weight="700">T9 Snapshot</text><text x="577" y="162" font-size="11" fill="#5b6577">licence check, splits</text>
+          <text x="412" y="144" font-weight="700">T10 AVFM SSL</text><text x="412" y="162" font-size="11" fill="#5b6577">Stage 1/1b + probe gate</text>
+          <text x="247" y="144" font-weight="700">T11 Teachers</text><text x="247" y="162" font-size="11" fill="#5b6577">Stage 2 multi-task</text>
+          <text x="82" y="144" font-weight="700">T12 Calibrate</text><text x="82" y="162" font-size="11" fill="#5b6577">temperature, conformal</text>
+        </g>
+        <!-- row 3: deploy -->
+        <g fill="#eaf0fb" stroke="#24458e"><rect x="10" y="220" width="145" height="58" rx="7"/><rect x="175" y="220" width="145" height="58" rx="7"/><rect x="340" y="220" width="145" height="58" rx="7"/></g>
+        <g fill="#e6f5ed" stroke="#22965e"><rect x="505" y="220" width="145" height="58" rx="7"/><rect x="670" y="220" width="145" height="58" rx="7"/><rect x="835" y="220" width="155" height="58" rx="7"/></g>
+        <g fill="#17213b">
+          <text x="82" y="244" font-weight="700">T13 Distil</text><text x="82" y="262" font-size="11" fill="#5b6577">edge students</text>
+          <text x="247" y="244" font-weight="700">T14 Export</text><text x="247" y="262" font-size="11" fill="#5b6577">Core ML · QNN · LiteRT</text>
+          <text x="412" y="244" font-weight="700">T15 Parity + bench</text><text x="412" y="262" font-size="11" fill="#5b6577">device matrix</text>
+          <text x="577" y="244" font-weight="700">T16 Offline gates</text><text x="577" y="262" font-size="11" fill="#5b6577">sliced gold sets</text>
+          <text x="742" y="244" font-weight="700">T17 Shadow</text><text x="742" y="262" font-size="11" fill="#5b6577">≥ 2 weeks live</text>
+          <text x="912" y="244" font-weight="700">T18 Canary → rollout</text><text x="912" y="262" font-size="11" fill="#5b6577">auto-rollback</text>
+        </g>
+      </g>
+      <g stroke="#5b6577" stroke-width="1.8" fill="none" marker-end="url(#tp)">
+        <line x1="155" y1="49" x2="172" y2="49"/><line x1="320" y1="49" x2="337" y2="49"/><line x1="485" y1="49" x2="502" y2="49"/><line x1="650" y1="49" x2="667" y2="49"/><line x1="815" y1="49" x2="832" y2="49"/>
+        <path d="M912 78V117"/>
+        <line x1="835" y1="149" x2="818" y2="149"/><line x1="670" y1="149" x2="653" y2="149"/><line x1="505" y1="149" x2="488" y2="149"/><line x1="340" y1="149" x2="323" y2="149"/><line x1="175" y1="149" x2="158" y2="149"/>
+        <path d="M82 178V217"/>
+        <line x1="155" y1="249" x2="172" y2="249"/><line x1="320" y1="249" x2="337" y2="249"/><line x1="485" y1="249" x2="502" y2="249"/><line x1="650" y1="249" x2="667" y2="249"/><line x1="815" y1="249" x2="832" y2="249"/>
+      </g>
+      <path d="M990 249H996V8H82V17" stroke="#7054c8" stroke-width="1.8" stroke-dasharray="6 4" fill="none" marker-end="url(#tp)"/>
+      <text x="540" y="13" font-size="11.5" fill="#5a3fb0" font-weight="600" text-anchor="middle">released model captures the next round of data (flywheel)</text>
+    </svg>
+    <figcaption><b>Figure 7.</b> Training and release pipeline. Teal: data and labels. Navy: model building. Green: release. Every step writes a versioned artefact referenced by the next.</figcaption>
+  </figure>
+
+  <table>
+    <thead><tr><th style="width:17%">Step</th><th>What happens</th><th style="width:22%">Output artefact</th><th style="width:24%">Gate to pass</th></tr></thead>
+    <tbody>
+      <tr><td><b>T1</b> Capture</td><td>Guided capture in partner workshops; consent scope recorded (service only / training)</td><td>Raw images + consent events</td><td>Consent present for training use</td></tr>
+      <tr><td><b>T2</b> Ingest</td><td>SHA-256 content addressing, near-duplicate check, ledger events</td><td>CAS objects, <code>ImageSynced</code></td><td>Hash unique; metadata complete</td></tr>
+      <tr><td><b>T3</b> De-identify</td><td>Faces and number plates blurred in training copies; originals kept per retention policy</td><td>Training copies</td><td>Automated blur check passes</td></tr>
+      <tr><td><b>T4</b> Curate</td><td>Embedding clustering; balance paint, finish, light, device, view, damage size; per-source resolution quotas so damaged and clean photos never differ systematically in resolution</td><td>Candidate pool</td><td>Slice quotas met or flagged</td></tr>
+      <tr><td><b>T5</b> Mine</td><td>Select edge/teacher disagreements, assessor overrides, near-threshold cases, new domains</td><td>Labelling queue</td><td>Budget per slice respected</td></tr>
+      <tr><td><b>T6</b> Pre-label</td><td>Teacher predictions + SAM 2 mask proposals, tier T5</td><td>Draft labels</td><td>Never used as ground truth alone</td></tr>
+      <tr><td><b>T7</b> Annotate ×2</td><td>Two independent annotators, written guideline v-pinned</td><td>Two label sets</td><td>Both complete</td></tr>
+      <tr><td><b>T8</b> Adjudicate</td><td>Senior assessor resolves disagreements; inter-annotator agreement tracked</td><td>T3 labels</td><td>κ ≥ 0.75 type; mask IoU ≥ 0.70</td></tr>
+      <tr><td><b>T9</b> Snapshot</td><td>Immutable dataset version (lakeFS/DVC); splits by vehicle, session, workshop, device</td><td>Dataset hash</td><td>Every image commercially licensed; no cross-split duplicates</td></tr>
+      <tr><td><b>T10</b> AVFM SSL</td><td>Stage 1 (224 px multi-crop) + Stage 1b (518 → 784 px) on unlabelled corpus</td><td>AVFM-L backbone</td><td>Probes beat stock DINOv2 ViT-L</td></tr>
+      <tr><td><b>T11</b> Teachers</td><td>Stage 2 multi-task fine-tuning: panels, damage, nuisance, viewpoint, keypoints, surface specialist</td><td>Teacher weights + configs</td><td>Validation targets met</td></tr>
+      <tr><td><b>T12</b> Calibrate</td><td>Per-class temperature; conformal λ for auto-clear on the calibration set</td><td>Pinned profile</td><td>ECE ≤ 0.05; α satisfied</td></tr>
+      <tr><td><b>T13</b> Distil</td><td>Feature, logit and mask KD into AVFM-S / mobile CNN on labelled + unlabelled data</td><td>Student weights</td><td>Within agreed gap of teacher</td></tr>
+      <tr><td><b>T14</b> Export</td><td>Core ML (FP16), QNN / LiteRT (INT8 QAT), ONNX; signed model packs</td><td>Signed bundles</td><td>≥ 95% ops on accelerator</td></tr>
+      <tr><td><b>T15</b> Parity + bench</td><td>Numerical parity vs PyTorch; latency, memory, thermals on device matrix</td><td>Parity + bench report</td><td>IoU ≥ 0.98; same route ≥ 99%; latency targets</td></tr>
+      <tr><td><b>T16</b> Offline gates</td><td>Full §15 metric suite on frozen gold sets, per slice</td><td>Gate report in registry</td><td>All targets; no slice regression</td></tr>
+      <tr><td><b>T17</b> Shadow</td><td>Scores live traffic with results hidden; compared with assessors and with the released model</td><td>Shadow report</td><td>No worse on override and miss audits</td></tr>
+      <tr><td><b>T18</b> Canary → rollout</td><td>1–2 workshops, then per tenant; registry pointer moves; auto-rollback triggers armed</td><td>Promoted release</td><td>Override and miss audits within limits for 4 weeks</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================ 5. SOURCE OF TRUTH ============================ -->
+<section>
+  <h2><span class="num">7</span>Source of truth &amp; ground truth</h2>
+  <p class="lead">Reliability starts with knowing exactly what was seen, what was predicted, by which model, and what turned out to be true. The model is never the source of truth; the ledger is.</p>
+
+  <h3>7.1 Inspection ledger (system of record)</h3>
+  <p>An inspection is an ordered stream of immutable events. Images and masks live in object storage under their SHA-256. Events live in PostgreSQL and are published through a transactional outbox, so no event is lost or duplicated. A correction is a new event; nothing is overwritten.</p>
+<pre><span class="c">// one event in the inspection stream (illustrative)</span>
+{ <span class="k">"event"</span>: <span class="s">"ServerInference"</span>, <span class="k">"inspection_id"</span>: <span class="s">"insp_01J…"</span>, <span class="k">"seq"</span>: 14,
+  <span class="k">"image_sha256"</span>: <span class="s">"9f2c…"</span>, <span class="k">"model"</span>: { <span class="k">"bundle"</span>: <span class="s">"avfm-ext-teacher-1.3.0"</span>, <span class="k">"sha256"</span>: <span class="s">"d674…"</span> },
+  <span class="k">"profile_sha256"</span>: <span class="s">"c97b…"</span>, <span class="k">"rules_version"</span>: <span class="s">"sev-rubric-2.1"</span>, <span class="k">"taxonomy"</span>: <span class="s">"ext-tax-1.0"</span>,
+  <span class="k">"outputs_ref"</span>: <span class="s">"cas://9a41…"</span>, <span class="k">"edge_agreement"</span>: 0.71, <span class="k">"emitted_at"</span>: <span class="s">"2026-11-04T10:42:11Z"</span> }
+
+<span class="c">// event types</span>
+InspectionCreated → VehicleIdentified → ImageCaptured → EdgeInference → ImageSynced
+→ ServerInference → VehicleFused → MeasurementTaken → RulesEvaluated → Routed
+→ AssessorReviewed → ReportIssued → RepairOrderClosed → LabelAdjudicated</pre>
+
+  <h3>7.2 Ground-truth tiers</h3>
+  <table>
+    <thead><tr><th class="c" style="width:8%">Tier</th><th style="width:26%">Source</th><th>Trusted for</th><th style="width:26%">Used in</th></tr></thead>
+    <tbody>
+      <tr><td class="c"><span class="tag green">T1</span></td><td>Closed repair order</td><td>What was actually repaired, refinished or replaced; parts and labour</td><td>Severity / repair model targets, rules validation</td></tr>
+      <tr><td class="c"><span class="tag green">T2</span></td><td>Physical measurement</td><td>Dent depth (handheld gauge), paint film thickness (coating gauge), scratch length (tape), recorded during data collection only</td><td>Depth head, measurement validation</td></tr>
+      <tr><td class="c"><span class="tag navy">T3</span></td><td>Adjudicated expert labels</td><td>Masks, types, panels, severity after two annotators plus a senior assessor</td><td>Gold test sets, calibration sets, training</td></tr>
+      <tr><td class="c"><span class="tag navy">T4</span></td><td>Single assessor label / in-app correction</td><td>Bulk training labels, audited by sampling</td><td>Training only (down-weighted)</td></tr>
+      <tr><td class="c"><span class="tag amber">T5</span></td><td>Model proposals (SAM 2, teacher pseudo-labels)</td><td>Speeding up annotation; never ground truth on their own</td><td>Pre-annotation, semi-supervised training</td></tr>
+    </tbody>
+  </table>
+
+  <h3>7.3 Label schema and taxonomy</h3>
+  <div class="grid2">
+    <div>
+      <p class="small">Each annotated image carries linked layers. Every label records its tier, its author, the taxonomy version and its capture conditions.</p>
+      <ul class="small">
+        <li><b>Context:</b> make, model, year, body style, paint colour and finish, VIN-derived specs</li>
+        <li><b>Capture:</b> device, slot ID, estimated camera pose, lighting class, wet/dirty flags</li>
+        <li><b>Panels:</b> instance masks using the OEM-aligned taxonomy with sides (<code>front_left_door</code>)</li>
+        <li><b>Damage:</b> instance masks, one or more types each, severity 1–5 and material</li>
+        <li><b>Nuisance:</b> reflection, glare, dirt, water, seam, sticker, aftermarket part</li>
+        <li><b>Measurement:</b> length, width, depth with method and uncertainty</li>
+        <li><b>Outcome:</b> repair action from the closed repair order</li>
+      </ul>
+    </div>
+    <div>
+      <table>
+        <thead><tr><th>Exterior damage taxonomy v1</th><th>Shape</th></tr></thead>
+        <tbody>
+          <tr><td>Scratch: clear coat / base coat / to substrate</td><td>thin</td></tr>
+          <tr><td>Scuff / abrasion</td><td>area</td></tr>
+          <tr><td>Paint chip</td><td>small</td></tr>
+          <tr><td>Paint peel / delamination / fade</td><td>area</td></tr>
+          <tr><td>Dent (with crease / edge flags)</td><td>area</td></tr>
+          <tr><td>Crack / fracture (plastic, glass)</td><td>thin</td></tr>
+          <tr><td>Deformation / misalignment</td><td>area</td></tr>
+          <tr><td>Detached / missing part</td><td>part</td></tr>
+          <tr><td>Corrosion</td><td>area</td></tr>
+          <tr><td>Glass chip / crack</td><td>small</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="callout amber"><strong>Annotation protocol.</strong> A written guideline with visual examples for every class and boundary case, such as when a scuff counts as a scratch. Two independent annotators label each gold image and a senior assessor adjudicates. Inter-annotator agreement is tracked per class (target κ ≥ 0.75 on type, mask IoU ≥ 0.70 between annotators). Any class below target is retrained or redefined before more data is bought.</div>
+</section>
+
+<!-- ============================ 6. DATA ENGINE ============================ -->
+<section>
+  <h2><span class="num">8</span>Data engine</h2>
+  <p class="lead">The data engine is the product's long-term advantage. It turns every inspection into either training data or evidence about where the model fails.</p>
+
+  <figure>
+    <svg viewBox="0 0 1000 330" font-family="Segoe UI, Arial, sans-serif">
+      <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#00a6b2"/></marker></defs>
+      <g font-size="14" text-anchor="middle">
+        <g fill="#fff" stroke-width="1.5">
+          <rect x="20" y="40" width="160" height="80" rx="8" stroke="#24458e"/>
+          <rect x="215" y="40" width="160" height="80" rx="8" stroke="#24458e"/>
+          <rect x="410" y="40" width="180" height="80" rx="8" stroke="#00a6b2"/>
+          <rect x="625" y="40" width="160" height="80" rx="8" stroke="#00a6b2"/>
+          <rect x="820" y="40" width="160" height="80" rx="8" stroke="#7054c8"/>
+          <rect x="820" y="210" width="160" height="80" rx="8" stroke="#7054c8"/>
+          <rect x="625" y="210" width="160" height="80" rx="8" stroke="#7054c8"/>
+          <rect x="410" y="210" width="180" height="80" rx="8" stroke="#22965e"/>
+          <rect x="215" y="210" width="160" height="80" rx="8" stroke="#22965e"/>
+          <rect x="20" y="210" width="160" height="80" rx="8" stroke="#22965e"/>
+        </g>
+        <g fill="#17213b">
+          <text x="100" y="74" font-weight="700">1 Capture</text><text x="100" y="96" font-size="12.5">workshops, guided</text>
+          <text x="295" y="74" font-weight="700">2 Predict</text><text x="295" y="96" font-size="12.5">edge + teacher</text>
+          <text x="500" y="74" font-weight="700">3 Mine</text><text x="500" y="96" font-size="12.5">disagreement, overrides,</text><text x="500" y="112" font-size="12.5">near-threshold, new domains</text>
+          <text x="705" y="74" font-weight="700">4 Pre-label</text><text x="705" y="96" font-size="12.5">teacher + SAM 2</text>
+          <text x="900" y="74" font-weight="700">5 Annotate</text><text x="900" y="96" font-size="12.5">two annotators</text>
+          <text x="900" y="244" font-weight="700">6 Adjudicate</text><text x="900" y="266" font-size="12.5">senior assessor, IAA</text>
+          <text x="705" y="244" font-weight="700">7 Snapshot</text><text x="705" y="266" font-size="12.5">versioned, licence-checked</text>
+          <text x="500" y="244" font-weight="700">8 Train</text><text x="500" y="266" font-size="12.5">teachers → students</text>
+          <text x="295" y="244" font-weight="700">9 Gate</text><text x="295" y="266" font-size="12.5">frozen sliced tests</text>
+          <text x="100" y="244" font-weight="700">10 Release</text><text x="100" y="266" font-size="12.5">shadow → canary</text>
+        </g>
+      </g>
+      <g stroke="#00a6b2" stroke-width="2" fill="none" marker-end="url(#ar2)">
+        <line x1="180" y1="80" x2="212" y2="80"/><line x1="375" y1="80" x2="407" y2="80"/><line x1="590" y1="80" x2="622" y2="80"/>
+        <line x1="785" y1="80" x2="817" y2="80"/><line x1="900" y1="120" x2="900" y2="207"/><line x1="820" y1="250" x2="788" y2="250"/>
+        <line x1="625" y1="250" x2="593" y2="250"/><line x1="410" y1="250" x2="378" y2="250"/><line x1="215" y1="250" x2="183" y2="250"/>
+        <line x1="100" y1="210" x2="100" y2="123"/>
+      </g>
+      <text x="500" y="170" text-anchor="middle" font-size="13.5" fill="#5b6577" font-style="italic">Each turn of the loop targets the slices where the gates show the model is weakest</text>
+    </svg>
+    <figcaption><b>Figure 8.</b> The data flywheel. Mining (step 3) uses the ledger so annotation spend goes to the images that move the metrics, not to more easy examples.</figcaption>
+  </figure>
+
+  <h3>8.1 Data volumes (v1 targets)</h3>
+  <table>
+    <thead><tr><th>Dataset</th><th class="c">Volume</th><th>Purpose</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Unlabelled vehicle corpus</td><td class="c">2–5 M images (v1)<br>10 M+ (v2)</td><td>AVFM self-supervised pretraining</td><td>Workshop captures with consent, plus licensed sources. Curated by embedding dedup and cluster balancing</td></tr>
+      <tr><td>Labelled exterior set</td><td class="c">25 k images<br>≥ 5 k vehicles</td><td>Teacher training</td><td>≥ 60 k damage instances; every class ≥ 2 k instances; negatives include reflective paints</td></tr>
+      <tr><td>Panel / keypoint set</td><td class="c">15 k images</td><td>Panel, side, viewpoint, keypoints</td><td>Bootstrapped from Carparts-Seg (CC BY 4.0) and relabelled to our taxonomy</td></tr>
+      <tr><td>Measured subset</td><td class="c">1.5 k dents<br>1 k scratches</td><td>Depth head, measurement validation</td><td>Handheld dent-gauge and tape-measure readings (T2), collected for training only; the product never needs them</td></tr>
+      <tr><td>Gold test set (frozen)</td><td class="c">2 k images<br>500 vehicles</td><td>Release gates</td><td>T3 adjudicated; held out by vehicle, workshop and device; never trained on</td></tr>
+      <tr><td>Calibration set</td><td class="c">1 k images<br>250 vehicles</td><td>Thresholds, conformal control</td><td>Same distribution as production; refreshed each quarter</td></tr>
+    </tbody>
+  </table>
+
+  <h3>8.2 Splits, curation and leakage control</h3>
+  <ul class="small">
+    <li><b>Group splits.</b> Split by vehicle (VIN hash), then by inspection session. Gold sets also hold out whole workshops, device models and a share of vehicle models.</li>
+    <li><b>Near-duplicate removal.</b> Embedding similarity is checked across splits so photos of the same scratch cannot appear in both train and test.</li>
+    <li><b>Slice coverage.</b> Quotas per paint colour and finish, lighting class, device tier, damage size bucket and panel. Coverage is reported with every snapshot.</li>
+    <li><b>Licence ledger.</b> Each image records its source, licence, consent scope and retention date. A snapshot build fails if any image lacks commercial training rights. CarDD, non-commercial sources and share-alike (CC BY-SA) images need legal clearance before they can be used.</li>
+  </ul>
+</section>
+
+<!-- ============================ 7. FOUNDATION MODEL ============================ -->
+<section class="page">
+  <h2><span class="num">9</span>Foundation model: AVFM</h2>
+  <p class="lead">AVFM is a vehicle-domain vision backbone. It starts from DINOv2 and continues self-supervised training on our own unlabelled vehicle photos, so its features represent paint gloss, panel seams, reflections, trim materials and underbody parts before any labels are used.</p>
+
+  <figure>
+    <svg viewBox="0 0 1000 300" font-family="Segoe UI, Arial, sans-serif">
+      <defs><marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24458e"/></marker></defs>
+      <g font-size="13.5" fill="#17213b">
+        <rect x="10" y="30" width="150" height="140" rx="8" fill="#f4f6fa" stroke="#5b6577"/>
+        <text x="22" y="54" font-weight="700" font-size="14.5">Stage 0</text><text x="22" y="76">Initialise</text>
+        <text x="22" y="100" font-size="12.5">DINOv2 ViT-L/14</text><text x="22" y="118" font-size="12.5">304 M params</text><text x="22" y="136" font-size="12.5">Apache 2.0</text>
+
+        <rect x="180" y="30" width="190" height="140" rx="8" fill="#eaf0fb" stroke="#24458e"/>
+        <text x="192" y="54" font-weight="700" font-size="14.5">Stage 1</text><text x="192" y="76">Domain SSL</text>
+        <text x="192" y="100" font-size="12.5">DINO + iBOT + KoLeo</text><text x="192" y="118" font-size="12.5">Gram anchoring</text><text x="192" y="136" font-size="12.5">224 px multi-crop</text><text x="192" y="154" font-size="12.5">2–5 M images</text>
+
+        <rect x="390" y="30" width="150" height="140" rx="8" fill="#eaf0fb" stroke="#24458e"/>
+        <text x="402" y="54" font-weight="700" font-size="14.5">Stage 1b</text><text x="402" y="76">High-res adapt</text>
+        <text x="402" y="100" font-size="12.5">518 → 784 px</text><text x="402" y="118" font-size="12.5">short schedule</text><text x="402" y="136" font-size="12.5">close-up surfaces</text>
+
+        <rect x="560" y="30" width="180" height="140" rx="8" fill="#e7f7f8" stroke="#00a6b2"/>
+        <text x="572" y="54" font-weight="700" font-size="14.5">Stage 2</text><text x="572" y="76">Multi-task teachers</text>
+        <text x="572" y="100" font-size="12.5">ViT-Adapter</text><text x="572" y="118" font-size="12.5">+ Mask2Former</text><text x="572" y="136" font-size="12.5">labelled sets (§10)</text><text x="572" y="154" font-size="12.5">per domain</text>
+
+        <rect x="760" y="30" width="230" height="140" rx="8" fill="#f0ecfb" stroke="#7054c8"/>
+        <text x="772" y="54" font-weight="700" font-size="14.5">Stage 3</text><text x="772" y="76">Distil &amp; deploy</text>
+        <text x="772" y="100" font-size="12.5">AVFM-S/14 + mobile CNN</text><text x="772" y="118" font-size="12.5">feature + logit + mask KD</text><text x="772" y="136" font-size="12.5">INT8 / FP16, parity tests</text><text x="772" y="154" font-size="12.5">Core ML · QNN · LiteRT</text>
+      </g>
+      <g stroke="#24458e" stroke-width="2" marker-end="url(#ar3)">
+        <line x1="160" y1="100" x2="177" y2="100"/><line x1="370" y1="100" x2="387" y2="100"/>
+        <line x1="540" y1="100" x2="557" y2="100"/><line x1="740" y1="100" x2="757" y2="100"/>
+      </g>
+      <g font-size="12.5" fill="#5b6577">
+        <rect x="180" y="200" width="360" height="80" rx="8" fill="#fff" stroke="#d6dde8" stroke-dasharray="4 3"/>
+        <text x="194" y="224" font-weight="700" fill="#17213b">Gate after Stage 1/1b (frozen-feature probes)</text>
+        <text x="194" y="246">Must beat stock DINOv2 ViT-L on linear probes for panel</text>
+        <text x="194" y="264">seg, damage seg and viewpoint, or Stage 2 uses stock weights</text>
+        <rect x="560" y="200" width="430" height="80" rx="8" fill="#fff" stroke="#d6dde8" stroke-dasharray="4 3"/>
+        <text x="574" y="224" font-weight="700" fill="#17213b">Data mix for Stage 1</text>
+        <text x="574" y="246">exterior 55% · close-up surfaces 15% · interior 20% · underbody 10%</text>
+        <text x="574" y="264">cluster-balanced: colour, finish, body type, view, lighting</text>
+      </g>
+    </svg>
+    <figcaption><b>Figure 9.</b> AVFM lifecycle. Stages 1–1b create the domain foundation once; Stage 2 trains task teachers on top; Stage 3 makes deployable students.</figcaption>
+  </figure>
+
+  <h3>9.1 Why continued pretraining instead of training from scratch</h3>
+  <div class="grid3">
+    <div class="card"><h4>From scratch</h4><p>Needs about 100 M+ curated images and tens of thousands of GPU-hours to match DINOv2's general features. High risk, slow, and it would not reuse general visual knowledge we already have for free.</p><p><span class="tag red">Not recommended</span></p></div>
+    <div class="card teal"><h4>Continued SSL (chosen)</h4><p>Keeps DINOv2's general features and adapts them to vehicle surfaces with 2–5 M of our own images. Estimated at hundreds to low thousands of GPU-hours, with a hard gate against stock weights.</p><p><span class="tag green">Recommended</span></p></div>
+    <div class="card"><h4>Stock DINOv2 / DINOv3</h4><p>The fallback and the baseline in every bake-off. DINOv3 uses Meta's custom licence, so legal review is required before shipping its weights in a commercial app.</p><p><span class="tag navy">Baseline</span></p></div>
+  </div>
+
+  <h3>9.2 Stage 1 training recipe</h3>
+  <table>
+    <thead><tr><th style="width:28%">Component</th><th>Setting</th></tr></thead>
+    <tbody>
+      <tr><td>Objective</td><td>DINO image-level self-distillation + iBOT masked patch-token prediction + KoLeo regulariser, with Sinkhorn-Knopp centring. EMA teacher.</td></tr>
+      <tr><td>Dense-feature preservation</td><td>Gram anchoring (as in DINOv3) toward an early checkpoint, so patch features stay sharp for segmentation during long training.</td></tr>
+      <tr><td>Crops</td><td>2 global crops at 224 px + 8 local crops at 98 px. Augmentations keep thin structures: mild blur only, no heavy JPEG. Colour jitter is limited so paint colour stays informative.</td></tr>
+      <tr><td>High-res phase (1b)</td><td>Short schedule at 518 px, then 784 px, mixing in close-up surface crops. This matches the resolution the damage heads need.</td></tr>
+      <tr><td>Curation</td><td>Embedding near-duplicate removal; k-means clustering on DINOv2 embeddings with balanced sampling per cluster, so rare views and colours are not swamped by common ones.</td></tr>
+      <tr><td>Optional teacher-of-teachers</td><td>If budget allows, a ViT-g/14 (1.1 B) domain model trained the same way, used only to distil AVFM-L and AVFM-S. Never deployed.</td></tr>
+      <tr><td>Exit gate</td><td>Frozen linear and kNN probes on panel segmentation, damage segmentation, viewpoint and material. Must beat stock DINOv2 ViT-L by an agreed margin on gold data.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>9.3 Model family produced</h3>
+  <table>
+    <thead><tr><th>Model</th><th class="c">Backbone params</th><th>Role</th><th>Runs on</th></tr></thead>
+    <tbody>
+      <tr><td><b>AVFM-L/14</b></td><td class="c">≈ 304 M</td><td>Foundation backbone for all server teachers</td><td>Server GPU</td></tr>
+      <tr><td><b>AVFM-B/14</b> (optional)</td><td class="c">≈ 86 M</td><td>Intermediate distillation step; on-prem workshop PCs</td><td>Server / edge PC</td></tr>
+      <tr><td><b>AVFM-S/14</b></td><td class="c">≈ 21 M</td><td>Edge student backbone (ViT)</td><td>iOS ANE, Snapdragon NPU</td></tr>
+      <tr><td><b>AVFM-M</b> (mobile CNN)</td><td class="c">≈ 10–30 M</td><td>Edge student alternative (ConvNeXt-T / MobileNetV4 / EfficientViT class); kept if it wins on performance per watt</td><td>Mid- and low-tier Android</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================ 8. TASK MODEL ============================ -->
+<section class="page">
+  <h2><span class="num">10</span>Task model architecture</h2>
+  <p class="lead">One shared AVFM backbone feeds a multi-scale pixel decoder and a query-based instance decoder. Separate heads answer separate questions. Fine surface damage gets its own high-resolution specialist.</p>
+
+  <figure>
+    <svg viewBox="0 0 1000 560" font-family="Segoe UI, Arial, sans-serif">
+      <defs><marker id="ar4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5b6577"/></marker></defs>
+      <g font-size="13.5" fill="#17213b">
+        <!-- input -->
+        <rect x="10" y="150" width="110" height="110" rx="8" fill="#f4f6fa" stroke="#5b6577"/>
+        <text x="22" y="176" font-weight="700">Photo</text><text x="22" y="198" font-size="12.5">long side</text><text x="22" y="216" font-size="12.5">1024–1600 px</text><text x="22" y="234" font-size="12.5">+ capture meta</text>
+        <!-- backbone -->
+        <rect x="150" y="60" width="170" height="200" rx="8" fill="#eaf0fb" stroke="#24458e"/>
+        <text x="162" y="86" font-weight="700">AVFM-L/14</text><text x="162" y="106" font-size="12.5">ViT backbone</text>
+        <g fill="#24458e" opacity="0.85"><rect x="166" y="122" width="138" height="20" rx="3"/><rect x="166" y="148" width="138" height="20" rx="3"/><rect x="166" y="174" width="138" height="20" rx="3"/><rect x="166" y="200" width="138" height="20" rx="3"/></g>
+        <g fill="#fff" font-size="12"><text x="174" y="136">blocks 1–6</text><text x="174" y="162">blocks 7–12</text><text x="174" y="188">blocks 13–18</text><text x="174" y="214">blocks 19–24</text></g>
+        <rect x="150" y="280" width="170" height="70" rx="8" fill="#fff" stroke="#24458e"/>
+        <text x="162" y="304" font-weight="700">Spatial prior CNN</text><text x="162" y="324" font-size="12.5">stride 4 / 8 detail</text>
+        <!-- adapter -->
+        <rect x="350" y="60" width="150" height="290" rx="8" fill="#fff" stroke="#24458e"/>
+        <text x="362" y="86" font-weight="700">ViT-Adapter</text><text x="362" y="106" font-size="12.5">injector / extractor</text>
+        <g font-size="12.5"><text x="362" y="146">F4 · 1/4</text><text x="362" y="176">F8 · 1/8</text><text x="362" y="206">F16 · 1/16</text><text x="362" y="236">F32 · 1/32</text></g>
+        <text x="362" y="276" font-size="12" fill="#5b6577">multi-scale features</text><text x="362" y="294" font-size="12" fill="#5b6577">for thin damage</text>
+        <!-- pixel decoder -->
+        <rect x="530" y="60" width="150" height="130" rx="8" fill="#e7f7f8" stroke="#00a6b2"/>
+        <text x="542" y="86" font-weight="700">Pixel decoder</text><text x="542" y="108" font-size="12.5">multi-scale</text><text x="542" y="126" font-size="12.5">deformable attn</text><text x="542" y="144" font-size="12.5">per-pixel embed</text><text x="542" y="162" font-size="12.5">at 1/4</text>
+        <rect x="530" y="210" width="150" height="140" rx="8" fill="#e7f7f8" stroke="#00a6b2"/>
+        <text x="542" y="236" font-weight="700">Query decoder</text><text x="542" y="258" font-size="12.5">Mask2Former</text><text x="542" y="276" font-size="12.5">masked attention</text><text x="542" y="294" font-size="12.5">N object queries</text><text x="542" y="312" font-size="12.5">→ instances</text>
+      </g>
+      <!-- heads -->
+      <g font-size="12.8" fill="#17213b">
+        <rect x="712" y="20" width="278" height="40" rx="6" fill="#fff" stroke="#00a6b2"/><text x="724" y="45"><tspan font-weight="700">Panel instances</tspan> · OEM taxonomy + side</text>
+        <rect x="712" y="68" width="278" height="40" rx="6" fill="#fff" stroke="#00a6b2"/><text x="724" y="93"><tspan font-weight="700">Damage instances</tspan> · multi-label types</text>
+        <rect x="712" y="116" width="278" height="40" rx="6" fill="#fff" stroke="#00a6b2"/><text x="724" y="141"><tspan font-weight="700">Nuisance</tspan> · reflection, dirt, seam, sticker</text>
+        <rect x="712" y="164" width="278" height="40" rx="6" fill="#fff" stroke="#00a6b2"/><text x="724" y="189"><tspan font-weight="700">Per-instance</tspan> · severity, material, depth</text>
+        <rect x="712" y="212" width="278" height="40" rx="6" fill="#fff" stroke="#24458e"/><text x="724" y="237"><tspan font-weight="700">Keypoints</tspan> · wheel centres, lamp corners</text>
+        <rect x="712" y="260" width="278" height="40" rx="6" fill="#fff" stroke="#24458e"/><text x="724" y="285"><tspan font-weight="700">Viewpoint</tspan> · azimuth / elevation bins</text>
+        <rect x="712" y="308" width="278" height="40" rx="6" fill="#fff" stroke="#24458e"/><text x="724" y="333"><tspan font-weight="700">Image quality</tspan> · blur, glare, coverage</text>
+      </g>
+      <g stroke="#5b6577" stroke-width="1.6" fill="none" marker-end="url(#ar4)">
+        <line x1="120" y1="205" x2="147" y2="160"/><line x1="120" y1="215" x2="147" y2="310"/>
+        <line x1="320" y1="160" x2="347" y2="160"/><line x1="320" y1="315" x2="347" y2="315"/>
+        <line x1="500" y1="125" x2="527" y2="125"/><line x1="605" y1="190" x2="605" y2="207"/>
+        <path d="M680 280H698V40H709"/><path d="M698 88H709"/><path d="M698 136H709"/><path d="M698 184H709"/>
+        <path d="M500 230H515V380H700V232H709"/><path d="M700 280H709"/><path d="M700 328H709"/>
+      </g>
+      <text x="520" y="398" font-size="12" fill="#5b6577">pooled + dense features → global heads</text>
+
+      <!-- surface specialist -->
+      <rect x="10" y="430" width="980" height="120" rx="10" fill="#fff5e2" stroke="#b7791f"/>
+      <g font-size="13.5" fill="#17213b">
+        <text x="26" y="456" font-weight="700" fill="#8a5a10">Surface specialist (second model, crops only)</text>
+        <rect x="26" y="470" width="190" height="62" rx="6" fill="#fff" stroke="#b7791f"/><text x="38" y="494" font-weight="700">Panel crop</text><text x="38" y="514" font-size="12.5">full-res, 1024 px tiles</text>
+        <rect x="246" y="470" width="220" height="62" rx="6" fill="#fff" stroke="#b7791f"/><text x="258" y="494" font-weight="700">AVFM-B features</text><text x="258" y="514" font-size="12.5">+ stride-2 CNN stem</text>
+        <rect x="496" y="470" width="220" height="62" rx="6" fill="#fff" stroke="#b7791f"/><text x="508" y="494" font-weight="700">U-Net style decoder</text><text x="508" y="514" font-size="12.5">to 1/2 resolution</text>
+        <rect x="746" y="470" width="228" height="62" rx="6" fill="#fff" stroke="#b7791f"/><text x="758" y="494" font-weight="700">Scratch · chip · paint</text><text x="758" y="514" font-size="12.5">clDice + Tversky + boundary</text>
+      </g>
+      <g stroke="#b7791f" stroke-width="1.6" marker-end="url(#ar4)"><line x1="216" y1="501" x2="243" y2="501"/><line x1="466" y1="501" x2="493" y2="501"/><line x1="716" y1="501" x2="743" y2="501"/></g>
+    </svg>
+    <figcaption><b>Figure 10.</b> Teacher architecture. The main model handles panels, structural damage and context at stride 4. The surface specialist runs only on panel crops where fine damage is plausible, at half resolution, so 2–3 px scratches survive.</figcaption>
+  </figure>
+
+  <h3>10.1 Design choices</h3>
+  <table>
+    <thead><tr><th style="width:20%">Area</th><th style="width:44%">Choice</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>Backbone</td><td>AVFM-L/14 domain-pretrained teacher; distilled AVFM-S or mobile CNN on the phone</td><td>Vehicle-domain features with a deployable student</td></tr>
+      <tr><td>Feature resolution</td><td>ViT-Adapter pyramid 1/4–1/32 + spatial prior CNN; surface specialist at 1/2</td><td>Thin scratches and chips survive</td></tr>
+      <tr><td>Output form</td><td>Instance masks from object queries</td><td>Each damage is counted, measured and tracked</td></tr>
+      <tr><td>Damage types</td><td>Independent sigmoid per type (multi-label)</td><td>A dent can also be scratched</td></tr>
+      <tr><td>Reflections / glare</td><td>Learned nuisance classes + cross-view consistency (§11)</td><td>Reflections move between views; damage does not</td></tr>
+      <tr><td>Panels</td><td>Panel-instance head with sides + keypoints + viewpoint head</td><td>Correct side and a panel coordinate frame</td></tr>
+      <tr><td>Severity</td><td>Ordinal severity evidence + measured inputs; rules engine decides</td><td>Auditable; no assumed values</td></tr>
+      <tr><td>Inference cost</td><td>One pass per photo + crops only where needed; TTA only on the server</td><td>Fits the phone latency budget</td></tr>
+    </tbody>
+  </table>
+
+  <h3>10.2 Training the teachers</h3>
+  <div class="grid2">
+    <div>
+      <h4>Losses</h4>
+      <ul class="small">
+        <li><b>Instances:</b> Mask2Former Hungarian matching; sigmoid focal for multi-label class, mask BCE + Dice.</li>
+        <li><b>Thin damage:</b> clDice (centreline Dice) + Tversky (β ≈ 0.7, favouring recall) + boundary loss.</li>
+        <li><b>Severity / depth:</b> ordinal regression (CORAL), trained only on T1–T3 labels; depth only on T2 measurements.</li>
+        <li><b>Viewpoint:</b> classification over azimuth bins + residual regression.</li>
+        <li><b>Keypoints:</b> heatmap loss with visibility masks.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Multi-task practice</h4>
+      <ul class="small">
+        <li><b>Partial labels:</b> each dataset supervises only the heads it has labels for; missing tasks are masked, not set to zero.</li>
+        <li><b>Loss balancing:</b> uncertainty weighting, checked against fixed weights in ablations.</li>
+        <li><b>Fine-tuning:</b> layer-wise learning-rate decay on the backbone; LoRA variant for fast per-domain experiments.</li>
+        <li><b>Augmentation:</b> photometric jitter, perspective changes, synthetic glare overlays as hard negatives. Horizontal flip only with left/right label swapping.</li>
+        <li><b>Semi-supervised:</b> teacher pseudo-labels on unlabelled workshop photos, accepted only above a calibrated confidence level, at T5 weight.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout"><strong>Domain separation.</strong> Interior and undercarriage get their own teacher heads and taxonomies on the same AVFM backbone, trained, versioned and released independently, so an interior change can never regress exterior results. Undercarriage reports <i>visible abnormality detected / not detected / insufficient visibility</i> only and never certifies mechanical health.</div>
+</section>
+
+<!-- ============================ 9. FUSION & MEASUREMENT ============================ -->
+<section>
+  <h2><span class="num">11</span>Multi-view fusion &amp; measurement</h2>
+  <p class="lead">A single photo cannot reliably tell damage from showroom glare, lamp strips and reflections. Real damage is fixed to the panel. Reflections move when the camera moves. Fusion uses that difference.</p>
+
+  <div class="grid2">
+    <div>
+      <h3 style="margin-top:0">11.1 Fusion algorithm</h3>
+      <ol class="small">
+        <li><b>Panel frame.</b> For each photo, panel instances, keypoints and viewpoint define a normalised 2-D coordinate frame per panel (u, v in 0–1), using a homography fitted to the panel's keypoints and outline.</li>
+        <li><b>Project.</b> Each damage instance is mapped into its panel's (u, v) frame, with its type probabilities and an appearance embedding.</li>
+        <li><b>Associate.</b> Instances on the same panel are matched across views by (u, v) distance, type similarity and embedding similarity (Hungarian matching).</li>
+        <li><b>Score consistency.</b> For each fused damage: seen in <i>k</i> of the <i>n</i> views where its panel location was visible and well exposed. Reflections fail this test because their (u, v) position drifts with viewpoint.</li>
+        <li><b>Fuse.</b> Combine type probabilities (log-odds averaging weighted by view quality). Keep the best-measured view for each measurement.</li>
+        <li><b>Output.</b> One vehicle-level list: <code>{panel, side, damage_id, types, views[], consistency, measurements}</code>.</li>
+      </ol>
+    </div>
+    <div>
+      <h3 style="margin-top:0">11.2 Consistency rules (initial)</h3>
+      <table>
+        <thead><tr><th>Evidence</th><th>Outcome</th></tr></thead>
+        <tbody>
+          <tr><td>Seen in ≥ 2 views, stable (u, v)</td><td><span class="tag green">confirmed</span></td></tr>
+          <tr><td>Seen in 1 of ≥ 2 visible views, near glare</td><td><span class="tag amber">likely reflection</span> → review</td></tr>
+          <tr><td>Seen in 1 view; location not visible elsewhere</td><td><span class="tag navy">request close-up</span></td></tr>
+          <tr><td>Position drifts across views</td><td><span class="tag red">nuisance</span> → suppressed, logged</td></tr>
+          <tr><td>Edge and teacher disagree</td><td>both kept → review, mined for training</td></tr>
+        </tbody>
+      </table>
+      <p class="small muted">Thresholds such as minimum view count and drift tolerance are set on the calibration set and versioned with the fusion profile.</p>
+    </div>
+  </div>
+
+  <h3>11.3 Measurement service</h3>
+  <table>
+    <thead><tr><th style="width:18%">Quantity</th><th>Method (in order of preference)</th><th style="width:24%">Reported as</th></tr></thead>
+    <tbody>
+      <tr><td>Metric scale</td><td>Multi-view geometry (structure-from-motion over the walk-around and close-ups) fixed to millimetres by known dimensions from the VIN lookup (wheel rim diameter, wheelbase) via keypoints → regulated number-plate size → none (report % of panel only). 2D photos only</td><td>mm per pixel + uncertainty, method</td></tr>
+      <tr><td>Scratch length</td><td>Skeletonise the instance mask, take the centreline length in panel coordinates, convert with scale; curved panels corrected with keypoint-based surface model</td><td>mm ± mm</td></tr>
+      <tr><td>Damage area / % panel</td><td>Instance area ÷ visible panel area in panel coordinates (not raw pixels, which distort with angle)</td><td>% of panel, cm² when scaled</td></tr>
+      <tr><td>Dent depth</td><td>2D depth classifier (d1 / d2 / d3) from shading, reflected-line distortion and crease cues across the close-up pair, trained on gauge-measured and adjudicated dents. A gauge reading entered by the technician overrides it</td><td>d-class + probability, "estimated"; mm only from a gauge</td></tr>
+      <tr><td>Paint layer penetration</td><td>Not measurable optically with confidence; surface specialist gives a likelihood; coating gauge for ground truth</td><td>likelihood + "verify"</td></tr>
+    </tbody>
+  </table>
+  <div class="callout amber"><strong>Contract.</strong> Every number in a report carries <code>value</code>, <code>uncertainty</code>, <code>method</code> and <code>quality</code>. If no valid method applies, the value is <code>null</code> with a reason, and the rules engine routes to measurement or review. It never substitutes a default value.</div>
+</section>
+
+<!-- ============================ 10. CALIBRATION & ROUTING ============================ -->
+<section>
+  <h2><span class="num">12</span>Calibration &amp; decision routing</h2>
+  <p class="lead">Reliability means two things: the probabilities mean what they say, and the system knows when not to decide.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h4>Probability calibration</h4>
+      <ul>
+        <li>Per-class temperature scaling of teacher and student outputs, fitted on the first-party calibration set. Target expected calibration error ≤ 0.05 per class.</li>
+        <li>Separate calibration per device tier where gates show a shift.</li>
+        <li>Calibration profiles are versioned and hash-pinned with the model.</li>
+      </ul>
+    </div>
+    <div class="card teal">
+      <h4>Guaranteed miss rate for auto-clear</h4>
+      <ul>
+        <li><b>Conformal risk control</b> sets the "no damage" threshold so that the expected rate of missed damage on auto-cleared vehicles is at most α (for example 2%), with a finite-sample guarantee on exchangeable data.</li>
+        <li>Thresholds are derived from α, not hand-picked, and documented as a risk target.</li>
+        <li>Re-run each quarter, and whenever drift monitors fire.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>12.1 Routing table</h3>
+  <table>
+    <thead><tr><th style="width:38%">Condition</th><th style="width:22%">Route</th><th>Behaviour</th></tr></thead>
+    <tbody>
+      <tr><td>Quality gate fails (blur, exposure, coverage)</td><td><span class="tag amber">recapture</span></td><td>Prompted on the phone before the technician leaves the vehicle</td></tr>
+      <tr><td>All damage confirmed across views, calibrated confidence high, cosmetic only</td><td><span class="tag green">auto-accept</span></td><td>Report issued; random sample audited by assessors</td></tr>
+      <tr><td>No damage and below conformal threshold on every view</td><td><span class="tag green">auto-clear</span></td><td>Miss rate bounded by α; sampled audit</td></tr>
+      <tr><td>Type uncertain, single-view, edge ≠ teacher, near threshold</td><td><span class="tag navy">assessor review</span></td><td>Shown with both predictions and the reason codes</td></tr>
+      <tr><td>Measurement required by rules but missing</td><td><span class="tag navy">measure</span></td><td>Request a close-up pair, or a gauge reading if the workshop has one</td></tr>
+      <tr><td>Structural, safety-relevant or high-voltage area involved</td><td><span class="tag red">escalate</span></td><td>Qualified technician inspection; never auto-decided</td></tr>
+      <tr><td>Offline with unresolved result</td><td><span class="tag amber">pending</span></td><td>Stored locally, clearly marked provisional, synced later</td></tr>
+    </tbody>
+  </table>
+  <p class="small">The fail-closed contract is part of the API: <code>automated_decision_allowed</code>, explicit reason codes, and <code>manual_review</code> true for every non-automated outcome.</p>
+
+  <h3>12.2 Rules engine</h3>
+  <p class="small">Severity (1–5) and repair options come from a versioned, unit-tested rules service. It takes fused damage, measurements with quality, panel material, vehicle data and OEM constraints. Each output lists the rule and inputs that produced it. The initial panel rubric (dent depth class × % of panel; scratch &lt; 20% → 1, else 3) is rules-v1, with assessor-agreement tests. Once there are enough closed repair orders (T1), a gradient-boosted model can <i>suggest</i> labour hours and cost. It can never override a safety or OEM rule.</p>
+</section>
+
+<!-- ============================ 11. EDGE ============================ -->
+<section>
+  <h2><span class="num">13</span>Distillation &amp; edge deployment</h2>
+  <p class="lead">The phone must be fast, offline-capable and honest about what it is. Students are distilled from the teachers, exported per platform and tested for parity against the server before any release.</p>
+
+  <figure>
+    <svg viewBox="0 0 1000 250" font-family="Segoe UI, Arial, sans-serif">
+      <defs><marker id="ar5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#24458e"/></marker></defs>
+      <g font-size="13.2" fill="#17213b">
+        <rect x="10" y="30" width="170" height="110" rx="8" fill="#eaf0fb" stroke="#24458e"/>
+        <text x="22" y="54" font-weight="700">Live preview</text><text x="22" y="76" font-size="12.3">quality + view nano CNN</text><text x="22" y="94" font-size="12.3">≈ 3–5 fps sampled</text><text x="22" y="112" font-size="12.3">framing guidance</text>
+        <rect x="205" y="30" width="180" height="110" rx="8" fill="#eaf0fb" stroke="#24458e"/>
+        <text x="217" y="54" font-weight="700">Shutter: main student</text><text x="217" y="76" font-size="12.3">AVFM-S or mobile CNN</text><text x="217" y="94" font-size="12.3">one pass at ~1024 px</text><text x="217" y="112" font-size="12.3">panels · damage · view</text>
+        <rect x="410" y="30" width="180" height="110" rx="8" fill="#fff5e2" stroke="#b7791f"/>
+        <text x="422" y="54" font-weight="700">Surface student</text><text x="422" y="76" font-size="12.3">only flagged panels</text><text x="422" y="94" font-size="12.3">full-res crops</text><text x="422" y="112" font-size="12.3">scratch · chip · paint</text>
+        <rect x="615" y="30" width="170" height="110" rx="8" fill="#e7f7f8" stroke="#00a6b2"/>
+        <text x="627" y="54" font-weight="700">Local fusion</text><text x="627" y="76" font-size="12.3">across captured views</text><text x="627" y="94" font-size="12.3">recapture prompts</text><text x="627" y="112" font-size="12.3">provisional report</text>
+        <rect x="810" y="30" width="180" height="110" rx="8" fill="#f0ecfb" stroke="#7054c8"/>
+        <text x="822" y="54" font-weight="700">Outbox → server</text><text x="822" y="76" font-size="12.3">teacher re-score</text><text x="822" y="94" font-size="12.3">final result pushed</text><text x="822" y="112" font-size="12.3">back to the app</text>
+      </g>
+      <g stroke="#24458e" stroke-width="2" marker-end="url(#ar5)"><line x1="180" y1="85" x2="202" y2="85"/><line x1="385" y1="85" x2="407" y2="85"/><line x1="590" y1="85" x2="612" y2="85"/><line x1="785" y1="85" x2="807" y2="85"/></g>
+      <g font-size="12.5" fill="#5b6577">
+        <text x="10" y="178" font-weight="700" fill="#17213b">Native module boundary</text>
+        <text x="10" y="200">React Native (TypeScript) owns the workflow, UI, overlays and sync. Camera frames go from VisionCamera frame processors straight into the</text>
+        <text x="10" y="220">Swift / Kotlin / C++ inference module. Pixel buffers never cross the JavaScript bridge; only compact results and mask references do.</text>
+      </g>
+    </svg>
+    <figcaption><b>Figure 11.</b> On-device sequence. Heavy models run once per captured photo, never on every preview frame.</figcaption>
+  </figure>
+
+  <div class="grid2">
+    <div>
+      <h3 style="margin-top:0">13.1 Distillation recipe</h3>
+      <ul class="small">
+        <li><b>Backbone:</b> AVFM-S/14 is distilled from AVFM-L with the same SSL objectives (DINOv2's approach for small models), then fine-tuned with the task heads.</li>
+        <li><b>Task KD:</b> student matches teacher class distributions (temperature KD), mask logits (pixel KL inside instances) and adapted pyramid features (MSE after 1×1 projection), plus ground-truth losses.</li>
+        <li><b>Data:</b> labelled sets plus large volumes of unlabelled workshop photos scored by the teacher. This is where distillation gets most of its gain.</li>
+        <li><b>Quantisation:</b> FP16 for ViT students on ANE/NPU; INT8 with quantisation-aware training for the CNN option. Calibration images come from the gold distribution.</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="margin-top:0">13.2 Runtime targets per platform</h3>
+      <table>
+        <thead><tr><th>Platform</th><th>Primary path</th><th>Fallback</th></tr></thead>
+        <tbody>
+          <tr><td>iOS</td><td>Core ML (ANE), FP16</td><td>ONNX Runtime + Core ML EP</td></tr>
+          <tr><td>Android Snapdragon</td><td>ONNX Runtime + QNN EP (HTP)</td><td>LiteRT GPU delegate</td></tr>
+          <tr><td>Android other</td><td>LiteRT (GPU / NNAPI)</td><td>ONNX Runtime CPU (XNNPACK)</td></tr>
+          <tr><td>Workshop PC</td><td>ONNX Runtime QNN / DirectML</td><td>ONNX Runtime CPU</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h3>13.3 Edge release checks</h3>
+  <table>
+    <thead><tr><th>Check</th><th>Target</th></tr></thead>
+    <tbody>
+      <tr><td>Numerical parity vs PyTorch student (FP32) on gold images</td><td>mask IoU ≥ 0.98, same routing decision on ≥ 99% of images</td></tr>
+      <tr><td>Accelerator coverage</td><td>≥ 95% of graph ops on ANE / HTP; no CPU fall-through in hot loops</td></tr>
+      <tr><td>Still-photo analysis, mid-tier phone</td><td>≤ 2 s main student + ≤ 1 s per flagged panel crop (design targets, to be benchmarked)</td></tr>
+      <tr><td>Bundle size</td><td>≤ 120 MB total, delivered as signed, versioned model packs with rollback</td></tr>
+      <tr><td>Thermal / battery</td><td>40-vehicle shift simulation without throttling below targets</td></tr>
+      <tr><td>Device matrix</td><td>Low / mid / flagship Android × 2 vendors, two iPhone generations; must pass on all before release</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================ 12. PLATFORM ============================ -->
+<section>
+  <h2><span class="num">14</span>Serving platform &amp; technology stack</h2>
+  <p class="lead">Start with a small number of well-defined services and grow the infrastructure only when load requires it. Every service is stateless except the ledger and object store.</p>
+
+  <table>
+    <thead><tr><th style="width:22%">Layer</th><th style="width:38%">Recommended technology</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Mobile app</td><td>React Native + TypeScript, VisionCamera, native ML module (Swift / Kotlin / C++)</td><td>Encrypted SQLite outbox; signed model packs</td></tr>
+      <tr><td>API &amp; orchestration</td><td>API gateway + inspection service (FastAPI or Spring Boot)</td><td>OAuth2/OIDC, tenant isolation, idempotent uploads</td></tr>
+      <tr><td>System of record</td><td>PostgreSQL (events, inspections) + transactional outbox</td><td>Append-only tables; point-in-time replay</td></tr>
+      <tr><td>Evidence store</td><td>S3-compatible object storage, content-addressed by SHA-256</td><td>Encrypted, lifecycle rules for retention</td></tr>
+      <tr><td>Event bus</td><td>Kafka / Redpanda (or a Postgres queue at pilot scale)</td><td>Drives fusion, measurement, rules, mining</td></tr>
+      <tr><td>Model serving</td><td>NVIDIA Triton + TensorRT / ONNX Runtime GPU; async workers</td><td>Dynamic batching; per-model version pinning</td></tr>
+      <tr><td>Rules engine</td><td>Versioned rules as code with a test suite (or a decision-table engine)</td><td>Outputs cite rule IDs</td></tr>
+      <tr><td>Annotation</td><td>CVAT or Label Studio (self-hosted) + SAM 2 assisted masks</td><td>Adjudication workflow, IAA dashboards</td></tr>
+      <tr><td>Data versioning</td><td>lakeFS or DVC over the object store</td><td>Immutable snapshots referenced by training runs</td></tr>
+      <tr><td>Training</td><td>PyTorch, FSDP / DDP, mixed precision on H100/A100 nodes; Lightning or plain loops</td><td>Reproducible configs, seeds, data hashes</td></tr>
+      <tr><td>Experiments &amp; registry</td><td>MLflow (tracking, model registry, stage transitions)</td><td>Promotion requires a passing gate report</td></tr>
+      <tr><td>Pipelines</td><td>Argo Workflows / Kubeflow / Airflow</td><td>Snapshot → train → distil → export → gate</td></tr>
+      <tr><td>Observability</td><td>OpenTelemetry, Prometheus, Grafana; drift jobs on embeddings and score distributions</td><td>Alerts on review rate, override rate, drift</td></tr>
+    </tbody>
+  </table>
+
+  <h3>14.1 Inspection API contract (excerpt)</h3>
+<pre>{ <span class="k">"inspection_id"</span>: <span class="s">"insp_01J…"</span>, <span class="k">"status"</span>: <span class="s">"final"</span>, <span class="k">"source"</span>: <span class="s">"server"</span>, <span class="k">"route"</span>: <span class="s">"assessor_review"</span>,
+  <span class="k">"reasons"</span>: [<span class="s">"single_view_evidence"</span>, <span class="s">"type_uncertain"</span>],
+  <span class="k">"damages"</span>: [{ <span class="k">"id"</span>: <span class="s">"dmg_3"</span>, <span class="k">"panel"</span>: <span class="s">"rear_left_door"</span>, <span class="k">"types"</span>: {<span class="k">"scratch_basecoat"</span>: 0.81, <span class="k">"dent"</span>: 0.34},
+      <span class="k">"views"</span>: [<span class="s">"v03"</span>, <span class="s">"v04"</span>], <span class="k">"consistency"</span>: 1.0,
+      <span class="k">"length_mm"</span>: { <span class="k">"value"</span>: 142, <span class="k">"uncertainty"</span>: 8, <span class="k">"method"</span>: <span class="s">"multiview_vin_scale"</span> },
+      <span class="k">"depth_mm"</span>:  { <span class="k">"value"</span>: null, <span class="k">"reason"</span>: <span class="s">"no_depth_method_available"</span> },
+      <span class="k">"severity"</span>: { <span class="k">"level"</span>: 2, <span class="k">"rule"</span>: <span class="s">"sev-rubric-2.1/scratch-area"</span> } }],
+  <span class="k">"provenance"</span>: { <span class="k">"teacher"</span>: <span class="s">"avfm-ext-teacher-1.3.0"</span>, <span class="k">"edge"</span>: <span class="s">"avfm-ext-s-1.3.0-coreml"</span>,
+      <span class="k">"fusion"</span>: <span class="s">"fuse-1.1"</span>, <span class="k">"rules"</span>: <span class="s">"sev-rubric-2.1"</span>, <span class="k">"automated_decision_allowed"</span>: false } }</pre>
+</section>
+
+<!-- ============================ 13. EVAL & RELEASE ============================ -->
+<section class="page">
+  <h2><span class="num">15</span>Evaluation, release gates &amp; monitoring</h2>
+  <p class="lead">"Accuracy" is defined as a set of metrics, each measured at vehicle, panel and damage level on frozen first-party gold sets and reported per slice. A release ships only if every gate passes. The targets below are v1 exit targets.</p>
+
+  <table>
+    <thead><tr><th>Metric</th><th class="c">v1 target</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Vehicle-level damage recall (damage ≥ 25 mm)</td><td class="c"><b>≥ 98%</b></td><td>Any panel, after fusion</td></tr>
+      <tr><td>Small-damage recall (5–25 mm)</td><td class="c"><b>≥ 85%</b></td><td>Reported separately so large damage cannot hide it</td></tr>
+      <tr><td>Clean-vehicle false alerts</td><td class="c"><b>≤ 3%</b></td><td>Including silver/white under showroom light</td></tr>
+      <tr><td>Damage type macro-F1</td><td class="c"><b>≥ 0.80</b></td><td>Per class ≥ 0.70</td></tr>
+      <tr><td>Scratch precision / recall</td><td class="c"><b>≥ 0.80 / 0.85</b></td><td>The class users notice most</td></tr>
+      <tr><td>Damage mask AP50</td><td class="c"><b>≥ 0.65</b></td><td>Instance-level</td></tr>
+      <tr><td>Panel instance mIoU</td><td class="c"><b>≥ 0.80</b></td><td>Every panel ≥ 0.65</td></tr>
+      <tr><td>Side (left / right) accuracy</td><td class="c"><b>≥ 98%</b></td><td>Wrong side means a wrong estimate</td></tr>
+      <tr><td>Severity vs assessor (exact / ±1)</td><td class="c"><b>≥ 70% / ≥ 90%</b></td><td>On T3 adjudicated panels</td></tr>
+      <tr><td>Scratch length error</td><td class="c"><b>≤ 10 mm or 10%</b></td><td>Against T2 measurements</td></tr>
+      <tr><td>Calibration error (ECE, per class)</td><td class="c"><b>≤ 0.05</b></td><td>Required for routing</td></tr>
+      <tr><td>Auto-decision rate at α = 2%</td><td class="c"><b>≥ 60%</b></td><td>Share of vehicles needing no review</td></tr>
+      <tr><td>Edge ↔ server agreement</td><td class="c"><b>≥ 95%</b></td><td>Same route decision</td></tr>
+    </tbody>
+  </table>
+
+  <div class="grid2">
+    <div>
+      <h3 style="margin-top:0">15.1 Mandatory slices</h3>
+      <p class="small">Every gate is reported per slice, and a regression in any slice beyond tolerance blocks release, even if the overall number improves:</p>
+      <ul class="small">
+        <li>Paint colour (white, silver, grey, black, red, blue, other) × finish (solid, metallic, pearl, matte)</li>
+        <li>Lighting (sun, overcast, workshop LED, showroom, night)</li>
+        <li>Device tier and vendor; damage size bucket; panel; vehicle segment</li>
+        <li>Dirty / wet vehicles; prior repairs; aftermarket parts</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="margin-top:0">15.2 Release process</h3>
+      <ol class="small">
+        <li><b>Offline gates</b> on frozen gold sets: automated report attached to the registry entry.</li>
+        <li><b>Shadow</b> (≥ 2 weeks): new model scores live traffic, results hidden; compared with assessors and with the released model.</li>
+        <li><b>Canary</b>: 1–2 workshops; review rate, override rate and assessor feedback watched daily.</li>
+        <li><b>Rollout</b> by tenant; automatic rollback if the override rate or miss audits exceed limits.</li>
+      </ol>
+    </div>
+  </div>
+
+  <h3>15.3 Production monitoring</h3>
+  <table>
+    <thead><tr><th>Signal</th><th>What it catches</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td>Assessor override rate per class / panel</td><td>Quality regressions the gold set missed</td><td>Mine overrides → labelling queue; alert above limit</td></tr>
+      <tr><td>Embedding and score drift per workshop / device</td><td>New cameras, lighting, vehicle models</td><td>Trigger recalibration and targeted collection</td></tr>
+      <tr><td>Route mix (auto / review / recapture)</td><td>Capture problems, threshold drift</td><td>Capture training or recalibration</td></tr>
+      <tr><td>Audit sample of auto-cleared vehicles</td><td>Actual miss rate vs α</td><td>Tighten α or roll back</td></tr>
+      <tr><td>Edge vs teacher disagreement</td><td>Student or export defects</td><td>Block edge rollout; retrain student</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================ 14. SECURITY ============================ -->
+<section>
+  <h2><span class="num">16</span>Security, privacy &amp; licensing</h2>
+  <div class="grid2">
+    <div class="card">
+      <h4>Security</h4>
+      <ul>
+        <li>OIDC authentication, role-based access (technician, assessor, admin), tenant isolation at the data layer.</li>
+        <li>TLS everywhere; encryption at rest for the ledger, object store and on-device storage.</li>
+        <li>Signed model packs; the app verifies signature and hash before loading.</li>
+        <li>Rate limits, audit log of every access to evidence, secrets in a managed vault.</li>
+      </ul>
+    </div>
+    <div class="card teal">
+      <h4>Privacy</h4>
+      <ul>
+        <li>Explicit consent scopes: service record, model training, or both. Stored per image in the ledger.</li>
+        <li>Automatic blurring of faces and number plates in training copies; originals kept only as long as the retention policy allows.</li>
+        <li>Data minimisation: location and personal belongings are not labelled or used.</li>
+        <li>Deletion requests propagate to future dataset snapshots; models retrained on schedule.</li>
+      </ul>
+    </div>
+  </div>
+  <table>
+    <thead><tr><th style="width:30%">Component / data</th><th style="width:22%">Licence</th><th>Position</th></tr></thead>
+    <tbody>
+      <tr><td>DINOv2 code and weights</td><td>Apache 2.0</td><td>Approved for AVFM initialisation</td></tr>
+      <tr><td>DINOv3 weights</td><td>Meta DINOv3 licence</td><td>Baseline only until legal review clears redistribution terms</td></tr>
+      <tr><td>Mask2Former, ViT-Adapter, SAM 2</td><td>MIT / Apache 2.0</td><td>Check each release and dependency</td></tr>
+      <tr><td>Carparts-Seg</td><td>CC BY 4.0</td><td>Usable with attribution</td></tr>
+      <tr><td>CarDD</td><td>Commercial use needs authorisation</td><td>Excluded until written permission</td></tr>
+      <tr><td>Share-alike or non-commercial image sources</td><td>CC BY-SA / NC</td><td>Excluded by default; legal review before any use</td></tr>
+      <tr><td>Workshop captures</td><td>Contract + consent</td><td>Primary data source; training rights written into partner contracts</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================ 15. ROADMAP ============================ -->
+<section class="page">
+  <h2><span class="num">17</span>Roadmap, team &amp; compute</h2>
+
+  <figure>
+    <svg viewBox="0 0 1000 330" font-family="Segoe UI, Arial, sans-serif">
+      <g font-size="12" fill="#5b6577">
+        <line x1="230" y1="30" x2="990" y2="30" stroke="#d6dde8"/>
+        <text x="230" y="22">wk 0</text><text x="382" y="22">wk 8</text><text x="534" y="22">wk 16</text><text x="686" y="22">wk 24</text><text x="838" y="22">wk 32</text><text x="960" y="22">wk 40</text>
+        <g stroke="#eef1f6"><line x1="382" y1="30" x2="382" y2="320"/><line x1="534" y1="30" x2="534" y2="320"/><line x1="686" y1="30" x2="686" y2="320"/><line x1="838" y1="30" x2="838" y2="320"/></g>
+      </g>
+      <g font-size="13.5" fill="#17213b">
+        <text x="10" y="62" font-weight="700">P0 Foundations</text>
+        <text x="10" y="112" font-weight="700">P1 Data engine</text>
+        <text x="10" y="162" font-weight="700">P2 AVFM + teachers</text>
+        <text x="10" y="212" font-weight="700">P3 Fusion + edge</text>
+        <text x="10" y="262" font-weight="700">P4 Shadow → canary</text>
+        <text x="10" y="312" font-weight="700">P5 Interior / underbody</text>
+      </g>
+      <g font-size="12" fill="#fff" font-weight="600">
+        <rect x="230" y="44" width="152" height="28" rx="5" fill="#24458e"/><text x="240" y="63">ledger · capture app · taxonomy</text>
+        <rect x="230" y="94" width="456" height="28" rx="5" fill="#00a6b2"/><text x="240" y="113">gold set · 25 k labels · active learning</text>
+        <rect x="420" y="144" width="380" height="28" rx="5" fill="#24458e"/><text x="430" y="163">SSL pretraining → multi-task teachers v1</text>
+        <rect x="610" y="194" width="304" height="28" rx="5" fill="#7054c8"/><text x="620" y="213">fusion · measurement · students · parity</text>
+        <rect x="800" y="244" width="190" height="28" rx="5" fill="#22965e"/><text x="810" y="263">shadow · canary · rollout</text>
+        <rect x="876" y="294" width="114" height="28" rx="5" fill="#b7791f"/><text x="884" y="313">interior heads</text>
+      </g>
+    </svg>
+    <figcaption><b>Figure 12.</b> Indicative 40-week plan for the exterior v1 release. The capture app and ledger start collecting first-party ground truth from week 0.</figcaption>
+  </figure>
+
+  <table>
+    <thead><tr><th style="width:20%">Phase</th><th>Deliverables</th><th style="width:30%">Exit criteria</th></tr></thead>
+    <tbody>
+      <tr><td><b>P0</b> Foundations</td><td>Inspection ledger, guided capture app v1 (capture, quality checks, sync), taxonomy v1, annotation guidelines, consent flows</td><td>First 100 inspections fully recorded end to end</td></tr>
+      <tr><td><b>P1</b> Data engine</td><td>Annotation platform, adjudication, 2 k-image gold set, 25 k labelled images, licence ledger, mining jobs</td><td>IAA targets met; gold set frozen</td></tr>
+      <tr><td><b>P2</b> AVFM + teachers</td><td>Stage 1/1b pretraining, probe gate, exterior multi-task teacher, surface specialist, calibration</td><td>Teacher passes offline gates (§15)</td></tr>
+      <tr><td><b>P3</b> Fusion + edge</td><td>Multi-view fusion, measurement service, rules engine v1, distilled students, Core ML / QNN exports</td><td>Edge parity and latency checks pass on device matrix</td></tr>
+      <tr><td><b>P4</b> Rollout</td><td>Shadow mode, canary at 1–2 workshops, monitoring, audit sampling</td><td>Override rate and miss audit within limits for 4 weeks</td></tr>
+      <tr><td><b>P5</b> Expansion</td><td>Interior heads, dent-depth classifier v2 (more gauge data), undercarriage (visible-abnormality only), repair-cost suggestions from T1 data</td><td>Per-domain gates, released independently</td></tr>
+    </tbody>
+  </table>
+
+  <div class="grid2">
+    <div>
+      <h3 style="margin-top:0">17.1 Team (core)</h3>
+      <table>
+        <thead><tr><th>Role</th><th class="c">FTE</th></tr></thead>
+        <tbody>
+          <tr><td>ML research / engineering (foundation, teachers, distillation)</td><td class="c">3–4</td></tr>
+          <tr><td>MLOps / data platform</td><td class="c">1–2</td></tr>
+          <tr><td>Backend / platform engineering</td><td class="c">2</td></tr>
+          <tr><td>Mobile (React Native + native iOS/Android)</td><td class="c">2</td></tr>
+          <tr><td>Data lead + annotation team (vendor or in-house)</td><td class="c">1 + 6–10</td></tr>
+          <tr><td>Domain assessors (adjudication, gold sets)</td><td class="c">2 part-time</td></tr>
+          <tr><td>QA / device testing</td><td class="c">1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3 style="margin-top:0">17.2 Compute (planning estimates)</h3>
+      <table>
+        <thead><tr><th>Workload</th><th class="c">H100 GPU-hours</th></tr></thead>
+        <tbody>
+          <tr><td>Stage 1/1b SSL, ViT-L, 2–5 M images, incl. ablations</td><td class="c">300–1,500</td></tr>
+          <tr><td>Optional ViT-g teacher-of-teachers</td><td class="c">+2,000–6,000</td></tr>
+          <tr><td>Stage 2 teachers (1024 px, sweeps)</td><td class="c">500–2,000</td></tr>
+          <tr><td>Distillation + QAT + exports</td><td class="c">200–800</td></tr>
+          <tr><td>Serving (pilot, async)</td><td class="c">1–2 GPUs continuous</td></tr>
+        </tbody>
+      </table>
+      <p class="small muted">Order-of-magnitude figures derived from model FLOPs and typical throughput, not benchmarks. Annotation and assessor time, not GPU time, is expected to be the dominant cost.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 16. RISKS ============================ -->
+<section>
+  <h2><span class="num">18</span>Risks &amp; mitigations</h2>
+  <table>
+    <thead><tr><th style="width:28%">Risk</th><th class="c" style="width:10%">Impact</th><th>Mitigation</th></tr></thead>
+    <tbody>
+      <tr><td>Insufficient first-party data or training rights</td><td class="c"><span class="tag red">High</span></td><td>Training rights in workshop contracts from P0; consent built into the capture flow; ledger counts usable images weekly</td></tr>
+      <tr><td>Label inconsistency (scratch vs scuff vs crack)</td><td class="c"><span class="tag red">High</span></td><td>Visual guideline, double annotation, adjudication, per-class IAA gate before scaling labelling</td></tr>
+      <tr><td>AVFM pretraining does not beat stock DINOv2</td><td class="c"><span class="tag amber">Medium</span></td><td>Hard probe gate; Stage 2 proceeds on stock weights, so the plan does not depend on it</td></tr>
+      <tr><td>Reflective paints keep causing false alerts</td><td class="c"><span class="tag amber">Medium</span></td><td>Nuisance classes, multi-view consistency, targeted hard-negative mining from the ledger</td></tr>
+      <tr><td>Edge models too slow or hot on low-tier phones</td><td class="c"><span class="tag amber">Medium</span></td><td>CNN student option, crop-only specialist, server-only mode per device tier</td></tr>
+      <tr><td>Export / accelerator incompatibilities (attention ops)</td><td class="c"><span class="tag amber">Medium</span></td><td>Parity and op-coverage tests in CI from the first student; design students with export-friendly ops</td></tr>
+      <tr><td>Over-claiming measurements or mechanical health</td><td class="c"><span class="tag red">High</span></td><td>Measurement contract (value, uncertainty, method); null when unmeasured; undercarriage limited to visible abnormality</td></tr>
+      <tr><td>Licence exposure in weights or datasets</td><td class="c"><span class="tag amber">Medium</span></td><td>Licence ledger blocks snapshot builds; legal sign-off on DINOv3, share-alike sources and CarDD before use</td></tr>
+      <tr><td>2D-only photos cannot measure dent depth in mm</td><td class="c"><span class="tag amber">Medium</span></td><td>Report a depth class with probability, never mm; route depth-dependent severity to review; optional gauge entry; train the classifier on gauge-measured dents</td></tr>
+      <tr><td>Silent drift after rollout</td><td class="c"><span class="tag amber">Medium</span></td><td>Override, drift and audit monitors; quarterly recalibration; automatic rollback</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout navy"><strong>Recommended next step.</strong> Approve P0 and P1 now. They do not depend on any modelling decision, and every week of first-party, ledger-recorded inspections makes the later model work cheaper and the release gates meaningful. Begin the Stage 1 probe gate as soon as about 1 M unlabelled workshop images are available.</div>
+</section>
+
+
+
+<section>
+  <h2><span class="num">A</span>Glossary</h2>
+  <table>
+    <thead><tr><th style="width:24%">Term</th><th>Meaning in this document</th></tr></thead>
+    <tbody>
+      <tr><td>AVFM</td><td>Automotive Vision Foundation Model: DINOv2 further self-supervised on vehicle photos</td></tr>
+      <tr><td>Case score</td><td>The strongest damage evidence anywhere in a photo</td></tr>
+      <tr><td>Recall / damage caught</td><td>Share of damaged photos (or vehicles) the system flags</td></tr>
+      <tr><td>False alert rate</td><td>Share of clean photos (or vehicles) the system wrongly flags</td></tr>
+      <tr><td>Proxy protocol</td><td>A fast, reduced evaluation used during training; for debugging only</td></tr>
+      <tr><td>Real pipeline</td><td>The full deployed inference path end to end, including capture checks, fusion and routing</td></tr>
+      <tr><td>Hard negative</td><td>A clean photo the model wrongly flags, added to training as an explicit counter-example</td></tr>
+      <tr><td>Teacher / student</td><td>Large server model / small phone model trained to imitate it (distillation)</td></tr>
+      <tr><td>SSL</td><td>Self-supervised learning: training on unlabelled images (DINO, iBOT objectives)</td></tr>
+      <tr><td>ViT-Adapter, Mask2Former</td><td>Multi-scale feature adapter for ViTs; query-based instance segmentation decoder</td></tr>
+      <tr><td>Multi-label</td><td>An instance can carry several damage types at once (dent + scratch)</td></tr>
+      <tr><td>Nuisance class</td><td>Learned "looks like damage but isn't" class: reflection, lamp, dirt, seam, sticker</td></tr>
+      <tr><td>Panel coordinates (u, v)</td><td>A normalised 2-D frame on each panel, used to match damage across views</td></tr>
+      <tr><td>Conformal risk control</td><td>Method that sets a threshold so a chosen error rate (α) is guaranteed on exchangeable data</td></tr>
+      <tr><td>ECE</td><td>Expected calibration error: gap between predicted confidence and observed accuracy</td></tr>
+      <tr><td>IAA, κ</td><td>Inter-annotator agreement; Cohen's kappa</td></tr>
+      <tr><td>Ground-truth tiers T1–T5</td><td>Repair order · physical measurement · adjudicated expert · single assessor · model proposal</td></tr>
+      <tr><td>Shadow / canary</td><td>Running a new model on live traffic with hidden results / for a small set of workshops first</td></tr>
+    </tbody>
+  </table>
+</section>
+
+</body>
+</html>

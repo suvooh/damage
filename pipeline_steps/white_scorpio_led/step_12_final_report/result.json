@@ -1,0 +1,205 @@
+{
+ "model_status": "development_only_not_production_approved",
+ "production_approved": false,
+ "decision": "recapture_required",
+ "automated_decision_allowed": false,
+ "manual_review": true,
+ "manual_review_required": false,
+ "recapture_required": true,
+ "decision_reasons": [
+  "quality:low_resolution"
+ ],
+ "recapture_reasons": [
+  "low_resolution"
+ ],
+ "reason": "Image quality is insufficient; capture another photograph.",
+ "damage_present": true,
+ "triage_alert": true,
+ "high_confidence_alert": true,
+ "quality": {
+  "width": 399,
+  "height": 501,
+  "dark_fraction": 0.03016023091661289,
+  "clipped_highlight_fraction": 0.0005002526275769264,
+  "specular_highlight_fraction": 0.0024812530327815545,
+  "sharpness": 0.004213238134980202,
+  "review_reasons": [
+   "low_resolution"
+  ]
+ },
+ "detections": [
+  {
+   "class_name": "crack_or_breakage",
+   "part": "front_bumper",
+   "part_id": 9,
+   "part_overlap": 0.6537257357545397,
+   "panel_area_pct": 3.3893902993312124,
+   "severity": {
+    "score": 3,
+    "label": "moderate",
+    "reason": "crack or breakage, 3% of panel (not in the rubric; rated on the d3 row)",
+    "basis": "extension:rated_on_d3_row",
+    "depth_class": null,
+    "depth_assumed": false,
+    "area_basis": "panel",
+    "area_fraction": 0.033893902993312124
+   },
+   "score": 0.5731062293052673,
+   "bbox": [
+    238,
+    315,
+    337,
+    351
+   ],
+   "area_pixels": 1597,
+   "area_frac": 0.007989034462403514,
+   "kind": "segmentation",
+   "side": null
+  }
+ ],
+ "overall_severity": 3,
+ "part_model": "dinov2-parts-v1",
+ "panels": [
+  {
+   "part": "front_bumper",
+   "part_id": 9,
+   "damage": [
+    {
+     "class_name": "crack_or_breakage",
+     "area_pct_of_panel": 2.4446464515291213,
+     "severity": {
+      "score": 3,
+      "label": "moderate",
+      "reason": "crack or breakage, 2% of panel (not in the rubric; rated on the d3 row)",
+      "basis": "extension:rated_on_d3_row",
+      "depth_class": null,
+      "depth_assumed": false,
+      "area_basis": "panel",
+      "area_fraction": 0.024446464515291214
+     }
+    },
+    {
+     "class_name": "deformation_or_detachment",
+     "area_pct_of_panel": 0.9447438478020909,
+     "severity": {
+      "score": 3,
+      "label": "moderate",
+      "reason": "deformation or detachment, 1% of panel (not in the rubric; rated on the d3 row)",
+      "basis": "extension:rated_on_d3_row",
+      "depth_class": null,
+      "depth_assumed": false,
+      "area_basis": "panel",
+      "area_fraction": 0.009447438478020908
+     }
+    }
+   ],
+   "damage_types": [
+    "crack_or_breakage",
+    "deformation_or_detachment"
+   ],
+   "damage_count": 1,
+   "damage_area_pct_of_panel": 3.3893902993312124,
+   "rating": 3,
+   "rating_label": "moderate",
+   "rating_reason": "crack or breakage, 2% of panel (not in the rubric; rated on the d3 row)",
+   "depth_assumed": false,
+   "bbox": [
+    103,
+    229,
+    358,
+    430
+   ],
+   "side": null
+  }
+ ],
+ "view": {
+  "view": "right",
+  "confidence": 0.8121072635602685,
+  "car_center_x": 0.4237313189126941
+ },
+ "parts_visible": [
+  {
+   "part": "windshield",
+   "part_id": 1,
+   "area_pct_of_image": 3.9630013156644104
+  },
+  {
+   "part": "front_door",
+   "part_id": 5,
+   "area_pct_of_image": 2.044532488906898
+  },
+  {
+   "part": "front_wheel",
+   "part_id": 7,
+   "area_pct_of_image": 7.712394759353473
+  },
+  {
+   "part": "front_bumper",
+   "part_id": 9,
+   "area_pct_of_image": 15.408781434624485
+  },
+  {
+   "part": "headlight",
+   "part_id": 11,
+   "area_pct_of_image": 4.313678407595836
+  },
+  {
+   "part": "bonnet",
+   "part_id": 13,
+   "area_pct_of_image": 1.9850024262252437
+  },
+  {
+   "part": "grille",
+   "part_id": 18,
+   "area_pct_of_image": 1.1860989799848924
+  },
+  {
+   "part": "quarter_panel",
+   "part_id": 20,
+   "area_pct_of_image": 1.704860954782165
+  },
+  {
+   "part": "fender",
+   "part_id": 21,
+   "area_pct_of_image": 3.260146373918829
+  }
+ ],
+ "part_catalogue": [
+  "windshield",
+  "rear_windshield",
+  "front_window",
+  "rear_window",
+  "front_door",
+  "rear_door",
+  "front_wheel",
+  "rear_wheel",
+  "front_bumper",
+  "rear_bumper",
+  "headlight",
+  "tail_light",
+  "bonnet",
+  "boot",
+  "license_plate",
+  "side_mirror",
+  "roof",
+  "grille",
+  "side_skirt",
+  "quarter_panel",
+  "fender"
+ ],
+ "review_candidates": [],
+ "n_detections": 1,
+ "image": {
+  "width": 399,
+  "height": 501
+ },
+ "runtime": {
+  "backend": "onnx",
+  "device": "onnx:gpu:fp32",
+  "elapsed_ms": 15959.198000025935
+ },
+ "thresholds": {
+  "triage": 0.381,
+  "segmentation": 0.381
+ }
+}
