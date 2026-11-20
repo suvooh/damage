@@ -1,0 +1,95 @@
+{
+ "status": "candidate_not_deployed",
+ "sha256": "dc20802daf522301a07bfcbdefdc44fc8dcaff161b2db145fa178c6cee5af872",
+ "bytes": 98931668,
+ "recipe": "last 3 DINOv2 blocks + 3 heads fine-tuned 6 epochs on cached 784px features; selected on validation",
+ "protocol": "single-scale 784px proxy (no tiling/TTA/multiscale); NOT the deployed pipeline; no ONNX export or recalibration yet",
+ "baseline_vs_finetuned": {
+  "baseline": {
+   "model": "baseline",
+   "operating_threshold_from_calibration": 0.9084,
+   "validation": {
+    "damage_cases": 98,
+    "clean_images": 100,
+    "auroc": 0.9990816326530612,
+    "recall_at_op": 0.9183673469387755,
+    "clean_false_alert_at_op": 0.0,
+    "recall_at_1pct_clean_fpr": 0.9591836734693877,
+    "recall_at_5pct_clean_fpr": 1.0,
+    "mean_damage_iou_at_deployed_threshold": 0.3481761956499201,
+    "mean_damage_iou_best_threshold": 0.3898147883482582,
+    "best_iou_threshold": 0.55,
+    "type_pixel_accuracy_on_damage": 0.6999040860221326
+   },
+   "calibration": {
+    "damage_cases": 65,
+    "clean_images": 100,
+    "auroc": 0.9988461538461539,
+    "recall_at_op": 0.9692307692307692,
+    "clean_false_alert_at_op": 0.02,
+    "recall_at_1pct_clean_fpr": 0.9384615384615385,
+    "recall_at_5pct_clean_fpr": 1.0,
+    "mean_damage_iou_at_deployed_threshold": 0.37026662480084077,
+    "mean_damage_iou_best_threshold": 0.39350225034329317,
+    "best_iou_threshold": 0.6,
+    "type_pixel_accuracy_on_damage": 0.7350506455413025
+   },
+   "test": {
+    "damage_cases": 81,
+    "clean_images": 100,
+    "auroc": 0.9951234567901235,
+    "recall_at_op": 0.9382716049382716,
+    "clean_false_alert_at_op": 0.02,
+    "recall_at_1pct_clean_fpr": 0.7283950617283951,
+    "recall_at_5pct_clean_fpr": 1.0,
+    "mean_damage_iou_at_deployed_threshold": 0.3807593986301154,
+    "mean_damage_iou_best_threshold": 0.39893934995445746,
+    "best_iou_threshold": 0.6,
+    "type_pixel_accuracy_on_damage": 0.7762758855098947
+   }
+  },
+  "finetuned": {
+   "model": "finetuned",
+   "operating_threshold_from_calibration": 0.6644,
+   "validation": {
+    "damage_cases": 98,
+    "clean_images": 100,
+    "auroc": 0.9846938775510203,
+    "recall_at_op": 0.9489795918367347,
+    "clean_false_alert_at_op": 0.0,
+    "recall_at_1pct_clean_fpr": 0.9693877551020408,
+    "recall_at_5pct_clean_fpr": 0.9693877551020408,
+    "mean_damage_iou_at_deployed_threshold": 0.3828208559468883,
+    "mean_damage_iou_best_threshold": 0.3959779615968535,
+    "best_iou_threshold": 0.55,
+    "type_pixel_accuracy_on_damage": 0.7104107935553003
+   },
+   "calibration": {
+    "damage_cases": 65,
+    "clean_images": 100,
+    "auroc": 1.0,
+    "recall_at_op": 0.9692307692307692,
+    "clean_false_alert_at_op": 0.0,
+    "recall_at_1pct_clean_fpr": 1.0,
+    "recall_at_5pct_clean_fpr": 1.0,
+    "mean_damage_iou_at_deployed_threshold": 0.3564300290487968,
+    "mean_damage_iou_best_threshold": 0.3659529806290779,
+    "best_iou_threshold": 0.35,
+    "type_pixel_accuracy_on_damage": 0.7431674664101651
+   },
+   "test": {
+    "damage_cases": 81,
+    "clean_images": 100,
+    "auroc": 1.0,
+    "recall_at_op": 0.9629629629629629,
+    "clean_false_alert_at_op": 0.0,
+    "recall_at_1pct_clean_fpr": 1.0,
+    "recall_at_5pct_clean_fpr": 1.0,
+    "mean_damage_iou_at_deployed_threshold": 0.37590495874727836,
+    "mean_damage_iou_best_threshold": 0.3800882828898113,
+    "best_iou_threshold": 0.65,
+    "type_pixel_accuracy_on_damage": 0.7711528555115613
+   }
+  }
+ }
+}
